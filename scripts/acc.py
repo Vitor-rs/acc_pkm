@@ -226,8 +226,8 @@ def cmd_catalog():
     console.print(f"[green]✔ Índice estruturado gerado em: {jsonl_file.relative_to(ROOT_DIR)} ({len(documents)} itens)[/green]")
 
 
-def cmd_new_project(project_name: str):
-    """Cria um novo projeto acadêmico a partir do template limpo."""
+def cmd_new_project(project_name: str, template: str = "sbc"):
+    """Cria um novo projeto acadêmico a partir dos templates (sbc, tcc/abnt, simple)."""
     clean_name = re.sub(r"[^a-zA-Z0-9_-]", "_", project_name.lower().strip())
     target_dir = ROOT_DIR / "projects" / clean_name
 
@@ -235,14 +235,36 @@ def cmd_new_project(project_name: str):
         console.print(f"[yellow]⚠ O projeto '{clean_name}' já existe em: {target_dir}[/yellow]")
         return
 
-    template_dir = ROOT_DIR / "projects" / "_template"
-    if not template_dir.exists():
-        console.print(f"[red]❌ Diretório template não encontrado em: {template_dir}[/red]")
+    tmpl = template.lower().strip()
+    if tmpl in ("tcc", "abnt", "tese", "monografia"):
+        source_dir = ROOT_DIR / "templates" / "tcc_abnt"
+        tmpl_desc = "TCC / Monografia ABNT (IFMA modular)"
+    elif tmpl in ("sbc", "artigo", "paper"):
+        source_dir = ROOT_DIR / "templates" / "artigo_sbc"
+        tmpl_desc = "Artigo Científico SBC (Sociedade Brasileira de Computação)"
+    elif tmpl in ("simple", "basico"):
+        source_dir = ROOT_DIR / "projects" / "_template"
+        tmpl_desc = "Manuscrito Básico Simples"
+    else:
+        cand = ROOT_DIR / "templates" / tmpl
+        if cand.exists():
+            source_dir = cand
+            tmpl_desc = f"Template Personalizado ({tmpl})"
+        else:
+            console.print(f"[yellow]Template '{tmpl}' não reconhecido. Usando SBC por padrão.[/yellow]")
+            source_dir = ROOT_DIR / "templates" / "artigo_sbc"
+            tmpl_desc = "Artigo Científico SBC"
+
+    if not source_dir.exists():
+        console.print(f"[red]❌ Diretório template não encontrado em: {source_dir}[/red]")
         return
 
-    shutil.copytree(template_dir, target_dir)
-    # Limpar qualquer arquivo temporário da cópia
-    for aux in target_dir.glob("build/*"):
+    shutil.copytree(source_dir, target_dir)
+    # Limpar qualquer pasta build ou artefatos temporários
+    build_dir = target_dir / "build"
+    if build_dir.exists():
+        shutil.rmtree(build_dir, ignore_errors=True)
+    for aux in target_dir.rglob("*-converted-to.pdf"):
         try:
             aux.unlink()
         except Exception:
@@ -250,21 +272,28 @@ def cmd_new_project(project_name: str):
 
     console.print(Panel(
         f"[green]✅ Novo projeto acadêmico criado com sucesso![/green]\n\n"
+        f"📋 [bold]Template Utilizado:[/bold] {tmpl_desc}\n"
         f"📁 [bold]Local:[/bold] projects/{clean_name}\n"
-        f"📄 [bold]Manuscrito principal:[/bold] projects/{clean_name}/main.tex\n"
-        f"📚 [bold]Citações:[/bold] projects/{clean_name}/references.bib\n\n"
+        f"📄 [bold]Manuscrito principal:[/bold] projects/{clean_name}/main.tex\n\n"
         f"Para compilar:\n"
         f"  [cyan]uv run python scripts/acc.py build projects/{clean_name}[/cyan]\n"
-        f"  ou abra no VS Code com a extensão [italic]LaTeX Workshop[/italic].",
+        f"Para empacotar para o Overleaf:\n"
+        f"  [cyan]uv run python scripts/acc.py overleaf pack projects/{clean_name}[/cyan]\n"
+        f"Ou abra no VS Code com a extensão [italic]LaTeX Workshop[/italic] ([bold]Ctrl+Alt+B[/bold]).",
         title=f"Projeto: {clean_name}",
         border_style="green"
     ))
 
 
 def cmd_build(target_path: str = ""):
-    """Compila um projeto LaTeX com pdfLaTeX e BibTeX salvando os binários em build/."""
+    """Compila um projeto LaTeX usando latexmk (com detecção de Perl e SyncTeX) salvando binários em build/."""
     if not target_path:
-        project_dir = ROOT_DIR / "projects" / "_template"
+        projects_dir = ROOT_DIR / "projects"
+        subdirs = [p for p in projects_dir.iterdir() if p.is_dir() and not p.name.startswith("_") and (p / "main.tex").exists()]
+        if subdirs:
+            project_dir = subdirs[0]
+        else:
+            project_dir = ROOT_DIR / "templates" / "artigo_sbc"
     else:
         project_dir = Path(target_path).resolve()
         if not project_dir.is_dir():
@@ -272,41 +301,89 @@ def cmd_build(target_path: str = ""):
 
     main_tex = project_dir / "main.tex"
     if not main_tex.exists():
-        console.print(f"[red]❌ Arquivo main.tex não encontrado em: {project_dir}[/red]")
-        return
+        tex_files = list(project_dir.glob("*.tex"))
+        if tex_files:
+            main_tex = tex_files[0]
+        else:
+            console.print(f"[red]❌ Nenhum arquivo .tex encontrado em: {project_dir}[/red]")
+            return
 
     build_dir = project_dir / "build"
     build_dir.mkdir(parents=True, exist_ok=True)
 
-    console.print(f"[cyan]🚀 Compilando manuscrito: {main_tex.relative_to(ROOT_DIR)}...[/cyan]")
+    rel_tex = main_tex.relative_to(ROOT_DIR) if main_tex.is_relative_to(ROOT_DIR) else main_tex
+    console.print(f"[cyan]🚀 Compilando manuscrito: [bold]{rel_tex}[/bold]...[/cyan]")
 
+    # Configurar ambiente com Git Perl para latexmk no Windows
+    env = os.environ.copy()
+    git_usr_bin = r"C:\Program Files\Git\usr\bin"
+    if os.path.exists(git_usr_bin) and git_usr_bin not in env.get("PATH", ""):
+        env["PATH"] = git_usr_bin + os.pathsep + env.get("PATH", "")
+
+    has_latexmk, _ = check_command("latexmk")
+
+    if has_latexmk:
+        cmd = [
+            "latexmk",
+            "-pdf",
+            "-interaction=nonstopmode",
+            "-file-line-error",
+            "-synctex=1",
+            f"-output-directory={build_dir.name}",
+            f"-pdflatex=pdflatex -interaction=nonstopmode --enable-installer -synctex=1 %O %S",
+            main_tex.name
+        ]
+        console.print(f"  [dim]Executando: latexmk (resolução automática de passadas e pacotes MiKTeX)[/dim]")
+        res = subprocess.run(cmd, cwd=str(project_dir), env=env, capture_output=True, text=True, errors="ignore")
+
+        pdf_name = main_tex.stem + ".pdf"
+        out_pdf = build_dir / pdf_name
+        dest_pdf = project_dir / pdf_name
+
+        if res.returncode == 0 and out_pdf.exists():
+            shutil.copy2(out_pdf, dest_pdf)
+            rel_pdf = dest_pdf.relative_to(ROOT_DIR) if dest_pdf.is_relative_to(ROOT_DIR) else dest_pdf
+            file_url = dest_pdf.as_uri()
+            console.print(f"[bold green]✔ PDF gerado com sucesso:[/bold green] [link={file_url}]{rel_pdf}[/link]")
+            return
+        else:
+            log_file = build_dir / (main_tex.stem + ".log")
+            if log_file.exists():
+                console.print(f"[yellow]Diagnosticando log de compilação ({log_file.name}):[/yellow]")
+                errors = []
+                for line in log_file.read_text(encoding="utf-8", errors="ignore").splitlines():
+                    if line.startswith("!") or "Error:" in line or "Fatal error" in line:
+                        errors.append(line)
+                for err in errors[:6]:
+                    console.print(f"  [red]{err}[/red]")
+            console.print(f"[red]❌ Falha na compilação latexmk. Código de saída: {res.returncode}[/red]")
+            return
+
+    # Fallback se latexmk não estiver disponível: pdflatex + bibtex tradicional
+    console.print("  [dim]latexmk não disponível, usando fallback pdflatex + bibtex...[/dim]")
     try:
-        # Passada 1: pdflatex
-        console.print("  [dim][1/4] Executando pdfLaTeX (passo inicial)...[/dim]")
-        subprocess.run(["pdflatex", "-interaction=nonstopmode", f"-output-directory={build_dir}", str(main_tex)], check=True, stdout=subprocess.DEVNULL)
-
-        # Passada 2: bibtex se houver aux
-        aux_file = build_dir / "main.aux"
+        subprocess.run(["pdflatex", "-interaction=nonstopmode", "--enable-installer", f"-output-directory={build_dir}", str(main_tex)], check=True, stdout=subprocess.DEVNULL)
+        aux_file = build_dir / f"{main_tex.stem}.aux"
         if aux_file.exists():
-            console.print("  [dim][2/4] Processando citações com BibTeX...[/dim]")
-            subprocess.run(["bibtex", "main"], cwd=str(build_dir), stdout=subprocess.DEVNULL)
+            subprocess.run(["bibtex", main_tex.stem], cwd=str(build_dir), stdout=subprocess.DEVNULL)
+        subprocess.run(["pdflatex", "-interaction=nonstopmode", "--enable-installer", f"-output-directory={build_dir}", str(main_tex)], check=True, stdout=subprocess.DEVNULL)
+        subprocess.run(["pdflatex", "-interaction=nonstopmode", "--enable-installer", f"-output-directory={build_dir}", str(main_tex)], check=True, stdout=subprocess.DEVNULL)
 
-        # Passada 3: pdflatex
-        console.print("  [dim][3/4] Atualizando referências cruzadas...[/dim]")
-        subprocess.run(["pdflatex", "-interaction=nonstopmode", f"-output-directory={build_dir}", str(main_tex)], check=True, stdout=subprocess.DEVNULL)
-
-        # Passada 4: pdflatex final
-        console.print("  [dim][4/4] Gerando PDF final...[/dim]")
-        subprocess.run(["pdflatex", "-interaction=nonstopmode", f"-output-directory={build_dir}", str(main_tex)], check=True, stdout=subprocess.DEVNULL)
-
-        out_pdf = build_dir / "main.pdf"
-        dest_pdf = project_dir / "main.pdf"
+        pdf_name = main_tex.stem + ".pdf"
+        out_pdf = build_dir / pdf_name
+        dest_pdf = project_dir / pdf_name
         if out_pdf.exists():
             shutil.copy2(out_pdf, dest_pdf)
-            console.print(f"[bold green]✔ PDF gerado com sucesso:[/bold green] [underline]{dest_pdf.relative_to(ROOT_DIR)}[/underline]")
+            console.print(f"[bold green]✔ PDF gerado com sucesso:[/bold green] {dest_pdf}")
     except Exception as e:
-        console.print(f"[red]❌ Erro ao compilar LaTeX:[/red] {e}")
-        console.print(f"[yellow]Consulte o log de erros em: {build_dir / 'main.log'}[/yellow]")
+        console.print(f"[red]❌ Erro ao compilar LaTeX via fallback:[/red] {e}")
+
+
+def cmd_overleaf(args: list[str]):
+    """Gerencia comandos de ponte e colaboração com o Overleaf."""
+    script_path = ROOT_DIR / "scripts" / "overleaf_bridge.py"
+    subprocess.run([sys.executable, str(script_path)] + args)
+
 
 
 def cmd_bib_audit():
@@ -409,11 +486,12 @@ def main():
             "  [green]zotero[/green]         - Sincroniza acervo Zotero com Lake via PyMuPDF4LLM e master.bib\n"
             "  [green]scrape[/green]         - Raspa artigos e páginas web com bypass anti-bot e salva no Lake\n"
             "  [green]search-papers[/green]  - Pesquisa papers acadêmicos e indexa resumos no Lake\n"
-            "  [green]new-project[/green]    - Cria um novo projeto acadêmico LaTeX modular\n"
-            "  [green]build[/green]          - Compila o manuscrito LaTeX de um projeto\n"
+            "  [green]new-project[/green]    - Cria um novo projeto LaTeX modular (--template sbc|tcc)\n"
+            "  [green]build[/green]          - Compila o manuscrito LaTeX de um projeto com latexmk\n"
+            "  [green]overleaf[/green]       - Ponte Overleaf: pack, unpack, sync-bib e git-info\n"
             "  [green]bib-audit[/green]      - Valida a consistência do arquivo master.bib\n"
             "  [green]transcript[/green]     - Transcreve vídeos e playlists do YouTube para o Lake\n\n"
-            "Exemplo: [italic]uv run python scripts/acc.py zotero sync[/italic]",
+            "Exemplo: [italic]uv run python scripts/acc.py overleaf pack projects/meu_artigo[/italic]",
             border_style="cyan"
         ))
         return
@@ -432,10 +510,29 @@ def main():
         cmd_search_papers(sys.argv[2:])
     elif action in ("new-project", "project", "novo"):
         name = sys.argv[2] if len(sys.argv) > 2 else "novo_artigo"
-        cmd_new_project(name)
+        template = "sbc"
+        if len(sys.argv) > 4 and sys.argv[3] in ("--template", "-t"):
+            template = sys.argv[4]
+        elif len(sys.argv) > 3 and not sys.argv[2].startswith("-"):
+            template = sys.argv[3]
+        cmd_new_project(name, template)
     elif action in ("build", "compile"):
         target = sys.argv[2] if len(sys.argv) > 2 else ""
         cmd_build(target)
+    elif action in ("overleaf", "ov"):
+        cmd_overleaf(sys.argv[2:])
+    elif action in ("latex", "tex"):
+        sub = sys.argv[2].lower() if len(sys.argv) > 2 else "build"
+        if sub in ("build", "b", "compile"):
+            cmd_build(sys.argv[3] if len(sys.argv) > 3 else "")
+        elif sub in ("new", "novo"):
+            name = sys.argv[3] if len(sys.argv) > 3 else "novo_artigo"
+            tmpl = sys.argv[4] if len(sys.argv) > 4 else "sbc"
+            cmd_new_project(name, tmpl)
+        elif sub in ("pack", "unpack", "sync-bib", "git-info"):
+            cmd_overleaf(sys.argv[2:])
+        else:
+            cmd_build(sys.argv[2])
     elif action in ("bib-audit", "audit-bib"):
         cmd_bib_audit()
     elif action in ("transcript", "yt"):
@@ -446,3 +543,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

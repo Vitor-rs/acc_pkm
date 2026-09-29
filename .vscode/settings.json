@@ -11,10 +11,13 @@
         "-interaction=nonstopmode",
         "-file-line-error",
         "-pdf",
+        "-pdflatex=pdflatex -synctex=1 -interaction=nonstopmode --enable-installer",
         "-outdir=%DIR%/build",
         "%DOC%"
       ],
-      "env": {}
+      "env": {
+        "PATH": "C:\\Program Files\\Git\\usr\\bin;${env:PATH}"
+      }
     },
     {
       "name": "xelatexmk",
@@ -27,7 +30,9 @@
         "-outdir=%DIR%/build",
         "%DOC%"
       ],
-      "env": {}
+      "env": {
+        "PATH": "C:\\Program Files\\Git\\usr\\bin;${env:PATH}"
+      }
     },
     {
       "name": "pdflatex",
@@ -36,10 +41,23 @@
         "-synctex=1",
         "-interaction=nonstopmode",
         "-file-line-error",
+        "--enable-installer",
         "-output-directory=%DIR%/build",
         "%DOC%"
       ],
-      "env": {}
+      "env": {
+        "PATH": "C:\\Program Files\\Git\\usr\\bin;${env:PATH}"
+      }
+    },
+    {
+      "name": "bibtex",
+      "command": "bibtex",
+      "args": [
+        "%DIR%/build/%DOCFILE%"
+      ],
+      "env": {
+        "PATH": "C:\\Program Files\\Git\\usr\\bin;${env:PATH}"
+      }
     },
     {
       "name": "biber",
@@ -49,7 +67,9 @@
         "--output-directory=%DIR%/build",
         "%DOCFILE%"
       ],
-      "env": {}
+      "env": {
+        "PATH": "C:\\Program Files\\Git\\usr\\bin;${env:PATH}"
+      }
     }
   ],
   "latex-workshop.latex.recipes": [
@@ -57,6 +77,15 @@
       "name": "latexmk (default)",
       "tools": [
         "latexmk"
+      ]
+    },
+    {
+      "name": "pdflatex -> bibtex -> pdflatex*2",
+      "tools": [
+        "pdflatex",
+        "bibtex",
+        "pdflatex",
+        "pdflatex"
       ]
     },
     {
@@ -74,6 +103,10 @@
         "pdflatex"
       ]
     }
+  ],
+  "latex-workshop.intellisense.citation.backend": "bibtex",
+  "latex-workshop.latex.bibDirs": [
+    "${workspaceFolder}/references"
   ],
   "latex-workshop.latex.clean.subfolder.enabled": true,
   "latex-workshop.latex.clean.fileTypes": [
@@ -104,6 +137,8 @@
   "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
   "files.associations": {
     "*.tex": "latex",
-    "*.bib": "bibtex"
+    "*.bib": "bibtex",
+    "*.cls": "latex",
+    "*.sty": "latex"
   }
 }

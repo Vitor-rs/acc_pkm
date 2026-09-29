@@ -1,0 +1,94 @@
+%% sbc.sty - Style package for SBC (Sociedade Brasileira de Computacao) conference papers
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{sbc}[2002/07/04 - SBC Conference Paper Style]
+
+\RequirePackage{geometry}
+\geometry{a4paper,top=3.5cm,bottom=2.5cm,left=3cm,right=3cm}
+
+\RequirePackage{times}
+\RequirePackage{indentfirst}
+\RequirePackage{graphicx}
+\RequirePackage{caption}
+
+\setlength{\parindent}{1.27cm}
+\setlength{\parskip}{0pt}
+
+% Definitions for SBC authors and addresses
+\def\address#1{\gdef\@address{#1}}
+\def\email#1{\texttt{#1}}
+\def\inst#1{\unskip$^{#1}$}
+\def\nextinstitute{\\\\}
+
+% Custom Maketitle
+\def\maketitle{\par
+ \begingroup
+   \renewcommand\thefootnote{\fnsymbol{footnote}}%
+   \def\@makefnmark{\rlap{\@textsuperscript{\normalfont\@thefnmark}}}%
+   \long\def\@makefntext##1{\parindent 1em\noindent
+               \hb@xt@1.8em{%
+                 \hss\@textsuperscript{\normalfont\@thefnmark}}##1}%
+   \newpage
+   \global\@topnum\z@
+   \@maketitle
+   \@thanks
+ \endgroup
+ \setcounter{footnote}{0}%
+ \let\thanks\relax
+ \let\maketitle\relax\let\@maketitle\relax
+ \gdef\@thanks{}\gdef\@author{}\gdef\@title{}}
+
+\def\@maketitle{%
+  \newpage
+  \null
+  \vskip 1em%
+  \begin{center}%
+  \let \footnote \thanks
+    {\Large\bfseries \@title \par}%
+    \vskip 1.5em%
+    {\normalsize\bfseries
+      \lineskip .5em%
+      \begin{tabular}[t]{c}%
+        \@author
+      \end{tabular}\par}%
+    \vskip 1em%
+    {\small
+      \lineskip .5em%
+      \begin{tabular}[t]{c}%
+        \@address
+      \end{tabular}\par}%
+  \end{center}%
+  \par
+  \vskip 1.5em}
+
+% Section formatting
+\renewcommand{\section}{\@startsection{section}{1}{\z@}%
+  {-3.5ex \@plus -1ex \@minus -.2ex}%
+  {2.3ex \@plus.2ex}%
+  {\reset@font\bfseries\normalsize}}
+
+\renewcommand{\subsection}{\@startsection{subsection}{2}{\z@}%
+  {-3.25ex\@plus -1ex \@minus -.2ex}%
+  {1.5ex \@plus .2ex}%
+  {\reset@font\bfseries\normalsize}}
+
+\renewcommand{\subsubsection}{\@startsection{subsubsection}{3}{\z@}%
+  {-3.25ex\@plus -1ex \@minus -.2ex}%
+  {1.5ex \@plus .2ex}%
+  {\reset@font\itshape\normalsize}}
+
+% Abstract environment
+\renewenvironment{abstract}{%
+  \begin{center}%
+    {\bfseries\normalsize Abstract\vspace{-.5em}\vspace{\z@}}%
+  \end{center}%
+  \itshape\small\quotation
+}{\endquotation}
+
+\newenvironment{resumo}{%
+  \begin{center}%
+    {\bfseries\normalsize Resumo\vspace{-.5em}\vspace{\z@}}%
+  \end{center}%
+  \itshape\small\quotation
+}{\endquotation}
+
+\endinput

@@ -1,0 +1,45 @@
+% Isto é um exemplo de Ficha Catalográfica, ou ``Dados internacionais de
+% catalogação-na-publicação''. Você pode utilizar este modelo como referência. 
+% Porém, a biblioteca da universidade lhe fornecerá um PDF com a ficha catalográfica definitiva após a defesa do trabalho. Quando estiver com o documento, salve-o como PDF na pasta pdf do seu projeto e substitua todo o conteúdo de implementação deste arquivo pelo comando abaixo:
+
+% \begin{fichacatalografica}
+%     \includepdf{pdf/ficha_catalografica.pdf}
+% \end{fichacatalografica}
+
+% Comente ou retire todas as linhas abaixo após inserir o documento da ficha catalográfica
+
+\begin{fichacatalografica}
+	\sffamily
+	\vspace*{2in}					% Posição vertical
+    
+	\begin{center}					% Minipage Centralizado
+    	\fbox{
+    	    \begin{minipage}[c][8cm]{13.5cm}		% Largura
+            	\small
+            	\imprimirautor
+            	%Sobrenome, Nome do autor
+            	
+            	\hspace{0.5cm} \imprimirtitulo  / \imprimirautor. --
+            	\cidade, \estado - 
+            	
+            	\hspace{0.5cm} \thelastpage p. : il. (algumas color.) ; 30 cm.\\
+            	
+            	\hspace{0.5cm} \genorientador~\orientador\\
+            	
+            	\hspace{0.5cm}
+            	\parbox[t]{\textwidth}{Trabalho de Concluao de Curso~--~IFMA - Imperatriz/MA,
+            	\Month de \the\year.}\\ 
+            	
+            	\hspace{0.5cm}
+            		1. Palavra-chave1.
+            		2. Palavra-chave2.
+            		2. Palavra-chave3.
+            		I. Orientador.
+            		II. Universidade xxx.
+            		III. Faculdade de xxx.
+            		IV. Título 			
+        	\end{minipage}
+    	}
+	\end{center}
+
+\end{fichacatalografica}

@@ -9,8 +9,13 @@ Repositório de Gestão de Conhecimento Pessoal (Personal Knowledge Management -
 - `.agents/skills/transcript/SKILL.md`: Definição da skill e do comando `/transcript`.
 - `.agents/skills/web-harvest/SKILL.md`: Definição da skill e comandos `/scrape`, `/crawl` e `/paper-search`.
 - `.agents/skills/zotero/SKILL.md`: Definição da skill e comando `/zotero`.
+- `.agents/skills/latex/SKILL.md`: Definição da skill e comandos `/latex` e `/overleaf`.
 
 ## Comandos Rápidos
+- `/latex new <nome> [--template sbc|tcc]`: Cria projeto acadêmico a partir dos templates SBC ou ABNT.
+- `/latex build [projeto]`: Compila manuscrito via latexmk com SyncTeX e diagnósticos no VS Code.
+- `/overleaf pack <projeto>`: Empacota projeto limpo em `.zip` com citações resolvidas de `master.bib` para o Overleaf.
+- `/overleaf unpack <zip>`: Descompacta pacote do Overleaf e mescla novas referências ao `references/master.bib`.
 - `/zotero sync`: Sincroniza todo o acervo do Zotero Desktop para `resources/_lake/` com parsing PyMuPDF4LLM e atualiza `master.bib` e o catálogo.
 - `/zotero search "<termo>"`: Busca instantânea na biblioteca local via SQLite.
 - `/zotero add "<doi>"`: Adiciona artigo por DOI no Zotero, obtém o PDF e puxa para o Lake.
@@ -21,3 +26,4 @@ Repositório de Gestão de Conhecimento Pessoal (Personal Knowledge Management -
 - `/scrape <url>`: Raspa página web com Scrapling stealth e fallback Firecrawl, salva no Lake e cataloga.
 - `/paper-search "<termo>"`: Busca literatura científica e preprints via Firecrawl Research Index.
 - `/crawl <url>`: Rastreamento recursivo de documentação para o Lake.
+

@@ -1,0 +1,75 @@
+\documentclass[12pt]{article}
+
+\usepackage{sbc}
+\usepackage[utf8]{inputenc}
+\usepackage[brazil,english]{babel}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{microtype}
+
+\title{Título do Artigo: Subtítulo Explicativo}
+
+\author{Primeiro Autor\inst{1}, Segundo Autor\inst{1,2}, Terceiro Autor\inst{2}}
+
+\address{Departamento de Ciência da Computação -- Instituto Federal\\
+  \email{\{autor1, autor2\}@instituto.edu.br}
+\nextinstitute
+  Laboratório de Inteligência Artificial e Pesquisa Aplicada\\
+  \email{autor3@lab.org.br}
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This meta-paper describes the style to be used in articles for SBC conferences.
+It serves as an example for formatting manuscripts with high academic rigor.
+\end{abstract}
+
+\begin{resumo}
+Este documento apresenta o formato padrão para artigos submetidos aos simpósios e congressos da Sociedade Brasileira de Computação (SBC). O texto aborda a estrutura modular, citações com referências automáticas e formatação de seções.
+\end{resumo}
+
+\section{Introdução}
+A área de Ciência da Computação e Tecnologia da Informação exige rigor metodológico na condução de experimentos e na redação de artigos científicos.
+
+Trabalhos recentes na área de processamento de documentos e modelos neurais demonstram a relevância da extração estruturada de informação \cite{Chai2024_X7HSG9C2}.
+
+\section{Trabalhos Relacionados}
+A literatura acadêmica sobre modelos biomodais e métricas universais de avaliação como ANLS* estabelece parâmetros quantitativos essenciais \cite{Peer2024_W5J79WT6}.
+
+\section{Metodologia}
+A metodologia proposta organiza o pipeline em três etapas sequenciais:
+\begin{enumerate}
+    \item Coleta e higienização dos dados experimentais;
+    \item Treinamento e ajuste fino de hiperparâmetros;
+    \item Avaliação com validação cruzada k-fold e testes de significância estatística.
+\end{enumerate}
+
+\section{Resultados e Discussão}
+Os resultados empíricos demonstraram ganhos consistentes de precisão e recall.
+
+\begin{table}[ht]
+\centering
+\caption{Comparação de Desempenho dos Modelos Avaliados}
+\label{tab:resultados}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Modelo} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Tempo (ms)} \\
+\midrule
+Baseline (Regras) & 0.742 & 0.685 & 0.712 & \textbf{12} \\
+BERTimbau Base    & 0.885 & 0.862 & 0.873 & 85 \\
+DocFusion (0.28B) & \textbf{0.924} & \textbf{0.910} & \textbf{0.917} & 45 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Conclusões}
+Este trabalho apresentou uma abordagem estruturada para a pesquisa científica em computação, integrando automação de referências e compilação de alta fidelidade.
+
+\bibliographystyle{apalike}
+\bibliography{references}
+
+\end{document}

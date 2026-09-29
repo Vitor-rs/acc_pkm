@@ -1,0 +1,145 @@
+\chapter{CONCEITOS GERAIS E REVISÃO DA LITERATURA}
+
+%Lembre-se que os capítulo, as sessões e sub-sessões são determinadas por si para adequar-se ao seu trabalho.
+
+Neste capítulo deve ser proporcionado o estado da arte / referencial teórico sobre o tema a que se refere o estudo. Um bom pesquisador não deve repetir trabalhos já concluídos ou que já estão em andamento. Por isso esta sessão é onde o autor demonstra até onde vai a pesquisa atual no campo de estudos em questão e estabelece as bases sobre as quais desenvolverá o estudo proposto. 
+
+\section{Conceitos Gerais}
+
+\subsection{Exemplos de Objetos do Texto}
+
+\subsubsection{Citações}
+As citações em textos tal como \citeonline[p. 1]{examplephdthesis}, utilize o comando \textit{"citeonline"}, entre colchetes (opcional) está a referencia da página do trabalho, exemplo sem colchetes \citeonline{examplephdthesis}.
+
+Citação em final de parágrafo utilize o comando cite. \cite{examplephdthesis}
+
+O argumento (entre colchetes) também é opcional. \cite[p. 1]{examplephdthesis}
+
+\subsubsection{Estruturas Matemáticas}
+A seguir são mostrados alguns exemplos de como deve-se utilizar ambiente teorema, axioma, corolário, lema e demonstrações assim como inserir as figuras, citações diretas e tabelas. A Figura 01 mostra um exemplo de como inserir uma figura no texto. A Tabela 01 mostra o exemplo de como uma tabela deve ser inserida.
+
+Para axiomas:
+\begin{axm}[**Opcional o nome do axioma]
+    Coisas que são iguais a uma mesma coisa, são iguais entre si.
+\end{axm}
+
+\begin{defi}[**Opicional o nome da definição]
+A definição define o que deve ser definido.
+\end{defi}
+
+Para teoremas:
+\begin{thm}[**Opcional o nome do teorema]
+    \label{thm}
+    Sejam $a, b$ os catetos e $c$ a hipotenusa de um triangulo retângulo, então $$ a^2+b^2=c^2$$
+\end{thm}
+
+Com sua demonstração
+\begin{proof}
+    Demonstração do teorema \ref{thm}, é trivial.
+    
+    \cqd % comando para inserir quadrado preto no fim da demonstração, se retirá-lo não aparecerá o quadrado preto.
+\end{proof}
+
+Para proposição:
+\begin{prop}
+Proposição é um termo usado em lógica para descrever o conteúdo de asserções. Uma asserção é um conteúdo que pode ser tomado como verdadeiro ou falso. Asserções são abstrações de sentenças não linguísticas que a constituem. A natureza das proposições é altamente controversa entre filósofos, muitos dos quais são céticos sobre a existência de proposições. Muitos lógicos preferem evitar o uso do termo proposição em favor de usar sentença
+\end{prop}
+
+Para corolários:
+\begin{cor}[**Opcional o nome do corolário]
+    \label{cor}
+    Um corolário (do latim tardio corollarĭum) é uma afirmação deduzida de uma verdade já demonstrada. Assim como proposição resultante de uma verdade.
+\end{cor}
+
+Para lemas:
+\begin{lem}[**Opcional o nome do lema]
+    \label{lem}
+    A palavra "lema" vem do grego $\lambda\acute{\eta}\mu\mu\alpha$ (lémma), no sentido de 'proposição'.
+\end{lem}
+
+\subsubsection{Equações}
+
+Exemplo de equação com simbolo de integral
+\begin{equation}
+ \dint_{x=3}^{x=4} \dfrac{x^2+3}{x-a} \mbox{d}x
+\end{equation}
+
+
+Exemplo de como inserir equação por partes.
+\begin{equation}
+ f(x) = \left\{ 
+ \begin{array}{ll}
+  x^2+3x+1 & , x \geq 0 \\
+  \ln |x^3|, x < 0
+ \end{array}\right.
+\end{equation}
+
+Exemplo de contrução de matriz $3\times3$
+\begin{equation}
+  \left[
+ \begin{array}{ccc}
+  2 & 3 & 4 \\
+  3 & 4 & 5 \\
+  6 & 7 & 8 
+ \end{array}
+  \right]
+\end{equation}
+
+\subsection{Estruturas Textuais}
+Para citação direta, teremos:
+\begin{citacao}
+	A Matemática é a chave do portão e as ciências. A falta de atenção às obras matemáticas prejudica todos os conhecimentos, uma vez que ele é ignorante de não poder conhecer as outras ciências ou as coisas deste mundo. \cite{exampleRogerCitacao}
+\end{citacao}
+
+\subsubsection{Figuras}
+Para figuras:
+
+\begin{figure}[h]
+\centering
+\caption{Exemplo de como inserir Figura}
+\includegraphics[scale=0.75]{imagens/logo_latex.eps}
+\label{fig:exemplo}
+\fonte{acervo do texto-exemplo} 
+\end{figure}
+
+Referenciando a figura \ref{fig:exemplo} como se segue. Para inserir duas figuras será da seguinte forma:
+
+\begin{figure}[h]
+    \centering
+    \caption{Imagens utilizadas}
+    \begin{subfigure}[b]{0.3\textwidth}
+        \centering
+        \caption{Passarinho}
+        \includegraphics[scale=0.5]{imagens/logo_latex.eps}
+        \label{fig:pas}
+    \end{subfigure}
+    \qquad
+    \begin{subfigure}[b]{0.3\textwidth}
+        \centering
+        \caption{Brasão Universidade}
+        \includegraphics[scale=1]{imagens/logoifma.eps}
+        \label{fig:uni}
+    \end{subfigure}
+    \fonte{acervo do texto-exemplo} 
+    \label{fig:my_label}
+\end{figure}
+
+Podendo referenciar \ref{fig:pas} e \ref{fig:uni} como agora. Todas as imagens devem ser referenciadas, mesmo que sejam de autoria propria. Elas devem estar em extensão .EPS, para uma melhor visualização.
+
+\subsubsection{Tabelas}
+
+Para tabelas:
+\begin{table}[h]
+  \centering
+  \caption{ Modelo de como as tabelas devem ser inseridas no texto }
+  \begin{tabular}{|c|c|c|c|}
+    \hline 
+    \textbf {Índice} & \textbf{Coluna 01} &\textbf{ Coluna 02} & \textbf{Coluna 03} \\ \hline \hline
+    Linha 01 & & & \\ \hline
+    Linha 02 & & & \\ \hline                         
+  \end{tabular}
+  \fonte{Criação para o texto-exemplo} 
+  \label{tab:modelo}
+\end{table}
+
+

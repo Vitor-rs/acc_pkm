@@ -1,0 +1,61 @@
+%%
+%% Customizações do abnTeX2 para o IFSULDEMINAS
+
+% ----------------------------------------------------------
+% Normalização de fontes e tamanhos
+%
+% ----------------------------------------------------------
+\renewcommand{\ABNTEXchapterfont}{\sffamily}
+\renewcommand{\ABNTEXchapterfont}{}
+\renewcommand{\ABNTEXchapterfontsize}{\normalsize\bfseries}
+\renewcommand{\ABNTEXpartfont}{\ABNTEXchapterfont}
+\renewcommand{\ABNTEXpartfontsize}{\ABNTEXchapterfontsize}
+\renewcommand{\ABNTEXsectionfont}{\ABNTEXchapterfont}
+\renewcommand{\ABNTEXsectionfontsize}{\normalsize\bfseries}
+\renewcommand{\ABNTEXsubsectionfont}{\ABNTEXsectionfont}
+\renewcommand{\ABNTEXsubsectionfontsize}{\normalsize\bfseries}
+\renewcommand{\ABNTEXsubsubsectionfont}{\ABNTEXsubsectionfont}
+\renewcommand{\ABNTEXsubsubsectionfontsize}{\normalsize\bfseries}
+\renewcommand{\ABNTEXsubsubsubsectionfont}{\ABNTEXsubsectionfont}
+\renewcommand{\ABNTEXsubsubsubsectionfontsize}{\normalsize\bfseries}
+
+% ----------------------------------------------------------
+% Normalização de fontes e tamanhos no Sumário, Seções, etc.
+% ----------------------------------------------------------
+\renewcommand{\cftsectionfont}{\bfseries}
+\renewcommand{\cftsectionpagefont}{\cftsectionfont}
+\renewcommand{\cftsubsectionfont}{\normalsize}
+\renewcommand{\cftsubsectionpagefont}{\cftsectionfont}
+\renewcommand{\cftsubsubsectionfont}{\normalsize}
+\renewcommand{\cftsubsubsectionpagefont}{\cftsectionfont}
+\renewcommand{\cftparagraphfont}{\normalsize}
+\renewcommand{\cftparagraphpagefont}{\cftsectionfont}
+\renewcommand{\cftsectionfont}{}						% Tira o negrito das seções no sumário.
+\renewcommand{\cftsectionpagefont}{\cftsectionfont}		% Tira o negrito das seções no sumário.
+
+
+
+% ----------------------------------------------------------
+% Pacotes Utilizados
+% ----------------------------------------------------------
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage[many]{tcolorbox}
+\usepackage{amsthm}
+
+% ----------------------------------------------------------
+% Ajuda a criar "caixas"
+% ----------------------------------------------------------
+\newtcbtheorem[]{caixa}{Quadro}{outer arc=0pt,arc=0pt,colframe = cor-quadro,colback = cor-quadro!5}{tha}
+
+% ----------------------------------------------------------
+% Comando para "corrigir" listas
+% ----------------------------------------------------------
+\newlist{lista}{itemize}{2}
+\setlist[lista,1]{label={$\bullet$},topsep=0pt,itemsep=0pt,leftmargin=\parindent+\labelwidth-\labelsep}
+\setlist[lista,2]{label={$\circ$},topsep=0pt,itemsep=0pt,leftmargin=*}
+
+% ----------------------------------------------------------
+% Comando de formatação de texto para código-fonte inline
+% ----------------------------------------------------------
+\newcommand{\codigo}{\texttt}

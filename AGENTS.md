@@ -90,3 +90,39 @@ Sempre que o usuário enviar comandos iniciando com `/zotero` ou `/zot`:
    ```bash
    uv run python scripts/acc.py bib-audit
    ```
+
+---
+
+## 5. Comandos de Barra de LaTeX & Overleaf (`/latex` e `/overleaf`)
+
+Sempre que o usuário enviar comandos iniciando com `/latex`, `/overleaf` ou `/tex`:
+
+1. **Criação de Novo Projeto (`/latex new <nome> [--template sbc|tcc]`):**
+   Instancia projeto acadêmico modular pronto para redação:
+   ```bash
+   uv run python scripts/acc.py new-project <nome> [--template sbc|tcc]
+   ```
+
+2. **Compilação de Manuscrito (`/latex build [caminho]` ou `/latex`):**
+   Compila via `latexmk` com SyncTeX, resolução automática de pacotes MiKTeX e diagnóstico de erros:
+   ```bash
+   uv run python scripts/acc.py build [caminho_do_projeto]
+   ```
+
+3. **Empacotamento Limpo para o Overleaf (`/overleaf pack <projeto>`):**
+   Gera `.zip` autocontido com apenas as referências citadas extraídas de `references/master.bib`, sem artefatos de compilação:
+   ```bash
+   uv run python scripts/acc.py overleaf pack <caminho_do_projeto>
+   ```
+
+4. **Descompactação e Mesclagem de Export do Overleaf (`/overleaf unpack <arquivo.zip> [nome]`):**
+   Extrai o pacote em `projects/` e mescla automaticamente referências inéditas adicionadas por coautores de volta ao `references/master.bib`:
+   ```bash
+   uv run python scripts/acc.py overleaf unpack "<caminho_zip>" [<nome_projeto>]
+   ```
+
+5. **Sincronização de Referências e Git Bridge (`/latex sync-bib` e `/overleaf git-info`):**
+   ```bash
+   uv run python scripts/acc.py overleaf sync-bib <caminho_do_projeto>
+   uv run python scripts/acc.py overleaf git-info
+   ```
