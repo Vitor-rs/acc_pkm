@@ -1,15 +1,96 @@
-# 🌊 Academic PKM (`acc_pkm`) — Knowledge Lake & YouTube Transcriber
+# 🌊 Academic PKM (`acc_pkm`) — Monorepo de Pesquisa Acadêmica & PKM
 
-Repositório central de gerenciamento de conhecimento pessoal e acadêmico (**Personal Knowledge Management - PKM**), focado exclusivamente em pesquisa científica, metodologia quantitativa/qualitativa, revisões sistemáticas e redação acadêmica.
+Repositório central de gerenciamento de conhecimento pessoal e acadêmico (**Personal Knowledge Management - PKM**), focado em pesquisa científica, metodologia quantitativa/qualitativa, revisões sistemáticas, escrita de artigos/dissertações em LaTeX e automações via Python (`uv`).
 
 > [!IMPORTANT]
-> **Isolamento de Escopo:** Este repositório é estritamente voltado para pesquisa acadêmica e estudos científicos. Ele não possui qualquer relação ou vínculo temático com o projeto Startuzeiro (focado em mercado digital e negócios). Apenas os conceitos de automação foram adaptados de forma genérica para o ecossistema acadêmico.
+> **Isolamento de Escopo:** Este repositório é estritamente voltado para pesquisa acadêmica e estudos científicos. Não possui qualquer relação ou vínculo com projetos de marketing ou vendas. Todas as automações e utilitários residem organizados em `scripts/`, mantendo a raiz limpa.
 
 ---
 
-## ⚡ Comando de Barra `/transcript` (Chat Antigravity / Skill)
+## 🏗️ Arquitetura do Monorepo
 
-No chat com o agente no Antigravity, você pode usar diretamente o comando de barra `/transcript`:
+```text
+acc_pkm/
+├── pyproject.toml              # Dependências e metadados do projeto Python (uv)
+├── uv.lock                     # Lockfile reprodutível de dependências
+├── README.md                   # Documentação geral
+├── AGENTS.md                   # Regras de orquestração e contexto para agentes IA
+├── GEMINI.md                   # Diretrizes operacionais
+├── .github/workflows/          # CI/CD (GitHub Actions para compilação automática de LaTeX)
+│   └── latex.yml
+├── .vscode/                    # Configurações do VS Code (LaTeX Workshop, LTeX pt-BR, UV)
+│   ├── settings.json
+│   └── extensions.json
+├── .agents/skills/             # Habilidades integradas do agente
+│   └── transcript/SKILL.md     # Definição do comando /transcript e /yt
+├── docs/                       # Documentação técnica e sínteses conceituais
+├── references/                 # Base bibliográfica centralizada
+│   └── master.bib              # Arquivo BibTeX mestre com acervo catalogado
+├── notes/                      # PKM de notas atômicas em Markdown
+│   ├── literature/             # Fichamentos de leitura e sínteses de livros/artigos
+│   └── concepts/               # Notas conceituais e definições metodológicas
+├── projects/                   # Artigos, relatórios e manuscritos acadêmicos
+│   └── _template/              # Template LaTeX modular pronto para compilar
+│       ├── main.tex
+│       ├── build.bat           # Script de compilação rápida local
+│       ├── references.bib
+│       └── sections/           # Seções modulares (introdução, metodologia, etc.)
+├── resources/                  # Data Lake e Catálogo Web
+│   ├── _lake_catalog.html      # Catálogo Web Interativo e pesquisável
+│   ├── _catalog/               # Metadados e índices do acervo
+│   └── _lake/                  # Data Lake local (PDFs, EPUBs e transcrições .md)
+└── scripts/                    # Utilitários e CLI central
+    ├── acc.py                  # CLI unificada (doctor, catalog, build, new-project)
+    ├── yt_transcribe_and_catalog.py  # Automação de extração do YouTube
+    ├── transcrever.bat         # Atalho Windows para transcrições
+    └── atualizar_catalogo.bat  # Atalho Windows para reindexação do Lake
+```
+
+---
+
+## ⚡ CLI Unificada (`scripts/acc.py`)
+
+O repositório inclui a CLI `acc.py`, gerenciada com `uv` sem necessidade de ativação manual de ambiente virtual:
+
+```bash
+# 1. Diagnóstico completo do ambiente (Python, MiKTeX/LaTeX, Git, Lake, BibTeX)
+uv run scripts/acc.py doctor
+
+# 2. Criar um novo projeto de manuscrito a partir do template
+uv run scripts/acc.py new-project "meu_artigo_2026"
+
+# 3. Compilar um projeto LaTeX para PDF (com BibTeX e saída limpa em build/)
+uv run scripts/acc.py build projects/_template
+
+# 4. Auditar integridade da base bibliográfica BibTeX
+uv run scripts/acc.py bib-audit
+
+# 5. Reindexar o acervo de livros e transcrições no Lake
+uv run scripts/acc.py catalog
+```
+
+---
+
+## 📝 Escrita Acadêmica com LaTeX
+
+### 1. No VS Code
+- Abra o repositório no VS Code. O arquivo [`.vscode/settings.json`](file:///.vscode/settings.json) já está configurado com:
+  - **LaTeX Workshop:** Compilação isolada para a pasta `build/` (evita poluir as pastas dos projetos).
+  - **LTeX:** Corretor ortográfico e gramatical configurado em Português (`pt-BR`) e Inglês (`en-US`).
+  - **Interpretador Python:** Aponta automaticamente para `.venv` gerado pelo `uv`.
+
+### 2. No GitHub Actions (CI/CD)
+- Qualquer push em `projects/**` aciona automaticamente o workflow [`.github/workflows/latex.yml`](file:///.github/workflows/latex.yml), que compila o PDF em ambiente Ubuntu + TeXLive e disponibiliza o PDF compilado como artefato para download.
+
+### 3. No Overleaf
+- Cada pasta dentro de `projects/` (como `projects/_template/`) é autocontida e pode ser zipada ou sincronizada diretamente com o Overleaf.
+
+---
+
+## 📺 Ingestão de Transcrições do YouTube & Data Lake
+
+### Comando de Barra no Chat Antigravity
+No chat com o agente no Antigravity, utilize o comando `/transcript`:
 
 ```text
 /transcript https://www.youtube.com/watch?v=VIDEO_ID
@@ -18,85 +99,35 @@ No chat com o agente no Antigravity, você pode usar diretamente o comando de ba
 /transcript reindex
 ```
 
-O comando aciona a skill [`transcript`](file:///.agents/skills/transcript/SKILL.md), extrai as legendas com timestamps agrupados em parágrafos coerentes, salva no Data Lake (`resources/_lake/`) e reindexa o catálogo web [`resources/_lake_catalog.html`](file:///resources/_lake_catalog.html) automaticamente.
-
----
-
-## 🚀 Como Usar no Terminal / Scripts
-
-### 1. Transcrever um ou mais Vídeos
-
+### Via Terminal
 ```bash
-# Transcrever um único vídeo
+# Transcrever vídeo individual
 uv run scripts/yt_transcribe_and_catalog.py "https://www.youtube.com/watch?v=VIDEO_ID"
 
-# Transcrever múltiplos vídeos em lote com tags
-uv run scripts/yt_transcribe_and_catalog.py URL1 URL2 URL3 --tags "metodologia,pesquisa"
+# Transcrever playlist completa
+uv run scripts/yt_transcribe_and_catalog.py "https://www.youtube.com/playlist?list=ID"
 
-# No Windows via script auxiliar na pasta scripts:
-scripts\transcrever.bat "https://www.youtube.com/watch?v=VIDEO_ID"
-```
-
-### 2. Transcrever uma Playlist Completa
-
-Basta passar o link da playlist (o script detecta e desmembra todos os vídeos automaticamente):
-
-```bash
-uv run scripts/yt_transcribe_and_catalog.py "https://www.youtube.com/playlist?list=ID_DA_PLAYLIST"
-```
-
-### 3. Traduzir Transcrição Automaticamente
-
-```bash
+# Traduzir automaticamente para português
 uv run scripts/yt_transcribe_and_catalog.py "https://www.youtube.com/watch?v=..." --translate-to pt
 ```
 
-### 4. Reindexar o Lake e Atualizar o Catálogo HTML
+---
 
-Se você adicionar arquivos manuais ao `_lake/` (artigos, livros em PDF/EPUB ou notas), execute:
+## 📊 Catálogo Web Interativo (`resources/_lake_catalog.html`)
 
-```bash
-uv run scripts/yt_transcribe_and_catalog.py reindex
-# Ou pelo arquivo batch na pasta scripts:
-scripts\atualizar_catalogo.bat
-```
+O catálogo web [`resources/_lake_catalog.html`](file:///resources/_lake_catalog.html) permite explorar visualmente o acervo:
+- **Busca em tempo real:** Pesquisa por título, autor, canal ou tags.
+- **Modos de visualização:** Grid com cards visuais ou tabela detalhada.
+- **Prévia e leitura rápida:** Visualização do resumo e trecho da obra sem abrir leitor externo.
+- **Dark / Light Mode:** Alternância de tema com persistência local.
+- **100% Offline:** Não depende de servidores externos ou conexão com a internet.
 
 ---
 
-## 📁 Estrutura Organizada de Pastas
+## 🛠️ Tecnologias Utilizadas
 
-Para manter a raiz limpa e sem arquivos dispersos:
-
-```text
-acc_pkm/
-├── pyproject.toml              # Configuração e dependências do ambiente Python (uv)
-├── README.md                   # Documentação do projeto
-├── AGENTS.md                   # Regras operacionais do workspace e do comando /transcript
-├── GEMINI.md                   # Contexto e diretrizes do agente
-├── .agents/
-│   └── skills/
-│       └── transcript/
-│           └── SKILL.md        # Definição formal da skill do agente
-├── scripts/
-│   ├── yt_transcribe_and_catalog.py  # Automação principal (PEP 723)
-│   ├── transcrever.bat               # Atalho de execução para Windows
-│   └── atualizar_catalogo.bat        # Atalho de reindexação do catálogo
-└── resources/
-    ├── _lake_catalog.html      # Catálogo Web Interativo (localização única)
-    └── _lake/                  # Data Lake acadêmico (obras e transcrições)
-        ├── *.md                # Transcrições estruturadas do YouTube
-        ├── *.pdf               # Livros e manuais de metodologia/ciência de dados
-        └── *.epub              # Obras acadêmicas e guias de pesquisa
-```
-
----
-
-## 📊 Recursos do Catálogo Web (`resources/_lake_catalog.html`)
-
-- **Localização Única:** Mantido exclusivamente dentro de `resources/_lake_catalog.html`.
-- **Busca Instantânea em Tempo Real:** Pesquise por títulos, canais, autores, resumos e tags.
-- **Filtros por Categoria:** Alternância instantânea entre *Todos*, *Transcrições do YouTube* e *Livros/Artigos*.
-- **Visualização em Cards & Tabela:** Escolha entre grade com miniaturas visuais ou tabela densa compacta.
-- **Modal de Prévia:** Leitura imediata do resumo e amostra da transcrição sem sair da página.
-- **Dark / Light Mode:** Alternância de tema com preferência persistida no navegador.
-- **100% Autônomo:** Não requer internet para abrir; CSS e lógica incorporados internamente.
+- **Gerenciador de Pacotes e Runtime:** [uv](https://github.com/astral-sh/uv) (Astral)
+- **Tipografia & Diagramação:** LaTeX / pdfLaTeX / BibTeX / LaTeX Workshop
+- **Extração de Mídia:** yt-dlp & youtube-transcript-api
+- **Interface CLI:** Rich
+- **Controle de Versão:** Git + GitHub CLI (`gh`) + GitHub Actions CI/CD
