@@ -1,0 +1,2397 @@
+<chatgpt>
+Para o que você está montando, eu não trataria isso como uma simples pasta com PDFs + `.tex`. Eu montaria um **repositório de pesquisa modular**, com o Python funcionando como camada de automação entre biblioteca, documentos, metadados, análises e manuscritos.
+
+A sua pasta atual já tem a matéria-prima certa. O que falta é separar claramente **fonte bruta, metadados, derivados, projetos e código**.
+
+## 1. Arquitetura que eu usaria
+
+Eu manteria um único repositório e um único projeto Python por enquanto. Não começaria com `uv workspace`: o próprio `uv` suporta workspaces para quando realmente houver vários pacotes independentes, cada um com seu `pyproject.toml`; para seu estágio atual, isso adicionaria estrutura sem benefício imediato. ([Documentação Astral][1])
+
+Algo assim:
+
+```text
+acc_pkm/
+│
+├── pyproject.toml
+├── uv.lock
+├── README.md
+├── LICENSE
+├── .gitignore
+├── .gitattributes
+├── .editorconfig
+│
+├── .github/
+│   └── workflows/
+│       ├── ci.yml
+│       └── latex.yml
+│
+├── src/
+│   └── acc_pkm/
+│       ├── __init__.py
+│       ├── cli.py
+│       │
+│       ├── catalog/
+│       │   ├── models.py
+│       │   ├── database.py
+│       │   └── scanner.py
+│       │
+│       ├── bibliography/
+│       │   ├── zotero.py
+│       │   ├── crossref.py
+│       │   ├── openalex.py
+│       │   └── bib.py
+│       │
+│       ├── documents/
+│       │   ├── pdf.py
+│       │   ├── epub.py
+│       │   ├── extraction.py
+│       │   └── provenance.py
+│       │
+│       ├── review/
+│       │   ├── protocol.py
+│       │   ├── screening.py
+│       │   └── evidence.py
+│       │
+│       ├── analysis/
+│       │   ├── dataframe.py
+│       │   ├── statistics.py
+│       │   └── bibliometrics.py
+│       │
+│       └── latex/
+│           ├── build.py
+│           └── audit.py
+│
+├── tests/
+│
+├── resources/
+│   ├── _lake/
+│   │   └── ... PDFs / EPUBs ...
+│   │
+│   ├── _derived/
+│   │   ├── text/
+│   │   ├── markdown/
+│   │   ├── json/
+│   │   └── figures/
+│   │
+│   ├── _catalog/
+│   │   ├── documents.jsonl
+│   │   └── schemas/
+│   │
+│   └── _state/
+│       ├── catalog.sqlite3
+│       └── cache/
+│
+├── references/
+│   ├── library.bib
+│   └── exports/
+│
+├── projects/
+│   ├── projeto-001/
+│   │   ├── README.md
+│   │   ├── protocol.yaml
+│   │   ├── questions.md
+│   │   ├── search/
+│   │   │   ├── strategy.md
+│   │   │   └── queries/
+│   │   ├── screening/
+│   │   ├── evidence/
+│   │   ├── data/
+│   │   ├── analysis/
+│   │   ├── figures/
+│   │   └── manuscript/
+│   │       ├── main.tex
+│   │       ├── sections/
+│   │       ├── figures/
+│   │       └── references.bib
+│   │
+│   └── projeto-002/
+│
+├── templates/
+│   ├── research-project/
+│   └── latex/
+│
+├── notebooks/
+│
+└── scripts/
+```
+
+A distinção fundamental seria:
+
+**`_lake` = verdade bruta**
+
+**`_catalog` = o que existe**
+
+**`_derived` = resultado de processamento**
+
+**`projects` = pesquisa efetivamente realizada**
+
+**`src` = máquina que automatiza tudo isso**
+
+Isso é muito mais importante do que escolher 25 bibliotecas diferentes.
+
+---
+
+# 2. O seu `_lake` não deve ir para o GitHub
+
+Esse é um ponto que eu mudaria imediatamente.
+
+Você tem atualmente livros como:
+
+```text
+Mittelbach_Fischer-The_LaTeX_Companion_Parts_I_and_II-3ed.pdf
+Creswell_Creswell-Research_Design-6ed_2022.epub
+Wayne_Booth_et_al-The_Craft_of_Research-5ed_2024.epub
+```
+
+Eu manteria esses arquivos no computador, mas colocaria:
+
+```gitignore
+resources/_lake/*
+```
+
+com um `.gitkeep`.
+
+O Git armazenaria:
+
+```text
+resources/_catalog/documents.jsonl
+```
+
+contendo algo como:
+
+```json
+{
+  "id": "sha256:8dc4...",
+  "path": "resources/_lake/Creswell_Creswell-Research_Design-6ed_2022.epub",
+  "media_type": "application/epub+zip",
+  "title": "Research Design",
+  "authors": ["John W. Creswell", "J. David Creswell"],
+  "year": 2022,
+  "edition": 6,
+  "language": "en",
+  "sha256": "8dc4...",
+  "size_bytes": 4839201,
+  "status": "indexed"
+}
+```
+
+Assim você tem:
+
+**arquivo físico → hash → registro → metadados → derivados → projetos que utilizam esse material.**
+
+Isso também permite detectar automaticamente:
+
+```text
+arquivo duplicado
+arquivo modificado
+arquivo desaparecido
+extração desatualizada
+metadado incompleto
+```
+
+---
+
+# 3. O primeiro programa que eu faria: `acc`
+
+Em vez de criar dezenas de scripts independentes, criaria uma CLI única:
+
+```powershell
+uv run acc --help
+```
+
+E ela teria comandos:
+
+```text
+acc
+├── doctor
+├── scan
+├── catalog
+├── enrich
+├── dedupe
+├── extract
+├── inspect
+├── refs
+├── review
+├── audit
+└── build
+```
+
+Por exemplo:
+
+```powershell
+uv run acc scan
+```
+
+varre:
+
+```text
+resources/_lake/
+```
+
+e atualiza o catálogo.
+
+```powershell
+uv run acc enrich
+```
+
+busca metadados para documentos incompletos.
+
+```powershell
+uv run acc extract
+```
+
+converte documentos para formatos pesquisáveis.
+
+```powershell
+uv run acc dedupe
+```
+
+procura duplicatas.
+
+```powershell
+uv run acc audit
+```
+
+verifica problemas.
+
+E:
+
+```powershell
+uv run acc doctor
+```
+
+seria particularmente útil:
+
+```text
+ACC-PKM Doctor
+
+Python ............ OK
+UV ............... OK
+Git .............. OK
+LaTeX ............ OK
+LuaLaTeX ......... OK
+Biber ............ OK
+PDF extractor .... OK
+Zotero API ....... OK
+Catalog ........... OK
+
+Documents: 17
+PDF: 12
+EPUB: 5
+
+Missing metadata: 4
+Duplicate files: 1
+Stale extraction: 2
+Broken bibliography entries: 0
+```
+
+Isso transforma seu repositório em uma ferramenta, em vez de ser simplesmente armazenamento.
+
+---
+
+# 4. Stack Python
+
+Eu dividiria as dependências em grupos para não transformar o ambiente em um Frankenstein acadêmico.
+
+## Núcleo
+
+```powershell
+uv add typer rich pydantic pydantic-settings httpx tenacity rapidfuzz platformdirs
+```
+
+### O papel de cada uma
+
+| Biblioteca          | Função                        |
+| ------------------- | ----------------------------- |
+| `typer`             | CLI `acc ...`                 |
+| `rich`              | terminal legível              |
+| `pydantic`          | modelos/validação de dados    |
+| `pydantic-settings` | configuração + `.env`         |
+| `httpx`             | APIs acadêmicas               |
+| `tenacity`          | retry de APIs                 |
+| `rapidfuzz`         | deduplicação por similaridade |
+| `platformdirs`      | cache/configuração do SO      |
+
+Eu evitaria criar uma camada complexa de configuração. Um:
+
+```text
+.env
+config.toml
+```
+
+é suficiente.
+
+---
+
+# 5. PDFs: PyMuPDF primeiro
+
+Para seu projeto, **PyMuPDF é obrigatório na minha opinião**.
+
+A documentação atual mostra extração de texto diretamente do PDF e também suporte a outros formatos, incluindo EPUB. ([PyMuPDF][2])
+
+Instalação:
+
+```powershell
+uv add pymupdf pymupdf4llm
+```
+
+O `pymupdf4llm` é particularmente interessante porque transforma PDFs em Markdown:
+
+```python
+import pymupdf4llm
+
+markdown = pymupdf4llm.to_markdown("document.pdf")
+```
+
+e também consegue produzir JSON com informações de layout. ([PyMuPDF][3])
+
+Isso é muito mais útil para pesquisa do que simplesmente:
+
+```python
+page.get_text()
+```
+
+porque você quer preservar:
+
+```text
+título
+seções
+subseções
+listas
+tabelas
+código
+figuras
+ordem de leitura
+```
+
+---
+
+# 6. Docling: sim, mas como segunda camada
+
+Eu colocaria:
+
+```powershell
+uv add --group documents docling
+```
+
+e não faria dele o primeiro extrator.
+
+O Docling atualmente trabalha com PDF e EPUB, entre muitos outros formatos, e pode exportar Markdown, JSON, texto, chunks etc. ([GitHub][4])
+
+A arquitetura seria:
+
+```text
+                  ┌── PyMuPDF ──────── rápido
+PDF/EPUB ─────────┤
+                  └── Docling ──────── estrutura/layout complexo
+```
+
+Por exemplo:
+
+```text
+extract
+   │
+   ├── simples → PyMuPDF4LLM
+   │
+   ├── tabelas/layout → Docling
+   │
+   └── OCR necessário → pipeline específico
+```
+
+Eu **não colocaria OCR pesado como padrão**. O caminho normal deveria ser texto nativo primeiro.
+
+---
+
+# 7. Metadata: não dependa de uma única fonte
+
+Aqui eu faria um sistema de provedores:
+
+```text
+bibliography/
+├── zotero.py
+├── crossref.py
+├── openalex.py
+└── semanticscholar.py
+```
+
+A ordem poderia ser:
+
+```text
+DOI
+ ↓
+Crossref
+ ↓
+OpenAlex
+ ↓
+Semantic Scholar
+ ↓
+Zotero
+ ↓
+ISBN/título/autor
+ ↓
+metadado manual
+```
+
+O Crossref possui uma API REST pública para metadados bibliográficos, com busca por DOI e outras consultas. ([www.crossref.org][5])
+
+Semantic Scholar também disponibiliza uma API para dados de artigos, autores, referências e citações. ([Semantic Scholar][6])
+
+A ideia é **não espalhar chamadas HTTP pelo projeto inteiro**. Tudo passa por:
+
+```python
+MetadataProvider
+```
+
+Assim você pode trocar ou adicionar fontes sem reescrever o resto do sistema.
+
+---
+
+# 8. Zotero + Better BibTeX
+
+Aqui eu faria uma pequena mudança conceitual.
+
+Não faria seu Python tentar substituir o Zotero.
+
+Faria:
+
+```text
+Zotero
+   │
+   ├── metadados bibliográficos
+   ├── coleções
+   └── citações
+        ↓
+Better BibTeX
+        ↓
+library.bib
+        ↓
+LaTeX
+```
+
+O Zotero atualmente tem API v3 recomendada e também oferece uma API local no cliente desktop, inclusive para leituras sem autenticação. ([Zotero][7])
+
+O Better BibTeX pode manter uma exportação atualizada automaticamente sempre que a biblioteca/coleção mudar. ([Retorque][8])
+
+Eu deixaria o **Zotero como fonte de verdade bibliográfica**.
+
+Seu Python seria consumidor:
+
+```text
+Zotero → BBT → BibLaTeX → ACC-PKM
+```
+
+e não:
+
+```text
+ACC-PKM tentando virar um segundo Zotero
+```
+
+Essa última opção é exatamente o tipo de projeto que começa com "vou só automatizar a bibliografia" e termina às 3h da manhã implementando um clone do Zotero.
+
+---
+
+# 9. `library.bib` e BibLaTeX
+
+Para LaTeX, eu usaria:
+
+```latex
+biblatex
+biber
+```
+
+e, quando exigido pela instituição:
+
+```latex
+biblatex-abnt
+```
+
+Não faria seu Python gerar citation keys manualmente se o Better BibTeX já estiver fazendo isso.
+
+O Python pode **validar**:
+
+```text
+@book{booth2024craft,
+...
+}
+```
+
+mas não precisa ser o dono da chave.
+
+A regra seria:
+
+```text
+Zotero/BBT → identifica referência
+
+Python → valida
+
+LaTeX/Biber → compila
+```
+
+---
+
+# 10. Banco de dados: SQLite + DuckDB
+
+Eu usaria os dois, mas para coisas diferentes.
+
+### SQLite
+
+Para o catálogo operacional:
+
+```text
+resources/_state/catalog.sqlite3
+```
+
+Tabelas:
+
+```text
+documents
+authors
+identifiers
+files
+extractions
+projects
+project_documents
+tags
+```
+
+Inclusive pode usar FTS5 para pesquisa textual.
+
+O bom é que SQLite já vem no Python. Você não precisa adicionar ORM para começar.
+
+### DuckDB
+
+Para análise:
+
+```powershell
+uv add --group analysis duckdb polars pyarrow pandas
+```
+
+Aí você pode fazer coisas como:
+
+```sql
+SELECT
+    year,
+    COUNT(*) AS papers
+FROM works
+GROUP BY year
+ORDER BY year;
+```
+
+ou analisar:
+
+```text
+ano × tema
+autor × publicação
+método × população
+palavra-chave × frequência
+```
+
+Eu usaria:
+
+```text
+SQLite = aplicação/catalogação
+
+DuckDB = análise de dados
+```
+
+---
+
+# 11. Notebooks
+
+Como você já trabalha com Jupyter/Colab:
+
+```powershell
+uv add --group analysis jupyterlab ipykernel
+```
+
+Mas eu faria uma distinção rigorosa:
+
+```text
+notebooks/
+    exploração
+
+projects/*/analysis/
+    análises oficiais
+```
+
+Ou seja:
+
+```text
+notebook exploratório
+       ↓
+descoberta
+       ↓
+script/notebook reproduzível
+       ↓
+resultado oficial
+       ↓
+manuscrito
+```
+
+Não deixar a conclusão de uma pesquisa escondida em uma célula `In[47]`.
+
+---
+
+# 12. Type checking e qualidade do Python
+
+Eu usaria **Ruff + ty + pytest**.
+
+```powershell
+uv add --dev ruff ty pytest pytest-cov
+```
+
+Ruff cobre linting e formatação em uma ferramenta só. ([Documentação Astral][9])
+
+E o `ty`, da mesma família do `uv` e Ruff, atualmente fornece type checking e language server. ([Documentação Astral][10])
+
+Comandos:
+
+```powershell
+uv run ruff check .
+uv run ruff format --check .
+uv run ty check
+uv run pytest
+```
+
+Eu colocaria isso como regra do projeto.
+
+---
+
+# 13. `pyproject.toml`
+
+Uma base inicial razoável seria:
+
+```toml
+[project]
+name = "acc-pkm"
+version = "0.1.0"
+description = "Academic research and knowledge management toolkit"
+readme = "README.md"
+requires-python = ">=3.12,<3.14"
+
+dependencies = [
+    "httpx",
+    "pydantic",
+    "pydantic-settings",
+    "platformdirs",
+    "rapidfuzz",
+    "rich",
+    "tenacity",
+    "typer",
+    "pymupdf",
+    "pymupdf4llm",
+]
+
+[project.scripts]
+acc = "acc_pkm.cli:app"
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "ruff",
+    "ty",
+]
+
+bibliography = [
+    "bibtexparser",
+    "pyyaml",
+]
+
+analysis = [
+    "duckdb",
+    "ipykernel",
+    "jupyterlab",
+    "matplotlib",
+    "pandas",
+    "polars",
+    "pyarrow",
+]
+
+documents = [
+    "docling",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "I",
+    "B",
+    "UP",
+    "SIM",
+    "RUF",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.uv]
+default-groups = ["dev"]
+```
+
+Não precisa copiar isso cegamente. A própria vantagem do `uv` é que `uv add` altera o `pyproject.toml` e atualiza `uv.lock` automaticamente. O modelo atual também permite grupos de dependências separados. ([Documentação Astral][11])
+
+---
+
+# 14. Comandos de instalação
+
+Partindo de seu diretório atual:
+
+```powershell
+cd "C:\Users\user\Documents\Vitor\acc_pkm"
+
+uv init --package
+uv python pin 3.12
+```
+
+Depois:
+
+```powershell
+uv add typer rich pydantic pydantic-settings httpx tenacity rapidfuzz platformdirs
+uv add pymupdf pymupdf4llm
+```
+
+Desenvolvimento:
+
+```powershell
+uv add --dev ruff ty pytest pytest-cov
+```
+
+Bibliografia:
+
+```powershell
+uv add --group bibliography bibtexparser pyyaml
+```
+
+Análise:
+
+```powershell
+uv add --group analysis duckdb polars pyarrow pandas jupyterlab ipykernel matplotlib
+```
+
+Documentos avançados:
+
+```powershell
+uv add --group documents docling
+```
+
+E:
+
+```powershell
+uv sync
+```
+
+O `uv` mantém o ambiente e lockfile do projeto, enquanto os grupos permitem que ferramentas pesadas não façam parte do ambiente padrão instalado. ([Documentação Astral][11])
+
+---
+
+# 15. Seu pipeline documental
+
+O fluxo que eu projetaria seria:
+
+```text
+                    resources/_lake
+                           │
+                           ▼
+                       acc scan
+                           │
+                           ▼
+                    catalog.sqlite3
+                           │
+                ┌──────────┴───────────┐
+                ▼                      ▼
+          acc enrich              acc dedupe
+                │                      │
+                └──────────┬───────────┘
+                           ▼
+                     acc extract
+                           │
+              ┌────────────┼────────────┐
+              ▼            ▼            ▼
+           .txt          .md          .json
+              │            │            │
+              └────────────┼────────────┘
+                           ▼
+                       projects/
+                           │
+                           ▼
+                    analysis / notes
+                           │
+                           ▼
+                    manuscript/main.tex
+                           │
+                           ▼
+                     LuaLaTeX + Biber
+                           │
+                           ▼
+                           PDF
+```
+
+E cada extração teria proveniência:
+
+```json
+{
+  "source_sha256": "8dc4...",
+  "extractor": "pymupdf4llm",
+  "extractor_version": "1.x",
+  "pipeline_version": "0.1.0",
+  "generated_at": "2026-09-29T..."
+}
+```
+
+Isso é extremamente importante para pesquisa reproduzível.
+
+Se amanhã você trocar PyMuPDF por Docling, consegue saber exatamente quais arquivos precisam ser processados novamente.
+
+---
+
+# 16. O `protocol.yaml` merece existir
+
+Para cada pesquisa:
+
+```yaml
+id: review-001
+
+title: "..."
+
+type: systematic_review
+
+question:
+  primary: "..."
+  secondary:
+    - "..."
+    - "..."
+
+scope:
+  population: "..."
+  intervention: "..."
+  context: "..."
+
+sources:
+  - crossref
+  - openalex
+  - semantic_scholar
+  - zotero
+
+inclusion:
+  - "..."
+  - "..."
+
+exclusion:
+  - "..."
+
+dates:
+  from: 2015
+  to: 2026
+
+analysis:
+  quantitative: true
+  qualitative: true
+
+status: protocol
+```
+
+Isso permite que seu software saiba que a pesquisa não é simplesmente:
+
+> "uma pasta cheia de PDFs".
+
+É uma **unidade metodológica formal**.
+
+---
+
+# 17. Pesquisa sistemática
+
+Como seu `_lake` já contém livros de metodologia como Booth, Creswell, Gil, Lakatos etc., eu faria o módulo `review` pensando desde o início em:
+
+```text
+identificação
+    ↓
+busca
+    ↓
+remoção de duplicatas
+    ↓
+triagem
+    ↓
+elegibilidade
+    ↓
+inclusão
+    ↓
+extração
+    ↓
+síntese
+```
+
+E salvaria cada decisão.
+
+Por exemplo:
+
+```csv
+record_id,title,decision,reason,reviewer,date
+...
+```
+
+Em vez de deixar a seleção de estudos apenas na memória.
+
+Isso futuramente permite gerar automaticamente tabelas e até partes do fluxo PRISMA.
+
+---
+
+# 18. LaTeX no VS Code
+
+Para o VS Code, eu manteria uma instalação tradicional:
+
+```text
+TeX Live
++ LuaLaTeX
++ Biber
++ latexmk
++ LaTeX Workshop
+```
+
+A própria documentação do LaTeX Workshop indica uma distribuição LaTeX no `PATH` e `latexmk` para a receita padrão; ChkTeX e `latexindent.pl` são opcionais para lint/formatting. ([GitHub][12])
+
+Eu usaria **LuaLaTeX como padrão**, principalmente para você trabalhar tranquilamente com Unicode e português.
+
+Estrutura de um manuscrito:
+
+```text
+manuscript/
+├── main.tex
+├── preamble.tex
+├── references.bib
+├── sections/
+│   ├── 01-introduction.tex
+│   ├── 02-methodology.tex
+│   ├── 03-results.tex
+│   ├── 04-discussion.tex
+│   └── 05-conclusion.tex
+├── figures/
+└── tables/
+```
+
+Não faça um `main.tex` de 2.500 linhas. É pedir para o futuro Vitor xingar o Vitor de hoje.
+
+---
+
+# 19. GitHub deveria compilar automaticamente
+
+Eu colocaria um CI que faça pelo menos:
+
+```text
+push / pull request
+        │
+        ├── Ruff
+        ├── ty
+        ├── pytest
+        │
+        └── LaTeX
+              ├── LuaLaTeX
+              └── Biber
+```
+
+A Action `xu-cheng/latex-action` atualmente compila documentos usando TeX Live e oferece suporte a pdfLaTeX, XeLaTeX e LuaLaTeX; a versão 4 está disponível atualmente. ([GitHub][13])
+
+Um workflow básico:
+
+```yaml
+name: LaTeX
+
+on:
+  push:
+    paths:
+      - "projects/**/*.tex"
+      - "projects/**/*.bib"
+      - "templates/**/*.tex"
+  pull_request:
+    paths:
+      - "projects/**/*.tex"
+      - "projects/**/*.bib"
+      - "templates/**/*.tex"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Build manuscript
+        uses: xu-cheng/latex-action@v4
+        with:
+          root_file: projects/projeto-001/manuscript/main.tex
+          latexmk_use_lualatex: true
+```
+
+O GitHub também documenta workflows específicos para projetos Python e recomenda `setup-python` para selecionar explicitamente a versão do Python em CI. ([GitHub Docs][14])
+
+---
+
+# 20. VS Code
+
+Eu usaria:
+
+```text
+Python
+Pylance
+Ruff
+LaTeX Workshop
+GitLens        opcional
+YAML
+Markdown All in One
+Error Lens     opcional
+```
+
+Não instalaria vinte extensões de IA e quinze gerenciadores de projeto. O VS Code pode virar uma árvore de Natal muito rapidamente.
+
+---
+
+# 21. `.gitignore`
+
+Algo nessa linha:
+
+```gitignore
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Research raw lake
+resources/_lake/*
+!resources/_lake/.gitkeep
+
+# Derived files
+resources/_derived/*
+!resources/_derived/.gitkeep
+
+# Runtime state
+resources/_state/*
+!resources/_state/.gitkeep
+
+# Jupyter
+.ipynb_checkpoints/
+
+# LaTeX
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.lof
+*.lot
+*.nav
+*.snm
+*.vrb
+
+# Build
+build/
+dist/
+```
+
+O `uv.lock`, ao contrário, **deve ir para o Git**.
+
+---
+
+# 22. Uma regra importante para os derivados
+
+Nunca faça:
+
+```text
+PDF
+ ↓
+LLM
+ ↓
+texto "melhorado"
+ ↓
+substitui PDF original
+```
+
+Faça:
+
+```text
+PDF original
+    │
+    ├── extração literal
+    │
+    ├── interpretação estrutural
+    │
+    ├── enriquecimento
+    │
+    └── análise por IA
+```
+
+Cada camada permanece separada.
+
+Por exemplo:
+
+```text
+_derived/
+├── markdown/
+│   └── 8dc4...md
+├── json/
+│   └── 8dc4...json
+├── ai/
+│   └── 8dc4...analysis.json
+└── provenance/
+    └── 8dc4...json
+```
+
+A IA pode sugerir:
+
+```text
+tema
+método
+conceitos
+resumo
+relações
+```
+
+mas não altera a fonte original.
+
+---
+
+# 23. O que eu não colocaria agora
+
+Eu resistiria bastante a instalar:
+
+```text
+LangChain
+LlamaIndex
+Chroma
+Qdrant
+FAISS
+sentence-transformers
+Neo4j
+networkx
+Celery
+Redis
+FastAPI
+PostgreSQL
+Docker
+```
+
+todos de uma vez.
+
+Você eventualmente pode usar alguns deles, mas **não precisa deles para construir a fundação**.
+
+Começaria com:
+
+```text
+Python
+UV
+Typer
+Pydantic
+HTTPX
+PyMuPDF
+PyMuPDF4LLM
+SQLite
+DuckDB
+Polars
+Ruff
+ty
+pytest
+LaTeX
+Zotero
+Better BibTeX
+```
+
+Isso já permite construir uma infraestrutura bastante séria.
+
+---
+
+# 24. A evolução natural
+
+Eu pensaria no projeto em quatro níveis:
+
+### Nível 1 — Biblioteca
+
+```text
+PDF/EPUB
+→ catálogo
+→ hashes
+→ metadados
+→ busca
+→ extração
+```
+
+### Nível 2 — Pesquisa
+
+```text
+projeto
+→ protocolo
+→ estratégia de busca
+→ screening
+→ evidências
+→ análise
+```
+
+### Nível 3 — Produção acadêmica
+
+```text
+dados
+→ gráficos
+→ tabelas
+→ referências
+→ LaTeX
+→ PDF
+```
+
+### Nível 4 — PKM/IA
+
+Só posteriormente:
+
+```text
+documentos
+    ↓
+chunks
+    ↓
+embeddings
+    ↓
+grafo
+    ↓
+recuperação semântica
+    ↓
+agentes/pesquisa assistida
+```
+
+Essa sequência é importante porque o nível 4 depende de os níveis 1–3 estarem bem organizados.
+
+---
+
+## Minha recomendação para o seu projeto especificamente
+
+Eu transformaria o estado atual:
+
+```text
+resources/
+└── _lake/
+    ├── livro.pdf
+    ├── livro.epub
+    ├── ...
+```
+
+primeiro em:
+
+```text
+resources/
+├── _lake/          ← seus arquivos reais
+├── _derived/       ← resultados automáticos
+├── _catalog/       ← metadados versionados
+└── _state/         ← banco/cache local
+```
+
+e criaria **uma única CLI chamada `acc`** como interface para todo o sistema.
+
+O primeiro ciclo funcional deveria ser simplesmente:
+
+```powershell
+uv run acc scan
+uv run acc enrich
+uv run acc dedupe
+uv run acc extract
+uv run acc audit
+```
+
+Depois:
+
+```powershell
+uv run acc new-project "Minha Pesquisa"
+```
+
+criando automaticamente:
+
+```text
+projects/minha-pesquisa/
+├── README.md
+├── protocol.yaml
+├── search/
+├── screening/
+├── evidence/
+├── analysis/
+├── figures/
+└── manuscript/
+```
+
+Esse é o ponto em que o repositório deixa de ser apenas um **PKM com livros** e passa a ser uma **infraestrutura pessoal de pesquisa acadêmica reproduzível**.
+
+E isso combina particularmente bem com o uso conjunto de **VS Code + GitHub + LaTeX + Zotero + UV**, sem transformar o projeto, logo de saída, numa usina nuclear arquitetural.
+
+[1]: https://docs.astral.sh/uv/concepts/workspaces/?utm_source=chatgpt.com "Using workspaces | uv"
+[2]: https://pymupdf.readthedocs.io/en/latest/the-basics.html?utm_source=chatgpt.com "The Basics - PyMuPDF documentation"
+[3]: https://pymupdf.readthedocs.io/en/latest/pymupdf4llm/?utm_source=chatgpt.com "PyMuPDF4LLM - PyMuPDF documentation"
+[4]: https://github.com/docling-project/docling/blob/main/docs/usage/supported_formats.md?utm_source=chatgpt.com "docling/docs/usage/supported_formats.md at main · docling-project/docling · GitHub"
+[5]: https://www.crossref.org/documentation/retrieve-metadata/rest-api/?utm_source=chatgpt.com "REST API - Crossref"
+[6]: https://api.semanticscholar.org/api-docs/snippets?utm_source=chatgpt.com "Semantic Scholar - Academic Graph API"
+[7]: https://www.zotero.org/support/dev/web_api/v3/basics?utm_source=chatgpt.com "Zotero Web API Documentation | Zotero Documentation"
+[8]: https://retorque.re/zotero-better-bibtex/exporting/auto/?utm_source=chatgpt.com "Automatic export :: Better BibTeX for Zotero"
+[9]: https://docs.astral.sh/ruff/linter/?utm_source=chatgpt.com "The Ruff Linter | Ruff"
+[10]: https://docs.astral.sh/ty/installation/?utm_source=chatgpt.com "Installation | ty"
+[11]: https://docs.astral.sh/uv/concepts/projects/dependencies/?utm_source=chatgpt.com "Managing dependencies | uv"
+[12]: https://github.com/James-Yu/LaTeX-Workshop/wiki/Install/e8c40cdb982409f72ef621ae2b04e3a56c09f6f5?utm_source=chatgpt.com "Install · James-Yu/LaTeX-Workshop Wiki · GitHub"
+[13]: https://github.com/xu-cheng/latex-action?utm_source=chatgpt.com "GitHub - xu-cheng/latex-action: :octocat: GitHub Action to compile LaTeX documents · GitHub"
+[14]: https://docs.github.com/en/actions/tutorials/build-and-test-code/python?utm_source=chatgpt.com "Building and testing Python - GitHub Docs"
+
+<chatgpt/>
+
+<gemini>
+Para transformar o `acc_pkm` em um monorepo acadêmico robusto, o segredo é separar claramente **ingestão bruta** (o que você já tem no `_lake`), **síntese/anotações** (PKM) e **produção** (artigos e relatórios em LaTeX), amarrando tudo com scripts em Python via `uv`.
+
+Aqui está um desenho prático de arquitetura, automação e ferramentas para o seu caso.
+
+---
+
+### 1. Arquitetura de Pastas do Monorepo
+
+```text
+acc_pkm/
+├── .github/
+│   └── workflows/          # CI/CD para compilar LaTeX e rodar linters
+├── .vscode/                # Configurações do LaTeX Workshop, LTeX e Tasks
+├── pyproject.toml          # Dependências do UV (scripts, CLI e parsers)
+├── resources/
+│   ├── _lake/              # Seus PDFs/EPUBs brutos atuais
+│   ├── _lake_catalog.html
+│   └── master.bib          # Base central de referências BibTeX
+├── notes/                  # PKM / Segunda mente (Markdown limpo)
+│   ├── literature/         # Fichamentos de livros/artigos do _lake
+│   └── concepts/           # Notas atômicas conceituais
+├── projects/               # Produção acadêmica (LaTeX)
+│   ├── 2026_artigo_evento/
+│   │   ├── main.tex
+│   │   ├── sections/
+│   │   └── refs.bib        # Link simbiótico ou export do master.bib
+│   └── 2026_relatorio_qualificacao/
+└── scripts/                # Automações locais rodadas via uv
+    ├── catalog_lake.py     # Indexador do _lake (extrai metadados/ISBN/DOI)
+    ├── sync_bib.py         # Higieniza e valida BibTeX
+    └── lake2markdown.py    # Extrai texto de PDFs para rascunhos de notas
+
+```
+
+---
+
+### 2. Ferramentas e Bibliotecas Python (`uv`)
+
+Configure o `pyproject.toml` na raiz usando `uv init` para gerenciar scripts e ferramentas sem poluir o sistema:
+
+* **Manipulação de BibTeX e Metadados:**
+* `bibtexparser>=2.0.0b`: Parser rápido para ordenar, higienizar chaves de citação (ex: `sobrenome_ano`) e remover entradas duplicadas no `master.bib`.
+* `requests` ou `httpx`: Para bater na API da **Crossref** ou **OpenAlex** e puxar o BibTeX exato a partir de DOIs encontrados nos arquivos.
+
+
+* **Extração e Processamento de Documentos:**
+* `pypdf` ou `pymupdf` (`fitz`): Rápido e leve para ler metadados embutidos, número de páginas e extrair texto corrido dos PDFs do `_lake`.
+* `ebooklib` + `beautifulsoup4`: Para inspecionar e extrair capítulos de arquivos `.epub`.
+
+
+* **CLI & Automação:**
+* `typer`: Para criar uma CLI unificada (ex: `uv run pkm catalog` ou `uv run pkm new-project "meu_artigo"`).
+
+
+
+---
+
+### 3. Integração LaTeX: VS Code, GitHub e Overleaf
+
+#### VS Code
+
+* **LaTeX Workshop:** Extensão padrão. Configure a receita de compilação para `latexmk` com `-synctex=1 -interaction=nonstopmode -file-line-error -pdf -outdir=build`. Guardar saídas na pasta `build/` evita sujar o repositório com `.aux`, `.log`, `.fls`.
+* **LTeX+ (LanguageTool):** Verificador gramatical multilíngue no próprio editor. Suporta alternar facilmente entre Português e Inglês no mesmo documento acadêmico e ignora comandos de controle do LaTeX.
+
+#### GitHub Actions
+
+Adicione um workflow simples em `.github/workflows/compile-latex.yml` para compilar os documentos da pasta `projects/` a cada push ou pull request, anexando os PDFs gerados como artefatos de release ou build:
+
+```yaml
+name: Compile LaTeX Documents
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile LaTeX
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          working_directory: projects/2026_artigo_evento
+      - uses: actions/upload-artifact@v4
+        with:
+          name: artigo-pdf
+          path: projects/2026_artigo_evento/main.pdf
+
+```
+
+#### O gargalo do Overleaf com Monorepos
+
+O Overleaf sincroniza o repositório Git esperando que o documento principal (`main.tex`) esteja na raiz ou seja facilmente identificável. Ele não lida de forma nativa com pastas aninhadas complexas de monorepos.
+
+Três soluções viáveis:
+
+1. **Git Subtree / Submodules:** Cada artigo em `projects/nome_do_artigo` pode ser um submódulo ou sincronizado via `git subtree` com um repositório isolado espelhado no Overleaf.
+2. **Script de Sync via GitHub Action:** Um workflow acionado quando você edita a pasta do projeto específico, dando push apenas daquela pasta para o repositório privado do Overleaf.
+3. **Desenvolvimento Híbrido:** Escrever e formatar a versão final localmente no VS Code, usando o Overleaf pontualmente apenas quando houver coautores que não usam Git/VS Code (subindo um ZIP ou pasta isolada).
+
+---
+
+### 4. Primeiro Passo Prático
+
+Para começar sem burocracia excessiva:
+
+1. Inicialize o ambiente com `uv init` na raiz do `acc_pkm`.
+2. Adicione um `.gitignore` contendo exclusões padrão do LaTeX (`*.aux`, `*.log`, `*.out`, `*.toc`, `build/`) e do Python (`.venv/`, `__pycache__/`).
+3. Crie um script leve em `scripts/catalog.py` que leia o `_lake` e valide se cada livro possui uma entrada correspondente no `master.bib`.
+<gemini/>
+
+<qwen>
+Prezado Vitor,
+
+É um prazer auxiliá-lo na estruturação de seu repositório monolítico de gestão do conhecimento pessoal (PKM) e pesquisa acadêmica. A consolidação de um ambiente robusto para pesquisa, especialmente na área de Tecnologia da Informação, exige rigor na organização, automação de tarefas repetitivas e integração fluida entre as ferramentas de escrita e controle de versão.
+
+Considerando o seu cenário atual e as ferramentas que pretende utilizar (LaTeX, VS Code, GitHub, Overleaf e `uv`), apresento a seguir um planejamento estruturado e recomendações técnicas para otimizar o seu fluxo de trabalho.
+
+### 1. Estrutura de Diretórios do Repositório
+
+Para um repositório monolítico, a segregação lógica de pastas é fundamental. Sugere-se a seguinte arquitetura:
+
+```text
+acc_pkm/
+├── .github/                # Workflows do GitHub Actions (ex: compilação automática, validação)
+├── .vscode/                # Configurações específicas do VS Code (settings.json, extensions.json)
+├── bib/                    # Arquivos .bib centralizados (ex: main.bib, it_refs.bib)
+├── resources/              # Seu diretório atual
+│   ├── _lake/              # Repositório de PDFs/EPUBs (raw files)
+│   ├── _lake_catalog.html  # Catálogo gerado (pode ser automatizado)
+│   └── figures/            # Imagens, diagramas TikZ compilados, gráficos
+├── scripts/                # Scripts Python de automação (gerenciados pelo uv)
+├── src/                    # Código-fonte LaTeX dos seus artigos, teses ou capítulos
+│   ├── papers/             # Artigos para conferências/periódicos
+│   └── thesis/             # Dissertações ou teses
+├── notes/                  # Anotações em Markdown ou LaTeX (Zettelkasten/Flechas)
+├── templates/              # Modelos LaTeX (ABNT, IEEE, ACM) e classes personalizadas (.cls)
+├── .gitignore              # Ignorar arquivos auxiliares do LaTeX
+├── .gitattributes          # Configuração para Git LFS
+├── pyproject.toml          # Configuração do projeto Python (uv)
+└── README.md               # Documentação do repositório
+```
+
+### 2. Configuração do `uv` e Bibliotecas Python Recomendadas
+
+O `uv` é uma excelente escolha pela sua velocidade e gestão eficiente de dependências. Para automatizar a extração de metadados dos seus PDFs, gestão de bibliografias e manipulação de textos, recomendo a criação de um ambiente virtual na raiz do projeto.
+
+**Inicialização:**
+```bash
+uv init
+uv add pymupdf bibtexparser typer pandas
+```
+
+**Bibliotecas e Ferramentas Recomendadas:**
+*   **`PyMuPDF` (fitz):** Essencial para extrair texto, metadados e até converter páginas de PDFs do seu `_lake` em imagens ou texto estruturado.
+*   **`bibtexparser`:** Para ler, manipular e limpar seus arquivos `.bib` programaticamente.
+*   **`Typer` ou `Click`:** Para criar Interfaces de Linha de Comando (CLI) personalizadas. Você pode criar um comando como `uv run catalog.py` para atualizar o seu `_lake_catalog.html`.
+*   **`Marker` ou `Nougat`:** (Caso precise de extração avançada). Ferramentas baseadas em IA para converter PDFs acadêmicos complexos (com fórmulas matemáticas) em Markdown ou LaTeX com alta precisão.
+*   **`Scholarly` ou `crossref`:** Para buscar metadados de artigos diretamente da web usando DOI ou título, automatizando a criação de entradas BibTeX.
+
+### 3. Configuração do LaTeX, VS Code e Overleaf
+
+A integração entre o ambiente local e o Overleaf deve ser feita via Git para evitar conflitos de sincronização.
+
+**Extensões do VS Code:**
+*   **LaTeX Workshop:** Indispensável. Compilação automática, visualização de PDF, e suporte a SyncTeX.
+*   **BibTeX:** Para formatação e validação de arquivos `.bib`.
+*   **Markdown All in One:** Caso utilize Markdown para anotações rápidas no diretório `notes/`.
+*   **Even Better TOML:** Para gerenciar o `pyproject.toml` do `uv`.
+
+**Sincronização com Overleaf:**
+1. No Overleaf, acesse o projeto e vá em *Menu -> GitHub -> Push, Pull, or Clone*.
+2. Conecte sua conta do GitHub e selecione o repositório `acc_pkm`.
+3. **Regra de Ouro:** Nunca edite o mesmo arquivo simultaneamente no Overleaf e no VS Code. Utilize o Overleaf para revisão colaborativa ou compilação final, e o VS Code para a escrita pesada e automação local.
+
+### 4. Controle de Versão com GitHub
+
+Como seu repositório contém arquivos binários pesados (PDFs e EPUBs no `_lake`), o uso do Git padrão tornará o repositório excessivamente grande e lento.
+
+*   **Git LFS (Large File Storage):** É imperativo configurar o Git LFS para rastrear os arquivos da pasta `resources/_lake/`.
+    ```bash
+    git lfs install
+    git lfs track "*.pdf"
+    git lfs track "*.epub"
+    ```
+*   **Arquivo `.gitignore`:** Certifique-se de ignorar rigorosamente os arquivos auxiliares do LaTeX para manter o repositório limpo.
+    ```text
+    # LaTeX auxiliary files
+    *.aux
+    *.log
+    *.out
+    *.toc
+    *.synctex.gz
+    *.fls
+    *.fdb_latexmk
+    *.bbl
+    *.blg
+    *.lof
+    *.lot
+    ```
+
+### 5. Fluxo de Trabalho e Automação Sugerida
+
+Para maximizar a eficiência do seu PKM, sugiro a implementação dos seguintes scripts Python (executáveis via `uv run`):
+
+1.  **Gerador de Catálogo (`scripts/generate_catalog.py`):**
+    Um script que varre o diretório `resources/_lake/`, utiliza o `PyMuPDF` para extrair o título, autor e resumo de cada PDF/EPUB, e atualiza automaticamente o `_lake_catalog.html` (ou converte para um `catalog.md` para melhor integração com o Git).
+2.  **Validador de BibTeX (`scripts/validate_bib.py`):**
+    Um script que verifica se todas as citações no seu código-fonte LaTeX (`\cite{...}`) possuem uma entrada correspondente no arquivo `.bib`, alertando sobre chaves faltantes ou duplicadas.
+3.  **Hooks de Pre-commit:**
+    Utilize a ferramenta `pre-commit` (instalável via `uv tool install pre-commit`) para executar o `latexindent` (formatador de código LaTeX) e verificar a sintaxe do BibTeX antes de cada commit, garantindo a padronização do código.
+
+### Considerações Finais
+
+A adoção do `uv` para gerenciar os scripts de automação, aliada ao Git LFS para os recursos pesados e ao LaTeX Workshop no VS Code, proporcionará um ambiente de pesquisa de nível profissional. Recomendo iniciar a implementação estruturando o `pyproject.toml` e configurando o Git LFS imediatamente, pois alterar a estrutura de versionamento posteriormente pode ser custoso.
+
+Coloco-me à disposição para auxiliá-lo na elaboração de qualquer um dos scripts de automação mencionados ou na configuração detalhada de alguma das ferramentas supracitadas.
+
+Cordiais saudações,
+
+**Assistente de IA**
+<qwen/>
+
+<deepseek>
+Com base na sua estrutura atual e nos objetivos que você descreveu, vou te ajudar a montar um setup robusto e automatizado para o seu repositório de pesquisa acadêmica. A ideia é transformar o `acc_pkm` em um ambiente integrado que una escrita em LaTeX, gestão de conhecimento e automação com Python (via UV).
+
+### 🏗️ Arquitetura Recomendada: O Monorepo para Pesquisa
+
+Para um repositório "monolito" que abriga vários projetos de pesquisa, a chave é uma **separação clara de contextos**. Cada paper, artigo ou projeto de pesquisa deve ter seu próprio diretório, compartilhando recursos comuns (como bibliografia, templates e scripts de automação) na raiz do repositório.
+
+A estrutura abaixo é uma adaptação das melhores práticas observadas em repositórios acadêmicos:
+
+```
+acc_pkm/
+├── .github/                  # Workflows do GitHub Actions (CI/CD)
+├── .vscode/                 # Configurações do VS Code (settings, tasks, launch)
+├── resources/               # Seus PDFs e EPUBs (como já está)
+├── shared/                  # Recursos compartilhados entre todos os projetos
+│   ├── bib/                 # Arquivos .bib compartilhados (ex: base.bib)
+│   ├── templates/           # Templates LaTeX (artigos, relatórios)
+│   └── scripts/             # Scripts Python (automação, análise)
+├── projects/                # Onde a mágica acontece
+│   ├── 2026-log-cohft/      # Exemplo de projeto (ano + nome curto)
+│   │   ├── main.tex         # Arquivo principal do paper
+│   │   ├── sections/        # Capítulos/seções em arquivos separados
+│   │   ├── figures/         # Figuras geradas ou importadas
+│   │   ├── data/            # Dados brutos e processados (raw/ e processed/)
+│   │   └── refs.bib         # Bibliografia específica deste paper
+│   └── 2026-sr-survey/      # Outro projeto de pesquisa
+├── notes/                   # Suas notas atômicas e de conhecimento (PKM)
+├── pyproject.toml           # Configuração do projeto Python gerenciado pelo UV
+└── README.md                # Documentação geral do repositório
+```
+
+### 🛠️ Ferramentas e Bibliotecas Essenciais
+
+Aqui está um guia das ferramentas que vão automatizar e organizar seu fluxo de trabalho.
+
+#### 📚 Gerenciamento de Bibliografia (Zotero + Better BibTeX)
+
+Esta é a combinação mais poderosa para gerenciar referências e integrar com o VS Code.
+*   **Zotero**: Seu gerenciador de referências central.
+*   **Better BibTeX (BBT)**: Plugin para Zotero que gera chaves de citação estáveis (ex: `silva2024metodologia`) e permite a **exportação automática** de sua biblioteca para um arquivo `.bib` sempre que você adicionar uma referência.
+*   **Integração com VS Code**: Com a extensão **Zotero LaTeX** (ou `vscode-zotero`), você pode inserir citações diretamente do Zotero no seu arquivo `.tex` dentro do VS Code.
+
+#### ⚙️ Automação com UV (Python)
+
+O UV vai ser o cérebro da automação. Ele gerencia o ambiente Python e as dependências de forma extremamente rápida.
+*   **Inicialização**: No raiz do seu repositório, execute `uv init` para criar o `pyproject.toml`.
+*   **Scripts Autônomos**: Você pode criar scripts Python que declaram suas próprias dependências no cabeçalho. Por exemplo, um script para compilar seu LaTeX ou verificar citações:
+    ```python
+    # /// script
+    # dependencies = [
+    #     "pypdf",
+    #     "pybtex",
+    # ]
+    # ///
+    import pypdf
+    # ... seu código
+    ```
+    Para executar, basta usar `uv run seu_script.py`.
+
+#### 🔍 Verificações e Automação de Tarefas (Pre-commit)
+
+O `pre-commit` executa scripts automaticamente antes de cada commit, garantindo a qualidade do seu repositório.
+*   **O que automatizar**:
+    *   **`bibtex-tidy`**: Formata e padroniza seus arquivos `.bib`.
+    *   **`latex-checklist`**: Verifica se há citações quebradas (`\cite{...}` sem entrada no `.bib`) ou `\todo{}` esquecidos.
+    *   **`check-json`/`check-yaml`**: Valida a sintaxe dos arquivos de configuração.
+*   **Como configurar**: Crie um arquivo `.pre-commit-config.yaml` na raiz e execute `pre-commit install`.
+
+#### 🖥️ VS Code + LaTeX Workshop
+
+A extensão **LaTeX Workshop** é indispensável. Ela compila seu projeto automaticamente ao salvar (`Ctrl+S`) e exibe o PDF lado a lado. Você pode personalizar "recipes" (receitas de compilação) no `settings.json` para usar `latexmk` com `biber` para gerenciar a bibliografia.
+
+#### 🔄 Integração com Overleaf (Git)
+
+O Overleaf permite sincronizar seu projeto com um repositório Git. Você pode configurar seu projeto local como um "remote" do Overleaf. O fluxo ideal é:
+1.  **Puxar (pull)** as mudanças do Overleaf para o seu repositório local.
+2.  Trabalhar localmente no VS Code.
+3.  **Empurrar (push)** as alterações de volta para o Overleaf e para o GitHub.
+
+#### 🤖 Automação Avançada com MCP (Model Context Protocol)
+
+Para um nível mais alto de automação, o **LaTeX MCP Server** é uma ferramenta inovadora. Ele permite que assistentes de IA (como GitHub Copilot) interajam com seu projeto LaTeX. Com ele, você pode pedir para a IA ler um PDF citado, extrair informações e até gerar tabelas ou gráficos automaticamente.
+
+### 🚀 Como Começar (Passo a Passo)
+
+1.  **Instale as Ferramentas Base**: UV, Git, uma distribuição LaTeX (TeX Live ou MiKTeX) e o VS Code.
+2.  **Configure o VS Code**: Instale as extensões **LaTeX Workshop**, **Zotero LaTeX** e **Python**.
+3.  **Prepare o Zotero**: Instale o plugin **Better BibTeX** e configure a exportação automática do seu arquivo `.bib` para a pasta `shared/bib/` do seu repositório.
+4.  **Inicialize o Projeto Python**: Na raiz do repositório `acc_pkm`, execute:
+    ```bash
+    uv init
+    uv add pypdf pybtex
+    ```
+5.  **Configure o Pre-commit**: Crie o arquivo `.pre-commit-config.yaml` com os hooks que mencionamos e execute `pre-commit install`.
+6.  **Organize seus Projetos**: Crie a pasta `projects/` e comece a mover seus trabalhos para lá, seguindo a estrutura sugerida (`main.tex`, `sections/`, etc.).
+
+Esse setup vai te dar uma base sólida, automatizada e organizada para sua pesquisa. Se surgir alguma dúvida ao configurar alguma ferramenta específica, pode me chamar.
+<deepseek/>
+
+<perplexity>
+A recomendação é começar com **um único projeto UV na raiz**, projetos acadêmicos autocontidos em `projects/`, automações em `src/acc_pkm/`, Zotero/Better BibTeX para referências e Git LFS restrito ao acervo binário. Não vale criar um workspace UV agora; ele só será útil quando o monorepo tiver vários pacotes Python independentes. [docs.astral](https://docs.astral.sh/uv/concepts/projects/dependencies/)
+
+Preparei um relatório completo com:
+
+- Estrutura recomendada de diretórios.
+- Comandos de bootstrap no PowerShell.
+- Configuração de UV, Ruff, pytest, Poe e pre-commit.
+- Política segura para Git LFS.
+- Organização de LaTeX, VS Code e Overleaf.
+- Fluxo Zotero + Better BibTeX.
+- Catálogo automatizado de PDFs e EPUBs.
+- GitHub Actions para qualidade e compilação LaTeX.
+- Bibliotecas recomendadas por finalidade.
+- Plano de implantação em quatro fases.
+
+O primeiro marco prático deve ser: **clonar → `uv sync` → verificar qualidade → gerar catálogo → compilar um manuscrito LaTeX**, tudo por comandos reproduzíveis. O relatório contém os exemplos de configuração e a sequência detalhada para chegar a esse ponto.
+
+
+# Arquitetura enxuta para um monorepo de pesquisa acadêmica
+
+## Recomendação central
+
+A melhor base para o estágio atual é **um único repositório de conteúdo, com um único pacote Python de automação na raiz**, e não um workspace UV com vários pacotes. O UV já oferece ambiente isolado, `pyproject.toml`, grupos de dependências e um `uv.lock` reproduzível; workspaces passam a valer a pena somente quando existirem vários pacotes Python internos com ciclos de vida próprios, pois cada membro ganha seu `pyproject.toml`, mas todos compartilham o mesmo lockfile.[1][2][3]
+
+O repositório deve separar quatro coisas que hoje estão misturadas conceitualmente: **fontes bibliográficas**, **projetos de pesquisa**, **conhecimento reutilizável** e **automação**. O Git deve versionar textos, código, metadados e configurações; o Git LFS deve guardar apenas os binários necessários; PDFs compilados e índices HTML devem ser tratados como produtos gerados, não como fontes.
+
+## Arquitetura proposta
+
+```text
+acc_pkm/
+├── .github/
+│   ├── ISSUE_TEMPLATE/
+│   │   ├── research-idea.yml
+│   │   └── literature-task.yml
+│   └── workflows/
+│       ├── quality.yml
+│       └── latex.yml
+├── .vscode/
+│   ├── extensions.json
+│   ├── settings.json
+│   └── tasks.json
+├── docs/
+│   ├── conventions.md
+│   ├── methodology.md
+│   └── workflows.md
+├── notes/
+│   ├── concepts/
+│   ├── literature/
+│   ├── methods/
+│   └── inbox/
+├── projects/
+│   └── example-study/
+│       ├── README.md
+│       ├── project.yml
+│       ├── manuscript/
+│       │   ├── main.tex
+│       │   ├── sections/
+│       │   └── references.bib
+│       ├── notebooks/
+│       ├── scripts/
+│       ├── data/
+│       │   ├── raw/
+│       │   ├── interim/
+│       │   └── processed/
+│       ├── figures/
+│       │   ├── src/
+│       │   └── generated/
+│       ├── tables/
+│       └── outputs/
+├── references/
+│   ├── library.bib
+│   ├── styles/
+│   └── README.md
+├── resources/
+│   ├── _lake/
+│   ├── catalog/
+│   │   ├── library.csv
+│   │   └── schema.yml
+│   └── _lake_catalog.html
+├── src/
+│   └── acc_pkm/
+│       ├── __init__.py
+│       ├── cli.py
+│       ├── catalog.py
+│       ├── projects.py
+│       ├── references.py
+│       └── latex.py
+├── tests/
+│   ├── test_catalog.py
+│   └── test_projects.py
+├── templates/
+│   ├── article/
+│   ├── review/
+│   └── research-note/
+├── .editorconfig
+├── .gitattributes
+├── .gitignore
+├── .pre-commit-config.yaml
+├── CITATION.cff
+├── LICENSE
+├── README.md
+├── pyproject.toml
+└── uv.lock
+```
+
+Essa estrutura é propositalmente orientada a **projetos autocontidos**. Cada pasta em `projects/` reúne pergunta, protocolo, dados, análise e manuscrito; `notes/` guarda conhecimento transversal; `resources/_lake/` é apenas o acervo binário; `references/` contém dados bibliográficos em texto; e `src/acc_pkm/` concentra as rotinas que automatizam o conjunto.
+
+## O que versionar
+
+| Categoria | Destino | Git comum | Git LFS | Ignorar |
+|---|---|---:|---:|---:|
+| LaTeX, Markdown, BibLaTeX, YAML e código | Pastas de projeto e raiz | Sim | Não | Não |
+| PDFs e EPUBs-fonte | `resources/_lake/` | Não | Sim | Não |
+| Dados brutos grandes e permitidos | `projects/*/data/raw/` | Não | Sim | Conforme licença |
+| CSVs pequenos e tabelas finais | `data/processed/` ou `tables/` | Sim | Não | Não |
+| PDF compilado, auxiliares LaTeX e HTML de catálogo | `outputs/`, `build/`, `_lake_catalog.html` | Não | Não | Sim |
+| Ambientes e caches | `.venv/`, `.cache/`, `.pytest_cache/` | Não | Não | Sim |
+| Índice local de busca em texto integral | `.local/` | Não | Não | Sim |
+
+O Git LFS deixa no histórico Git apenas ponteiros e armazena os binários separadamente. Entretanto, cada alteração em um binário envia uma nova cópia completa e conta novamente para o uso de armazenamento; por isso, o `_lake` deve ser tratado como **imutável**: adicionar, deduplicar e, quando necessário, substituir conscientemente, mas nunca editar EPUBs e PDFs repetidamente.[4][5]
+
+Como o acervo mostrado contém livros provavelmente protegidos por direitos autorais, a opção prudente é manter o repositório privado e não incluir `resources/_lake/` em releases, Zenodo, GitHub Pages ou exportações para Overleaf. Metadados, fichamentos autorais e referências podem ser publicados separadamente quando desejado.
+
+## Bootstrap no Windows
+
+Na raiz atual, o primeiro bootstrap pode ser feito no PowerShell:
+
+```powershell
+git init
+git branch -M main
+
+git lfs install
+git lfs track "resources/_lake/*.pdf"
+git lfs track "resources/_lake/*.epub"
+
+uv init --package --python 3.12
+uv add typer rich pydantic pyyaml httpx pymupdf ebooklib bibtexparser python-slugify
+uv add --group dev ruff pytest pytest-cov pre-commit poethepoet
+uv add --group data jupyterlab duckdb pandas polars pyarrow matplotlib
+uv add --group nlp spacy
+
+uv sync
+uv run pre-commit install
+```
+
+Os comandos `uv add --group` registram dependências locais em grupos independentes, que não fazem parte de um pacote publicado. O UV mantém versões exatas em `uv.lock`; `uv sync` sincroniza o ambiente e, em CI, `uv sync --locked` deve falhar se o lockfile não corresponder ao `pyproject.toml`, em vez de alterá-lo silenciosamente.[6][7][1]
+
+Não é necessário instalar todos os grupos sempre. O uso diário pode manter apenas `dev`; um notebook analítico pode usar `uv sync --group data`, e um projeto de NLP pode acrescentar `--group nlp`. Isso reduz o ambiente padrão sem impedir expansões temáticas.
+
+## Configuração do UV
+
+Após os comandos de bootstrap, estas seções podem ser incorporadas ao `pyproject.toml` gerado pelo UV:
+
+```toml
+[project]
+name = "acc-pkm"
+version = "0.1.0"
+description = "Monorepo acadêmico e ferramentas para pesquisa reproduzível"
+requires-python = ">=3.12"
+
+[project.scripts]
+acc-pkm = "acc_pkm.cli:app"
+
+[tool.uv]
+default-groups = ["dev"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+extend-exclude = [
+  "resources/_lake",
+  "projects/*/outputs",
+  "projects/*/data/raw",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.poe.tasks]
+lint = "ruff check ."
+format = "ruff format ."
+format-check = "ruff format --check ."
+test = "pytest"
+
+[tool.poe.tasks.check]
+sequence = ["lint", "format-check", "test"]
+```
+
+O Ruff cobre lint, organização de imports e formatação em uma ferramenta; a documentação recomenda executar correções de lint/imports antes do formatador. O `pytest` descobre por padrão arquivos `test_*.py` e `*_test.py`, o que combina com uma pasta central de testes para catálogo, templates e comandos. O Poe the Poet funciona com ambientes gerenciados pelo UV e permite declarar tarefas documentadas diretamente no `pyproject.toml`, evitando scripts PowerShell e Bash duplicados.[8][9][10][11][12][13]
+
+Com isso, os comandos humanos ficam estáveis:
+
+```powershell
+uv run poe format
+uv run poe check
+uv run acc-pkm catalog scan
+uv run acc-pkm catalog render
+uv run acc-pkm project new "titulo-do-projeto"
+uv run acc-pkm refs sync "titulo-do-projeto"
+```
+
+Os quatro comandos `acc-pkm` são o primeiro pequeno produto de automação a implementar; não é necessário criar dezenas de abstrações antes de o fluxo real mostrar quais se repetem.
+
+## Catálogo do acervo
+
+O arquivo `_lake_catalog.html` atual deve passar a ser **saída gerada**. A fonte canônica deve ser `resources/catalog/library.csv` ou, se os registros crescerem e ganharem campos compostos, `library.jsonl`; ambos são legíveis por Git, Python, DuckDB e planilhas.
+
+O catálogo mínimo deve registrar:
+
+- `resource_id`: identificador estável, preferencialmente prefixo do SHA-256.
+- `path`: caminho relativo dentro do repositório.
+- `sha256`: deduplicação e verificação de integridade.
+- `media_type`, `bytes` e `pages`.
+- `title`, `authors`, `year`, `edition` e `language`.
+- `doi`, `isbn` e `source_url`, quando existirem.
+- `rights`: `personal-copy`, `open-access`, `public-domain`, `unknown` etc.
+- `tags`, `status`, `added_at` e `notes`.
+- `extraction_status`: indica se metadados vieram do arquivo, de API ou de revisão manual.
+
+A rotina `catalog scan` deve calcular hashes, detectar duplicatas, extrair metadados básicos com PyMuPDF/EPUBLib e preservar correções humanas já existentes. `catalog render` deve produzir o HTML navegável. Para artigos científicos, GROBID pode ser acrescentado depois como serviço Docker: ele transforma PDFs acadêmicos em TEI/XML estruturado e extrai cabeçalho, referências, contextos de citação, seções, figuras e tabelas.[14][15]
+
+Não convém colocar texto integral extraído no Git. Para busca local, uma etapa opcional pode gerar `resources/.local/search.duckdb`, ignorado pelo Git, contendo texto e embeddings reconstruíveis a partir dos arquivos que o usuário já possui legalmente.
+
+## Bibliografia e citações
+
+A pilha recomendada é **Zotero + Better BibTeX + `references/library.bib`**. O Better BibTeX oferece chaves de citação estáveis, exportação automática de coleções e integração com fluxos LaTeX/Markdown.[16][17]
+
+Fluxo sugerido:
+
+1. Importar e corrigir a referência no Zotero.
+2. Criar coleções por projeto ou tema.
+3. Configurar uma autoexportação Better BibLaTeX da biblioteca para `references/library.bib`.
+4. Fixar chaves importantes para evitar mudanças após o manuscrito começar.
+5. Fazer `acc-pkm refs sync <projeto>` copiar apenas as entradas citadas ou pertencentes à coleção para `projects/<projeto>/manuscript/references.bib`.
+
+O arquivo por projeto facilita o envio ao Overleaf e torna cada manuscrito autocontido. A biblioteca global continua sendo a fonte bibliográfica principal; o arquivo local é um recorte gerado e deve trazer no cabeçalho um aviso para não ser editado manualmente.
+
+Para documentos Markdown ou Quarto, o Pandoc processa referências com `--citeproc`, recebe bibliografia externa e aplica estilos CSL; isso permite reutilizar o mesmo `.bib` para HTML, DOCX e PDF. Quarto é uma camada opcional valiosa para relatórios com notebooks, equações, tabelas, referências cruzadas e citações, mas não precisa substituir LaTeX em artigos cuja formatação final depende de classes de periódicos.[18][19][20][21]
+
+## LaTeX no VS Code
+
+No Windows, a combinação mais previsível é **TeX Live + LaTeX Workshop + latexmk**. O TeX Live inclui Perl e normalmente inclui `latexmk`; a receita padrão do LaTeX Workshop usa `latexmk`, que executa a sequência necessária de compiladores e ferramentas bibliográficas.[22][23]
+
+Extensões iniciais do VS Code:
+
+```json
+{
+  "recommendations": [
+    "James-Yu.latex-workshop",
+    "astral-sh.ty",
+    "charliermarsh.ruff",
+    "ms-python.python",
+    "ms-toolsai.jupyter",
+    "quarto.quarto",
+    "redhat.vscode-yaml",
+    "tamasfe.even-better-toml",
+    "yzhang.markdown-all-in-one"
+  ]
+}
+```
+
+Configuração enxuta em `.vscode/settings.json`:
+
+```json
+{
+  "python.defaultInterpreterPath": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+  "python.terminal.activateEnvironment": true,
+  "ruff.nativeServer": "on",
+  "editor.formatOnSave": true,
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff"
+  },
+  "latex-workshop.latex.autoBuild.run": "onSave",
+  "latex-workshop.latex.outDir": "%DIR%/../outputs/build",
+  "latex-workshop.view.pdf.viewer": "tab",
+  "files.exclude": {
+    "**/.venv": true,
+    "**/__pycache__": true,
+    "**/outputs/build": true
+  }
+}
+```
+
+O LaTeX Workshop permite escolher receitas e usa `latexmk` por padrão; o build no salvamento também é uma configuração suportada. ChkTeX pode ser ativado mais tarde como linter semântico de LaTeX; ele detecta problemas tipográficos que o compilador não trata como erros, mas deve ser configurado para evitar excesso de avisos.[23][24][25][26]
+
+## Template de projeto
+
+Cada pesquisa deve começar com um `project.yml` simples:
+
+```yaml
+id: example-study
+title: Título provisório
+type: empirical-study
+status: idea
+language: pt-BR
+created: 2026-09-29
+updated: 2026-09-29
+owners:
+  - Vitor R. Santos
+research_questions:
+  - Qual é a pergunta principal?
+keywords: []
+methods: []
+bibliography: manuscript/references.bib
+entrypoint: manuscript/main.tex
+```
+
+O comando `acc-pkm project new` deve validar o slug, copiar `templates/article/`, preencher data e título e recusar sobrescrita. Os tipos iniciais suficientes são `article`, `systematic-review` e `research-note`; novos templates só devem ser criados quando houver diferença estrutural real.
+
+Para revisões sistemáticas, o mesmo diretório pode ganhar `protocol/`, `screening/` e `extraction/`, com CSVs de decisões e critérios versionados. Para experimentos, `notebooks/` serve à exploração, mas resultados finais devem migrar para funções em `scripts/` ou `src/`, cobertas por testes e executáveis de forma determinística.
+
+## Git LFS com disciplina
+
+A `.gitattributes` deve ser gerada pelos comandos `git lfs track` e mantida no Git. É preferível restringir o LFS aos diretórios de acervo e dados brutos, em vez de rastrear `*.pdf` globalmente, porque PDFs de manuscritos são produtos de build e não devem entrar no histórico.
+
+Uma política útil é:
+
+```gitattributes
+resources/_lake/*.pdf filter=lfs diff=lfs merge=lfs -text
+resources/_lake/*.epub filter=lfs diff=lfs merge=lfs -text
+projects/*/data/raw/*.zip filter=lfs diff=lfs merge=lfs -text
+projects/*/data/raw/*.parquet filter=lfs diff=lfs merge=lfs -text
+```
+
+Antes do primeiro push, execute:
+
+```powershell
+git lfs ls-files
+git check-attr -a resources/_lake/arquivo.pdf
+git status
+```
+
+O plano do GitHub inclui franquias de armazenamento e download para LFS, e o comportamento ao ultrapassá-las depende do plano, do método de pagamento e do orçamento configurado. Como versões completas de binários se acumulam, o catálogo deve mostrar tamanho e duplicatas antes do commit.[27][4]
+
+## Pre-commit
+
+A primeira configuração deve ser curta: remover espaços finais, garantir newline final, validar YAML/TOML/JSON, detectar marcadores de conflito, bloquear arquivos grandes fora do LFS e rodar Ruff. O framework instala hooks locais com `pre-commit install`, pode executar tudo com `pre-commit run --all-files` e atualizar versões fixadas com `pre-commit autoupdate`.[28]
+
+O hook `check-added-large-files` permite definir o tamanho máximo aceito no Git normal; combinado com o LFS, ele impede que um PDF seja adicionado por engano sem o filtro correto. A recomendação é começar com limite de 2 MB para arquivos não-LFS e abrir exceções explícitas apenas para pequenos recursos realmente textuais ou necessários.[29]
+
+## GitHub Actions
+
+A automação inicial precisa de apenas dois workflows.
+
+### Qualidade Python
+
+```yaml
+name: quality
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - run: uv sync --locked --group dev
+      - run: uv run poe check
+```
+
+O checkout deve manter `lfs: false` para que lint e testes não baixem todo o acervo. A integração oficial do UV para GitHub Actions recomenda `astral-sh/setup-uv`, `uv sync --locked` e execução de ferramentas via `uv run`; a action também oferece cache baseado em arquivos como `uv.lock` e `pyproject.toml`.[30][31]
+
+### Compilação LaTeX
+
+```yaml
+name: latex
+
+on:
+  pull_request:
+    paths:
+      - "projects/**/*.tex"
+      - "projects/**/*.bib"
+      - ".github/workflows/latex.yml"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+      - uses: xu-cheng/latex-action@v4
+        with:
+          root_file: main.tex
+          working_directory: projects/example-study/manuscript
+      - uses: actions/upload-artifact@v4
+        with:
+          name: example-study-pdf
+          path: projects/example-study/manuscript/main.pdf
+          retention-days: 14
+```
+
+A LaTeX Action usa uma imagem com TeX Live completo e `latexmk` como compilador padrão. Artifacts permitem guardar o PDF produzido pelo workflow sem versioná-lo no repositório e aceitam prazo de retenção configurável. Quando houver vários manuscritos ativos, o job pode virar uma matriz explícita; geração dinâmica de matriz deve esperar até existir necessidade real.[32][33][34][35]
+
+## Overleaf sem conflito
+
+Overleaf deve ser tratado como **editor colaborativo de um manuscrito**, não como espelho do monorepo. Exporte apenas `projects/<slug>/manuscript/`, suas figuras necessárias e o `references.bib` específico; nunca envie `_lake`, ambientes Python ou dados brutos.
+
+A sincronização direta do Overleaf com GitHub exige vinculação de conta, não é automática e não permite simplesmente ligar dois projetos já existentes; a documentação também recomenda menos de 100 arquivos por commit e projeto abaixo de 100 MB para esse fluxo. A integração Git, disponível como recurso premium, permite adicionar o Overleaf como segundo remote do projeto local e fazer `push`/`pull` explicitamente.[36][37][38]
+
+Para evitar conflitos, escolha um dono operacional por manuscrito em cada período: ou as edições entram principalmente pelo GitHub/VS Code, ou principalmente pelo Overleaf. Sincronizações bidirecionais simultâneas sem coordenação criam merges desnecessários.
+
+## Descoberta bibliográfica
+
+A automação de busca deve começar por metadados, não por scraping de páginas. Crossref permite acesso público e recomenda fornecer e-mail em `mailto` e identificar o cliente no `User-Agent`; isso melhora a etiqueta operacional e permite contato em caso de problema. OpenAlex oferece endpoints para obras, autores, fontes, instituições e tópicos, com busca, filtros, ordenação e paginação; identificadores como DOI, ORCID e OpenAlex ID são preferíveis a nomes ambíguos.[39][40][41]
+
+Um comando futuro `acc-pkm discover` pode:
+
+- Receber consulta, intervalo de anos, tipo documental e filtros de acesso aberto.
+- Consultar Crossref e OpenAlex com cache local.
+- Normalizar DOI, título, autores, ano, fonte e resumo.
+- Deduplicar por DOI e, subsidiariamente, por título normalizado.
+- Exportar CSV para triagem e BibLaTeX para Zotero.
+- Registrar consulta, data, parâmetros, total retornado e versão do código para reprodutibilidade.
+
+A busca OpenAlex cobre título, resumo e parte do texto integral, e aceita operadores booleanos e frases exatas. Resultados ainda precisam de triagem humana; APIs ajudam na recuperação e documentação, não substituem avaliação metodológica.[42]
+
+## Bibliotecas recomendadas
+
+| Camada | Ferramentas | Papel | Momento |
+|---|---|---|---|
+| CLI e validação | Typer, Rich, Pydantic, PyYAML | Comandos, mensagens e schemas | Agora |
+| HTTP e metadados | HTTPX, Crossref REST, OpenAlex | Descoberta e enriquecimento | Agora/curto prazo |
+| PDFs e EPUBs | PyMuPDF, EPUBLib | Catálogo e extração local | Agora |
+| Bibliografia | Zotero, Better BibTeX, bibtexparser | Fonte bibliográfica e recortes `.bib` | Agora |
+| Qualidade | Ruff, pytest, pre-commit | Formatação, testes e proteção de commits | Agora |
+| Tarefas | Poe the Poet | Interface única no `pyproject.toml` | Agora |
+| Dados | DuckDB, pandas ou Polars, PyArrow | Triagem, tabelas e análises | Sob demanda |
+| Notebooks | JupyterLab, Quarto | Exploração e relatórios computacionais | Sob demanda |
+| Estatística/ML | SciPy, statsmodels, scikit-learn | Análise conforme projeto | Sob demanda |
+| Visualização | Matplotlib, Seaborn, Plotly | Figuras reproduzíveis | Sob demanda |
+| NLP | spaCy e bibliotecas específicas | Pipelines linguísticos | Grupo separado |
+| PDF científico avançado | GROBID via Docker | TEI, referências e estrutura | Fase posterior |
+
+Evite instalar “tudo de ciência de dados” no grupo padrão. Cada nova dependência deve responder a uma tarefa concreta, entrar no grupo correto e ser fixada pelo `uv.lock`.
+
+## Convenções importantes
+
+- Use nomes de pastas em `kebab-case`, módulos Python em `snake_case` e chaves bibliográficas estáveis.
+- Datas em metadados devem usar ISO 8601, por exemplo `2026-09-29`.
+- Caminhos gravados em CSV/YAML devem ser relativos e usar `/`, mesmo no Windows.
+- Dados brutos são imutáveis; transformação gera `interim` e `processed`.
+- Toda figura final deve ter um script ou notebook-fonte identificável.
+- Notebooks não devem ser a única implementação de uma análise crítica.
+- Segredos e tokens ficam em `.env`, nunca no Git; publique apenas `.env.example`.
+- O catálogo e os PDFs compilados devem ser reconstruíveis por comando.
+- Commits devem separar acervo, código, análise e manuscrito quando possível.
+
+## Fases de implantação
+
+### Fase 1: fundação
+
+1. Inicializar Git, UV e Git LFS.
+2. Mover o catálogo HTML para saída gerada e criar `library.csv`.
+3. Criar `src/acc_pkm`, `tests`, `projects`, `notes`, `references` e `templates`.
+4. Configurar Ruff, pytest, Poe e pre-commit.
+5. Adicionar configurações do VS Code e um template LaTeX mínimo.
+6. Criar o workflow `quality.yml`.
+
+### Fase 2: automação útil
+
+1. Implementar `catalog scan` e `catalog render`.
+2. Implementar `project new`.
+3. Configurar Zotero/Better BibTeX e `refs sync`.
+4. Adicionar testes de deduplicação, preservação de metadados e geração de projetos.
+5. Criar o workflow LaTeX para o primeiro manuscrito real.
+
+### Fase 3: pesquisa reproduzível
+
+1. Adicionar busca Crossref/OpenAlex com cache e registro de consultas.
+2. Criar schemas para protocolos, triagem e extração de dados.
+3. Adotar Quarto apenas onde houver narrativa computacional.
+4. Adicionar GROBID quando o volume de artigos justificar o serviço.
+5. Criar releases de código e templates; não incluir o acervo privado.
+
+### Fase 4: publicação
+
+Quando o código estiver maduro e publicável, `CITATION.cff` informa ao GitHub como citar o repositório e ativa o bloco “Cite this repository” na página do projeto. Se o repositório público for integrado ao Zenodo, cada release pode ser arquivado com um DOI; essa integração deve ser usada apenas em uma versão limpa, sem materiais de terceiros que não possam ser redistribuídos.[43][44][45][46]
+
+## Decisões que devem esperar
+
+Não crie agora um UV workspace, um banco vetorial compartilhado, microserviços, uma ontologia complexa de notas ou sincronização automática bidirecional com Overleaf. Essas soluções podem ser úteis, mas aumentam o custo antes de existir demanda comprovada.
+
+O primeiro marco deve ser simples e verificável: **clonar o repositório, executar `uv sync`, rodar `uv run poe check`, gerar o catálogo e compilar um projeto LaTeX sem intervenção manual**. Se esse caminho funcionar no Windows local e no GitHub Actions, a base estará suficientemente sólida para incorporar revisões sistemáticas, análise de dados, NLP e novos formatos sem reorganizar todo o repositório.
+
+
+<perplexity/>
+
+
+<glm-z.ai>
+Ótimo ponto de partida — dá pra transformar isso num setup bem profissional. Vou organizar por decisões de arquitetura, estrutura, setup `uv`, bibliotecas e automações. Mas antes, **um alerta importante**:
+
+> ⚠️ Seu `_lake` tem livros comerciais inteiros (Creswell, Gil, Marconi & Lakatas, ISLR...). Se esse repo algum dia ficar **público**, o GitHub derruba por DMCA. E mesmo privado, você não quer centenas de MB de PDF no histórico do git. **Mantenha o `_lake` fora do git** (backup em nuvem própria) e versione só os *metadados* (CSV/BIB gerados por script).
+
+## 1. Estrutura proposta
+
+```
+acc_pkm/
+├── .github/workflows/
+│   ├── latex.yml            # compila tudo no push, sobe PDFs como artifact
+│   └── digest.yml           # busca semanal de artigos novos (agendada)
+├── .vscode/                # settings.json, extensions.json
+├── papers/                  # cada artigo/projeto LaTeX
+│   ├── _template/           # esqueleto reutilizável (main.tex, refs.bib, Makefile)
+│   └── 2025-slr-foo/
+│       ├── main.tex
+│       ├── sections/
+│       ├── figures/
+│       └── build/           # saída do latexmk (ignorada)
+├── references/              # main.bib (auto-export do Zotero)
+├── screening/               # pipeline de revisão sistemática (inbox.csv, decisions.csv)
+├── notes/                   # markdown solto / zettelkasten
+├── scripts/                 # catalog.py, dig.py, new_paper.py
+├── src/acc_pkm/             # código reutilizável como pacote (uv init --package)
+├── data/{raw,derived}/
+├── resources/
+│   ├── _lake/               # PDFs/EPUBs — FORA do git
+│   └── _catalog/            # metadados gerados (catalog.csv) — dentro do git
+├── exports/                 # PDFs finais prontos p/ submeter
+├── pyproject.toml
+├── uv.lock
+└── .gitignore
+```
+
+Convenção: papers nomeados `YYYY-slug`, um `main.tex` por pasta, build fora do fonte.
+
+## 2. Setup com uv
+
+```powershell
+cd acc_pkm
+uv init --package
+uv python pin 3.12
+uv add --group research pymupdf pyalex arxiv habanero semanticscholar bibtexparser pyzotero
+uv add --group analysis pandas polars statsmodels pingouin scikit-learn matplotlib seaborn
+uv add --group slr asreview
+uv add --group dev ruff pytest mypy poethepoet
+```
+
+> Gotcha: `uv sync` instala só o grupo `dev` por padrão. Use `uv sync --all-groups`.
+
+No `pyproject.toml`, adicione tasks:
+
+```toml
+[tool.poe.tasks]
+catalog = "python scripts/catalog.py"   # regenera catálogo do _lake
+dig     = "python scripts/dig.py"       # busca artigos em várias fontes
+new     = "python scripts/new_paper.py" # scaffold de novo paper a partir de _template
+```
+
+Roda com `uv run poe catalog`. (`poe` é o `make` multiplataforma — melhor que Makefile no Windows.)
+
+## 3. Bibliotecas — o que usar pra quê
+
+| Categoria | Ferramenta | Nota |
+|---|---|---|
+| Buscar artigos | `pyalex` (OpenAlex), `arxiv`, `habanero` (Crossref), `semanticscholar` | OpenAlex é a melhor API gratuita atualmente |
+| Bibliografia | **Zotero + Better BibTeX** (GUI), `papis` (CLI nativo), `pyzotero` | Detalho abaixo |
+| Manipular PDF | `pymupdf` | Extração de texto, metadados, anotações, merge — rápido |
+| PDF estruturado | `docling` | PDF→Markdown com estrutura (bom p/ busca/RAG sobre o lake) |
+| Revisão sistemática | `asreview` | Triagem de títulos/resumos com aprendizado ativo — combina direto com os livros de SLR que você tem |
+| Estatística/dados | `pandas`, `polars`, `statsmodels`, `pingouin`, `scikit-learn` | ISLR do seu lake casa perfeitamente com `statsmodels`/`sklearn` |
+| Figuras p/ LaTeX | `matplotlib` (exporte PDF/SVG), `plotnine` | Evite tikzplotlib (abandonado) |
+| Qualidade | `ruff`, `pytest`, `mypy`, `pre-commit` | |
+| Opcional (IA) | `paperqa` | Perguntar coisas aos PDFs do lake; precisa de API key |
+
+## 4. Bibliografia: o fluxo que recomendo
+
+**Zotero 7 + Better BibTeX**, com o truque que faz tudo funcionar num monorepo:
+
+1. Uma **coleção Zotero por paper** (além da biblioteca geral).
+2. No BBT, configure **auto-export**: biblioteca inteira → `references/main.bib`, e cada coleção → `papers/<slug>/refs.bib` — ambos com "Keep updated".
+3. Cada paper fica **autocontido** (compila com o próprio `refs.bib`), o que é essencial pro sync com Overleaf depois.
+
+Citation keys no formato `auth_year_firstword` (padrão BBT decente). Para venue brasileira: `abntex2` (classe) e `biblatex-abnt` (citações ABNT).
+
+Se preferir 100% terminal/repo: `papis` guarda PDFs + `info.yaml` em pastas — daria pra apontar a library pra dentro do repo, mas aí o `_lake` entraria no git (vide alerta). Zotero separa melhor "arquivos" de "repo".
+
+## 5. LaTeX no VS Code
+
+Instale **TeX Live completo** (evita "package not found" crônico do MiKTeX). Extensões: **LaTeX Workshop**, **LTeX+** (gramática pt/en no LaTeX), Code Spell Checker, Ruff, GitLens, Jupyter, Rainbow CSV.
+
+```jsonc
+// .vscode/settings.json
+{
+  "latex-workshop.latex.outDir": "%DIR%/build",
+  "latex-workshop.latex.autoBuild.run": "onSave",
+  "latex-workshop.latex.autoClean.run": "onFailedBuild",
+  "latex-workshop.linting.chktex.enabled": true,
+  "latex-workshop.formatting.latex": "latexindent"
+}
+```
+
+Para revisão de texto acadêmico, **TeXtidote** (CLI) complementa o LTeX+.
+
+## 6. GitHub
+
+`.gitignore` essencial:
+
+```gitignore
+# LaTeX
+build/
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+
+# Python
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+
+# Lake (copyright + peso)
+resources/_lake/
+resources/_lake_catalog.html
+
+# OS
+Thumbs.db
+```
+
+CI compilando os papers (`.github/workflows/latex.yml`):
+
+```yaml
+name: latex
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: xu-cheng/texlive-action@v2
+        with:
+          run: latexmk -pdf -interaction=nonstopmode -outdir=build papers/*/main.tex
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pdfs
+          path: papers/*/build/*.pdf
+```
+
+E o `digest.yml` agendado (`cron` semanal) rodando `uv sync --group research && uv run poe dig` com suas queries salvas, commitando o `screening/inbox.csv` — você abre segunda-feira com candidatos novos.
+
+## 7. Overleaf (o ponto delicado)
+
+Repos não aninham bem. Estratégias:
+
+- **Plano grátis**: use `ols` (overleaf-sync, `uv tool install overleaf-sync`) — sincroniza uma pasta local com um projeto Overleaf via API. Monorepo continua sendo a fonte da verdade; você sincroniza só a pasta do paper ativo.
+- **Plano pago** (tem git bridge): o projeto Overleaf vira um remote e você usa `git subtree`:
+
+```powershell
+git remote add overleaf-foo https://git.overleaf.com/<id>
+git subtree pull --prefix=papers/2025-slr-foo overleaf master
+git subtree push --prefix=papers/2025-slr-foo overleaf master
+```
+
+Por isso o paper autocontido (com `refs.bib` próprio) importa tanto.
+
+## 8. Primeira automação: regenerar o catálogo do lake
+
+Isso substitui seu `_lake_catalog.html` por algo versionável (só metadados):
+
+```python
+# scripts/catalog.py
+import csv, html
+from pathlib import Path
+import pymupdf
+
+LAKE = Path("resources/_lake")
+OUT = Path("resources/_catalog"); OUT.mkdir(parents=True, exist_ok=True)
+
+rows = []
+for f in sorted(LAKE.iterdir()):
+    r = {"arquivo": f.name, "titulo": f.stem.replace("_", " "),
+         "autores": "", "paginas": "", "mb": round(f.stat().st_size / 1e6, 1)}
+    if f.suffix.lower() == ".pdf":
+        with pymupdf.open(f) as doc:
+            m = doc.metadata or {}
+            r["titulo"] = m.get("title") or r["titulo"]
+            r["autores"] = m.get("author") or ""
+            r["paginas"] = doc.page_count
+    rows.append(r)
+
+with open(OUT / "catalog.csv", "w", newline="", encoding="utf-8") as fh:
+    w = csv.DictWriter(fh, fieldnames=rows[0].keys()); w.writeheader(); w.writerows(rows)
+
+cards = "\n".join(
+    f"<li><b>{html.escape(r['titulo'])}</b> — {r['autores'] or '?'} "
+    f"({r['paginas'] or '—'} p., {r['mb']} MB)<br><code>{r['arquivo']}</code></li>"
+    for r in rows)
+(OUT / "index.html").write_text(
+    f"<!doctype html><meta charset='utf-8'><title>Lake</title><ul>{cards}</ul>",
+    encoding="utf-8")
+print(f"{len(rows)} itens catalogados.")
+```
+
+`uv run poe catalog` e pronto. Melhorias futuras: lookup de DOI no Crossref via `habanero` pra enriquecer/normalizar autores.
+
+## Checklist pra executar agora
+
+1. `uv init --package` + `uv add` dos grupos acima + `uv sync --all-groups`
+2. Criar a estrutura de pastas e o `.gitignore` (com `_lake` excluído!)
+3. Instalar Zotero + Better BibTeX, configurar auto-exports
+4. `scripts/catalog.py` + `poe catalog`
+5. `papers/_template/` com seu preâmbulo LaTeX favorito (e `poe new` só copia a pasta renomeando)
+6. Workflow de CI do LaTeX
+7. `git init`, repo **privado** no GitHub
+
+Quer que eu monte algum dos próximos pedaços em detalhe? Por exemplo: o `scripts/dig.py` (busca OpenAlex+arXiv com dedupe por DOI pro `inbox.csv`), o `_template` LaTeX (ABNT ou genérico), ou o `new_paper.py`.
+<glm-z.ai/>

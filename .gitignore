@@ -1,0 +1,69 @@
+# ==========================================
+# Academic PKM (.gitignore)
+# ==========================================
+
+# --- Python & Environments ---
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# --- LaTeX Build Artifacts ---
+*.aux
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.log
+*.out
+*.toc
+*.synctex
+*.synctex.gz
+*.synctex(busy)
+*.nav
+*.snm
+*.vrb
+*.bcf
+*.run.xml
+*.idx
+*.ilg
+*.ind
+*.lof
+*.lot
+texput.pdf
+build/
+projects/*/build/
+
+# --- Large & Copyrighted Lake Assets ---
+# Binary books and media stay local in resources/_lake/
+resources/_lake/*.pdf
+resources/_lake/*.epub
+resources/_lake/*.mobi
+resources/_lake/*.djvu
+resources/_lake/*.mp4
+resources/_lake/*.mp3
+resources/_lake/*.wav
+resources/_lake/*.zip
+resources/_lake/*.tar.gz
+
+# Always track markdown notes, transcripts, and directory structure in Lake
+!resources/_lake/.gitkeep
+!resources/_lake/*.md
+
+# --- OS & Temporary Files ---
+.DS_Store
+Thumbs.db
+desktop.ini
+*.tmp
+*.bak
+*.swp
+
+# --- Secrets & Local Overrides ---
+.env
+.env.local
+*.secret

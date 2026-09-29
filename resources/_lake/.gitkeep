@@ -1,0 +1,3 @@
+# Data Lake Directory
+# Raw binary literature (*.pdf, *.epub) is kept locally and excluded from git.
+# Transcripts (*.md) and metadata catalogs are tracked.

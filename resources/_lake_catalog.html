@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌊 Academic PKM — Lake Catalog</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --surface-hover: #334155;
+      --border: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #38bdf8;
+      --primary-hover: #0284c7;
+      --accent: #818cf8;
+      --success: #34d399;
+      --warning: #fbbf24;
+      --badge-yt: #ef4444;
+      --badge-pdf: #f97316;
+      --badge-epub: #10b981;
+      --radius: 12px;
+      --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="light"] {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface-hover: #f1f5f9;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --primary: #0284c7;
+      --primary-hover: #0369a1;
+      --accent: #6366f1;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 24px;
+      min-height: 100vh;
+      transition: background-color 0.3s ease;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      font-size: 2.2rem;
+      background: linear-gradient(135deg, #38bdf8, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand h1 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+    }
+
+    .brand p {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition);
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background: var(--surface-hover);
+      border-color: var(--primary);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #0f172a;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+      color: #ffffff;
+    }
+
+    /* KPIs */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .kpi-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .kpi-icon {
+      font-size: 2rem;
+      background: var(--surface-hover);
+      width: 52px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+    }
+
+    .kpi-info .kpi-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .kpi-info .kpi-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Controls Bar */
+    .controls {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .search-wrapper {
+      position: relative;
+      flex: 1;
+      min-width: 280px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 10px 16px 10px 40px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 0.95rem;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .search-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .filter-select {
+      padding: 9px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 0.875rem;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .filter-pills {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.825rem;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: var(--surface-hover);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .pill.active {
+      background: var(--primary);
+      color: #0f172a;
+      border-color: var(--primary);
+    }
+
+    /* View Switcher */
+    .view-switcher {
+      display: flex;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .view-btn {
+      padding: 8px 12px;
+      background: var(--surface);
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .view-btn.active {
+      background: var(--primary);
+      color: #0f172a;
+    }
+
+    /* Cards Grid */
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: var(--transition);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+      border-color: var(--primary);
+    }
+
+    .card-media {
+      position: relative;
+      width: 100%;
+      height: 190px;
+      background: #000;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover .card-media img {
+      transform: scale(1.04);
+    }
+
+    .card-media-doc {
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      font-size: 3.5rem;
+      color: var(--accent);
+    }
+
+    .card-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .badge-yt {
+      background: var(--badge-yt);
+      color: #fff;
+    }
+
+    .badge-doc {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .card-duration {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      background: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .card-body {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      line-height: 1.4;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.825rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .card-summary {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      flex: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .tag {
+      background: var(--surface-hover);
+      color: var(--primary);
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+      gap: 8px;
+    }
+
+    /* Table View */
+    .catalog-table-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow-x: auto;
+      display: none;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.875rem;
+    }
+
+    th {
+      background: var(--surface-hover);
+      color: var(--text-muted);
+      padding: 12px 16px;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+    }
+
+    td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    tr:hover td {
+      background: var(--surface-hover);
+    }
+
+    /* Modal / Drawer Preview */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 860px;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+    }
+
+    .modal-header {
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .modal-close {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 4px 8px;
+    }
+
+    .modal-body {
+      padding: 24px;
+      overflow-y: auto;
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+
+    .transcript-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.85rem;
+      white-space: pre-wrap;
+      max-height: 420px;
+      overflow-y: auto;
+      margin-top: 12px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+      grid-column: 1 / -1;
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: 12px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Header -->
+  <header>
+    <div class="brand">
+      <div class="brand-icon">🌊</div>
+      <div>
+        <h1>Academic PKM — Lake Catalog</h1>
+        <p>Repositório Central de Transcrições do YouTube, Livros Técnicos e Metodologia Científica</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn" onclick="toggleTheme()" id="themeBtn">🌓 Tema</button>
+      <button class="btn btn-primary" onclick="copyCatalogInfo()">📋 Copiar Sumário</button>
+    </div>
+  </header>
+
+  <!-- KPI Metrics -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-icon">🎬</div>
+      <div class="kpi-info">
+        <div class="kpi-value">0</div>
+        <div class="kpi-label">Transcrições do YouTube</div>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon">⏱️</div>
+      <div class="kpi-info">
+        <div class="kpi-value">0.0h</div>
+        <div class="kpi-label">Tempo Total de Conteúdo</div>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon">📝</div>
+      <div class="kpi-info">
+        <div class="kpi-value">0</div>
+        <div class="kpi-label">Palavras Transcritas</div>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon">📚</div>
+      <div class="kpi-info">
+        <div class="kpi-value">17</div>
+        <div class="kpi-label">Livros & Artigos (.pdf/.epub)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Controls Bar -->
+  <div class="controls">
+    <div class="search-wrapper">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" class="search-input" placeholder="Buscar por título, canal, palavra-chave ou autor..." oninput="renderItems()">
+    </div>
+
+    <div class="filter-group">
+      <div class="filter-pills">
+        <button class="pill active" onclick="setTypeFilter('all', this)">Todos</button>
+        <button class="pill" onclick="setTypeFilter('youtube_transcript', this)">🎬 YouTube</button>
+        <button class="pill" onclick="setTypeFilter('livro_documento', this)">📚 Livros/PDFs</button>
+      </div>
+
+      <select id="sortSelect" class="filter-select" onchange="renderItems()">
+        <option value="recent">Adicionados Recentemente</option>
+        <option value="title_asc">Título (A-Z)</option>
+        <option value="duration_desc">Maior Duração</option>
+        <option value="words_desc">Mais Palavras</option>
+      </select>
+
+      <div class="view-switcher">
+        <button class="view-btn active" id="btnCards" onclick="setView('cards')">⊞ Cards</button>
+        <button class="view-btn" id="btnTable" onclick="setView('table')">☰ Tabela</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content Container -->
+  <div id="catalogGrid" class="catalog-grid"></div>
+
+  <div id="catalogTableWrap" class="catalog-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Tipo</th>
+          <th>Título</th>
+          <th>Canal / Autor</th>
+          <th>Data</th>
+          <th>Duração / Tam.</th>
+          <th>Tags</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="catalogTableBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal Preview -->
+<div class="modal-overlay" id="previewModal" onclick="closeModal(event)">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h3 id="modalTitle">Prévia</h3>
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div id="modalMeta" style="margin-bottom: 12px; color: var(--text-muted); font-size: 0.9rem;"></div>
+      <h4>📌 Resumo</h4>
+      <p id="modalSummary" style="margin-bottom: 18px;"></p>
+      <div id="modalTranscriptSection">
+        <h4>🎙️ Amostra da Transcrição</h4>
+        <div id="modalTranscript" class="transcript-box"></div>
+      </div>
+      <div style="margin-top: 20px; display: flex; gap: 12px;">
+        <a id="modalFileLink" href="#" class="btn btn-primary">Abrir Arquivo Local (.md)</a>
+        <a id="modalYtLink" href="#" target="_blank" class="btn">Assistir no YouTube ↗</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JSON Data Island -->
+<script id="lakeData" type="application/json">
+[
+  {
+    "id": "Andrew_Booth_et_al-Systematic_Approaches_to_a_Successful_Literature_Review-3ed",
+    "tipo": "livro_documento",
+    "extensao": "pdf",
+    "titulo": "Systematic Approaches To A Successful Literature Review",
+    "canal": "Andrew Booth Et Al",
+    "data_publicacao": "N/D",
+    "tamanho_mb": "2.49 MB",
+    "arquivo_rel": "_lake/Andrew_Booth_et_al-Systematic_Approaches_to_a_Successful_Literature_Review-3ed.pdf",
+    "nome_arquivo": "Andrew_Booth_et_al-Systematic_Approaches_to_a_Successful_Literature_Review-3ed.pdf",
+    "tags": [
+      "academico",
+      "livro",
+      "pdf"
+    ],
+    "resumo": "Obra acadêmica armazenada no Lake (.PDF, 2.49 MB).",
+    "preview": "Arquivo original disponível no acervo local: Andrew_Booth_et_al-Systematic_Approaches_to_a_Successful_Literature_Review-3ed.pdf",
+    "tamanho_bytes": 2614724
+  },
+  {
+    "id": "Angela_Boland_et_al-Doing_a_Systematic_Review_A_Students_Guide-2ed",
+    "tipo": "livro_documento",
+    "extensao": "epub",
+    "titulo": "Doing A Systematic Review A Students Guide",
+    "canal": "Angela Boland Et Al",
+    "data_publicacao": "N/D",
+    "tamanho_mb": "4.06 MB",
+    "arquivo_rel": "_lake/Angela_Boland_et_al-Doing_a_Systematic_Review_A_Students_Guide-2ed.epub",
+    "nome_arquivo": "Angela_Boland_et_al-Doing_a_Systematic_Review_A_Students_Guide-2ed.epub",
+    "tags": [
+      "academico",
+      "livro",
+      "epub"
+    ],
+    "resumo": "Obra acadêmica armazenada no Lake (.EPUB, 4.06 MB).",
+    "preview": "Arquivo original disponível no acervo local: Angela_Boland_et_al-Doing_a_Systematic_Review_A_Students_Guide-2ed.epub",
+    "tamanho_bytes": 4258702
+  },
+  {
+    "id": "Antonio_Carlos_Gil-Como_Elaborar_Projetos_de_Pesquisa-7ed_2022",
+    "tipo": "livro_documento",
+    "extensao": "pdf",
+    "titulo": "Como Elaborar Projetos De Pesquisa",
+    "canal": "Antonio Carlos Gil",
+    "data_publicacao": "N/D",
+    "tamanho_mb": "168.73 MB",
+    "arquivo_rel": "_lake/Antonio_Carlos_Gil-Como_Elaborar_Projetos_de_Pesquisa-7ed_2022.pdf",
+    "nome_arquivo": "Antonio_Carlos_Gil-Como_Elaborar_Projetos_de_Pesquisa-7ed_2022.pdf",
+    "tags": [
+      "academico",
+      "livro",
+      "pdf"
+    ],
+    "resumo": "Obra acadêmica armazenada no Lake (.PDF, 168.73 MB).",
+    "preview": "Arquivo original disponível no acervo local: Antonio_Carlos_Gil-Como_Elaborar_Projetos_de_Pesquisa-7ed_2022.pdf",
+    "tamanho_bytes": 176922685
+  },
+  {
+    "id": "Antonio_Carlos_Gil-Pesquisa_Qualitativa_Basica-2025",
+    "tipo": "livro_documento",
+    "extensao": "epub",
+    "titulo": "Pesquisa Qualitativa Basica",
+    "canal": "Antonio Carlos Gil",
+    "data_publicacao": "2025",
+    "tamanho_mb": "1.92 MB",
+    "arquivo_rel": "_lake/Antonio_Carlos_Gil-Pesquisa_Qualitativa_Basica-2025.epub",
+    "nome_arquivo": "Antonio_Carlos_Gil-Pesquisa_Qualitativa_Basica-2025.epub",
+    "tags": [
+      "academico",
+      "livro",
+      "epub"
+    ],
+    "resumo": "Obra acadêmica armazenada no Lake (.EPUB, 1.92 MB).",
+    "preview": "Arquivo original disponível no acervo local: Antonio_Carlos_Gil-Pesquisa_Qualitativa_Basica-2025.epub",
+    "tamanho_bytes": 2010509
+  },
+  {
+    "id": "Briony_Oates_et_al-Researching_Information_Systems_and_Computing-2ed_2022",
+    "tipo": "livro_documento",
+    "extensao": "pdf",
+    "titulo": "Researching Information Systems And Computing",
+    "canal": "Briony Oates Et Al",
+    "data_publicacao": "N/D",
+    "tamanho_mb": "4.09 MB",
+    "arquivo_rel": "_lake/Briony_Oates_et_al-Researching_Information_Systems_and_Computing-2ed_2022.pdf",
+    "nome_arquivo": "Briony_Oates_et_al-Researching_Information_Systems_and_Computing-2ed_2022.pdf",
+    "tags": [
+      "academico",
+      "livro",
+      "pdf"
+    ],
+    "resumo": "Obra acadêmica armazenada no Lake (.PDF, 4.09 MB).",
+    "preview": "Arquivo original disponível no acervo local: Briony_Oates_et_al-Researching_Information_Systems_and_Computing-2ed_2022.pdf",
+    "tamanho_bytes": 4292880
+  },
+  {
+    "id": "Carson_Dellosa-The_Complete_Book_of_Spanish_Grades_1_3-2016",
+    "tipo": "livro_documento",
+    "extensao": "pdf",
+    "titulo": "The Complete Book Of Spanish Grades 1 3",
+    "canal": "Carson Dellosa",
+    "data_publicacao": "2016",
+    "tamanho_mb": "18.85 MB",
+    "arquivo_rel": "_lake/Carson_Dellosa-The_Complete_Book_of_Spanish_Grades_1_3-2016.pdf",
+    "nome_arquivo": "Carson_Dellosa-The_Complete_Book_of_Spanish_Grades_1_3-2016.pdf",
+    "tags": [
+      "academico",
+      "livro",
+      "pdf"
+    ],
+    "resumo": "Obra acadêmica armazenada no Lake (.PDF, 18.85 MB).",
+    "preview": "Arquivo original disponível no acervo local: Carson_Dellosa-The_Complete_Book_of_Spanish_Grades_1_3-2016.pdf",
+    "tamanho_bytes": 19768352
+  },
+  {
+    "id": "Creswell_Creswell-Research_Design-6ed_2022",
+    "tipo": "livro_documento",
+    "extensao": "epub",
+    "titulo": "Research Design",
+    "canal": "Creswell Creswell",
+    "data_publicacao": "N/D",
+    "tamanho_mb": "13.54 MB",
+    "arquivo_rel": "_lake/Creswell_Creswell-Research_Design-6ed_2022.epub",
+    "nome_arquivo": "Creswell_Creswell-Research_Design-6ed_2022.epub",
+    "tags": [
+      "academico",
+      "livro",
+      "epub"
+    ],
+    "resumo": "Obra acadêmica armazenada no Lake (.EPUB, 13.54 MB).",
+    "preview": "Arquivo original disponível no acervo local: Creswell_Creswell-Research_Design-6ed_2022.epub",
+    "tamanho_bytes": 14195675
+  },
+  {
+    "id": "Gareth_James_et_al-An_Introduction_to_Statistical_Learning-2023",
+    "tipo": "livro_documento",
+    "extensao": "pdf",
+    "titulo": "An Introduction To Statistical Learning",
+    "canal": "Gareth James Et Al",
+    "data_publicacao": "2023",
+    "tamanho_mb": "12.59 MB",
+    "arquivo_rel": "_lake/Gareth_James_et_al-An_Introduction_to_Statistical_Learning-2023.pdf",
+    "nome_arquivo": "Gareth_James_et_al-An_Introduction_to_Statistical_Learning-2023.pdf",
+    "tags": [
+      "academico",
+      "livro",
+      "pdf"
+    ],
+    "resumo": "Obra acadêmica armazenada no Lake (.PDF, 12.59 MB).",
+    "preview": "Arquivo original disponível no acervo local: Gareth_James_et_al-An_Introduction_to_Statistical_Learning-2023.pdf",
+    "tamanho_bytes": 13201614
+  },
+  {
+    "id": "Graff_Birkenstein-They_Say_I_Say_with_Readings-6ed_2024",
+    "tipo": "livro_documento",
+    "extensao": "pdf",
+    "titulo": "They Say I Say With Readings",
+    "canal": "Graff Birkenstein",
+    "data_publicacao": "N/D",
+    "tamanho_mb": "24.34 MB",
+    "arquivo_rel": "_lake/Graff_Birkenstein-They_Say_I_Say_with_Readings-6ed_2024.pdf",
+    "nome_arquivo": "Graff_Birkenstein-They_Say_I_Say_with_Readings-6ed_2024.pdf",
+    "tags": [
+      "academico",
+      "livro",
+      "pdf"
+    ],
+    "resumo": "Obra acadêmica armazenada no Lake (.PDF, 24.34 MB).",
+    "preview": "Arquivo original disponível no acervo local: Graff_Birkenstein-They_Say_I_Say_with_Readings-6ed_2024.pdf",
+    "tamanho_bytes": 25522954
+  },
+  {
+    "id": "Joan_Bolker-Writing_Your_Dissertation_in_Fifteen_Minutes_a_Day-1998",
+    "tipo": "livro_documento",
+    "extensao": "epub",
+    "titulo": "Writing Your Dissertation In Fifteen Minutes A Day",
+    "canal": "Joan Bolker",
+    "data_publicacao": "1998",
+    "tamanho_mb": "1.0 MB",
+    "arquivo_rel": "_lake/Joan_Bolker-Writing_Your_Dissertation_in_Fifteen_Minutes_a_Day-1998.epub",
+    "nome_arquivo": "Joan_Bolker-Writing_Your_Dissertation_in_Fifteen_Minutes_a_Day-1998.epub",
+    "tags": [
+      "academico",
+      "livro",
+      "epub"
+    ],
+    "resumo": "Obra acadêmica armazenada no Lake (.EPUB, 1.0 MB).",
+    "preview": "Arquivo original disponível no acervo local: Joan_Bolker-Writing_Your_Dissertation_in_Fifteen_Minutes_a_Day-1998.epub",
+    "tamanho_bytes": 1049740
+  },
+  {
+    "id": "Marconi_Lakatos-Fundamentos_de_Metodologia_Cientifica-8ed_2017",
+    "tipo": "livro_documento",
+    "extensao": "pdf",
+    "titulo": "Fundamentos De Metodologia Cientifica",
+    "canal": "Marconi Lakatos",
+    "data_publicacao": "N/D",
+    "tamanho_mb": "1.83 MB",
+    "arquivo_rel": "_lake/Marconi_Lakatos-Fundamentos_de_Metodologia_Cientifica-8ed_2017.pdf",
+    "nome_arquivo": "Marconi_Lakatos-Fundamentos_de_Metodologia_Cientifica-8ed_2017.pdf",
+    "tags": [
+      "academico",
+      "livro",
+      "pdf"
+    ],
+    "resumo": "Obra acadêmica armazenada no Lake (.PDF, 1.83 MB).",
+    "preview": "Arquivo original disponível no acervo local: Marconi_Lakatos-Fundamentos_de_Metodologia_Cientifica-8ed_2017.pdf",
+    "tamanho_bytes": 1922165
+  },
+  {
+    "id": "Menga_Ludke-Pesquisa_em_Educacao_Abordagens_Qualitativas-2021",
+    "tipo": "livro_documento",
+    "extensao": "pdf",
+    "titulo": "Pesquisa Em Educacao Abordagens Qualitativas",
+    "canal": "Menga Ludke",
+    "data_publicacao": "2021",
+    "tamanho_mb": "45.87 MB",
+    "arquivo_rel": "_lake/Menga_Ludke-Pesquisa_em_Educacao_Abordagens_Qualitativas-2021.pdf",
+    "nome_arquivo": "Menga_Ludke-Pesquisa_em_Educacao_Abordagens_Qualitativas-2021.pdf",
+    "tags": [
+      "academico",
+      "livro",
+      "pdf"
+    ],
+    "resumo": "Obra acadêmica armazenada no Lake (.PDF, 45.87 MB).",
+    "preview": "Arquivo original disponível no acervo local: Menga_Ludke-Pesquisa_em_Educacao_Abordagens_Qualitativas-2021.pdf",
+    "tamanho_bytes": 48096286
+  },
+  {
+    "id": "Mittelbach_Fischer-The_LaTeX_Companion_Parts_I_and_II-3ed",
+    "tipo": "livro_documento",
+    "extensao": "pdf",
+    "titulo": "The Latex Companion Parts I And Ii",
+    "canal": "Mittelbach Fischer",
+    "data_publicacao": "N/D",
+    "tamanho_mb": "42.11 MB",
+    "arquivo_rel": "_lake/Mittelbach_Fischer-The_LaTeX_Companion_Parts_I_and_II-3ed.pdf",
+    "nome_arquivo": "Mittelbach_Fischer-The_LaTeX_Companion_Parts_I_and_II-3ed.pdf",
+    "tags": [
+      "academico",
+      "livro",
+      "pdf"
+    ],
+    "resumo": "Obra acadêmica armazenada no Lake (.PDF, 42.11 MB).",
+    "preview": "Arquivo original disponível no acervo local: Mittelbach_Fischer-The_LaTeX_Companion_Parts_I_and_II-3ed.pdf",
+    "tamanho_bytes": 44158687
+  },
+  {
+    "id": "Paul_Silvia-How_to_Write_a_Lot-2ed_2019",
+    "tipo": "livro_documento",
+    "extensao": "epub",
+    "titulo": "How To Write A Lot",
+    "canal": "Paul Silvia",
+    "data_publicacao": "N/D",
+    "tamanho_mb": "0.49 MB",
+    "arquivo_rel": "_lake/Paul_Silvia-How_to_Write_a_Lot-2ed_2019.epub",
+    "nome_arquivo": "Paul_Silvia-How_to_Write_a_Lot-2ed_2019.epub",
+    "tags": [
+      "academico",
+      "livro",
+      "epub"
+    ],
+    "resumo": "Obra acadêmica armazenada no Lake (.EPUB, 0.49 MB).",
+    "preview": "Arquivo original disponível no acervo local: Paul_Silvia-How_to_Write_a_Lot-2ed_2019.epub",
+    "tamanho_bytes": 514292
+  },
+  {
+    "id": "Simply_Psychology-Doing_a_Systematic_Review_A_Students_Guide",
+    "tipo": "livro_documento",
+    "extensao": "pdf",
+    "titulo": "Doing A Systematic Review A Students Guide",
+    "canal": "Simply Psychology",
+    "data_publicacao": "N/D",
+    "tamanho_mb": "1.03 MB",
+    "arquivo_rel": "_lake/Simply_Psychology-Doing_a_Systematic_Review_A_Students_Guide.pdf",
+    "nome_arquivo": "Simply_Psychology-Doing_a_Systematic_Review_A_Students_Guide.pdf",
+    "tags": [
+      "academico",
+      "livro",
+      "pdf"
+    ],
+    "resumo": "Obra acadêmica armazenada no Lake (.PDF, 1.03 MB).",
+    "preview": "Arquivo original disponível no acervo local: Simply_Psychology-Doing_a_Systematic_Review_A_Students_Guide.pdf",
+    "tamanho_bytes": 1078604
+  },
+  {
+    "id": "Till_Tantau-TikZ_and_PGF_Manual-3_1_8b_2020",
+    "tipo": "livro_documento",
+    "extensao": "pdf",
+    "titulo": "Tikz And Pgf Manual",
+    "canal": "Till Tantau",
+    "data_publicacao": "N/D",
+    "tamanho_mb": "10.09 MB",
+    "arquivo_rel": "_lake/Till_Tantau-TikZ_and_PGF_Manual-3_1_8b_2020.pdf",
+    "nome_arquivo": "Till_Tantau-TikZ_and_PGF_Manual-3_1_8b_2020.pdf",
+    "tags": [
+      "academico",
+      "livro",
+      "pdf"
+    ],
+    "resumo": "Obra acadêmica armazenada no Lake (.PDF, 10.09 MB).",
+    "preview": "Arquivo original disponível no acervo local: Till_Tantau-TikZ_and_PGF_Manual-3_1_8b_2020.pdf",
+    "tamanho_bytes": 10580316
+  },
+  {
+    "id": "Wayne_Booth_et_al-The_Craft_of_Research-5ed_2024",
+    "tipo": "livro_documento",
+    "extensao": "epub",
+    "titulo": "The Craft Of Research",
+    "canal": "Wayne Booth Et Al",
+    "data_publicacao": "N/D",
+    "tamanho_mb": "3.2 MB",
+    "arquivo_rel": "_lake/Wayne_Booth_et_al-The_Craft_of_Research-5ed_2024.epub",
+    "nome_arquivo": "Wayne_Booth_et_al-The_Craft_of_Research-5ed_2024.epub",
+    "tags": [
+      "academico",
+      "livro",
+      "epub"
+    ],
+    "resumo": "Obra acadêmica armazenada no Lake (.EPUB, 3.2 MB).",
+    "preview": "Arquivo original disponível no acervo local: Wayne_Booth_et_al-The_Craft_of_Research-5ed_2024.epub",
+    "tamanho_bytes": 3358695
+  }
+]
+</script>
+
+<script>
+  let items = [];
+  try {
+    items = JSON.parse(document.getElementById('lakeData').textContent);
+  } catch(e) {
+    console.error("Falha ao carregar lakeData", e);
+  }
+
+  let currentTypeFilter = 'all';
+  let currentView = 'cards';
+
+  function setTypeFilter(type, btn) {
+    currentTypeFilter = type;
+    document.querySelectorAll('.filter-pills .pill').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    renderItems();
+  }
+
+  function setView(view) {
+    currentView = view;
+    document.getElementById('btnCards').classList.toggle('active', view === 'cards');
+    document.getElementById('btnTable').classList.toggle('active', view === 'table');
+    document.getElementById('catalogGrid').style.display = view === 'cards' ? 'grid' : 'none';
+    document.getElementById('catalogTableWrap').style.display = view === 'table' ? 'block' : 'none';
+    renderItems();
+  }
+
+  function renderItems() {
+    const query = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+    const sort = document.getElementById('sortSelect').value;
+
+    let filtered = items.filter(item => {
+      if (currentTypeFilter !== 'all' && item.tipo !== currentTypeFilter) {
+        return false;
+      }
+      if (!query) return true;
+      const haystack = [
+        item.titulo,
+        item.canal,
+        item.resumo,
+        (item.tags || []).join(" ")
+      ].join(" ").toLowerCase();
+      return haystack.includes(query);
+    });
+
+    // Sorting
+    filtered.sort((a, b) => {
+      if (sort === 'title_asc') {
+        return a.titulo.localeCompare(b.titulo);
+      } else if (sort === 'duration_desc') {
+        return (b.duracao_segundos || 0) - (a.duracao_segundos || 0);
+      } else if (sort === 'words_desc') {
+        return (b.palavras || 0) - (a.palavras || 0);
+      }
+      return 0; // default order
+    });
+
+    if (currentView === 'cards') {
+      renderCards(filtered);
+    } else {
+      renderTable(filtered);
+    }
+  }
+
+  function renderCards(list) {
+    const grid = document.getElementById('catalogGrid');
+    if (list.length === 0) {
+      grid.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-icon">🔎</div>
+          <h3>Nenhum conteúdo encontrado</h3>
+          <p>Tente ajustar sua busca ou limpar os filtros selecionados.</p>
+        </div>
+      `;
+      return;
+    }
+
+    grid.innerHTML = list.map(item => {
+      const isYT = item.tipo === 'youtube_transcript';
+      const badge = isYT ? '<span class="card-badge badge-yt">YouTube</span>' : `<span class="card-badge badge-doc">${item.extensao || 'Doc'}</span>`;
+      const duration = isYT ? `<span class="card-duration">${item.duracao || '00:00'}</span>` : `<span class="card-duration">${item.tamanho_mb || ''}</span>`;
+
+      const mediaHtml = isYT && item.thumbnail_url 
+        ? `<img src="${item.thumbnail_url}" alt="${item.titulo}" loading="lazy" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'360\' height=\'200\' fill=\'%231e293b\'><rect width=\'100%\' height=\'100%\'/></svg>'">`
+        : `<div class="card-media-doc">${isYT ? '🎬' : '📚'}</div>`;
+
+      const tagsHtml = (item.tags || []).map(t => `<span class="tag">#${t}</span>`).join('');
+      const ytLinkBtn = isYT && item.url_original ? `<a href="${item.url_original}" target="_blank" class="btn" style="padding: 6px 12px; font-size: 0.8rem;">Assistir ↗</a>` : '';
+
+      return `
+        <div class="card">
+          <div class="card-media">
+            ${badge}
+            ${mediaHtml}
+            ${duration}
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">${item.titulo}</h3>
+            <div class="card-meta">
+              <span>👤 ${item.canal}</span>
+              ${item.data_publicacao ? `<span>📅 ${item.data_publicacao}</span>` : ''}
+              ${isYT && item.palavras ? `<span>📝 ${item.palavras} palavras</span>` : ''}
+            </div>
+            <p class="card-summary">${item.resumo || 'Sem resumo disponível.'}</p>
+            <div class="card-tags">${tagsHtml}</div>
+            <div class="card-footer">
+              <a href="${item.arquivo_rel}" class="btn btn-primary" style="padding: 6px 12px; font-size: 0.8rem;">Abrir Arquivo</a>
+              <div style="display: flex; gap: 6px;">
+                <button class="btn" style="padding: 6px 12px; font-size: 0.8rem;" onclick="openPreview('${item.id}')">Ver Prévia</button>
+                ${ytLinkBtn}
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function renderTable(list) {
+    const tbody = document.getElementById('catalogTableBody');
+    if (list.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 40px;">Nenhum conteúdo encontrado.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = list.map(item => {
+      const isYT = item.tipo === 'youtube_transcript';
+      const typeLabel = isYT ? '🎬 Transcrição' : `📚 ${item.extensao ? item.extensao.toUpperCase() : 'Doc'}`;
+      const dur = isYT ? item.duracao : item.tamanho_mb;
+      const tags = (item.tags || []).map(t => `<span class="tag">#${t}</span>`).join(' ');
+
+      return `
+        <tr>
+          <td><strong>${typeLabel}</strong></td>
+          <td><a href="${item.arquivo_rel}" style="color: var(--primary); text-decoration: none; font-weight: 600;">${item.titulo}</a></td>
+          <td>${item.canal}</td>
+          <td>${item.data_publicacao || '-'}</td>
+          <td>${dur || '-'}</td>
+          <td>${tags}</td>
+          <td>
+            <div style="display: flex; gap: 6px;">
+              <button class="btn" style="padding: 4px 8px; font-size: 0.75rem;" onclick="openPreview('${item.id}')">Prévia</button>
+              ${isYT && item.url_original ? `<a href="${item.url_original}" target="_blank" class="btn" style="padding: 4px 8px; font-size: 0.75rem;">Vídeo ↗</a>` : ''}
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function openPreview(id) {
+    const item = items.find(i => i.id === id);
+    if (!item) return;
+
+    document.getElementById('modalTitle').textContent = item.titulo;
+    document.getElementById('modalMeta').innerHTML = `
+      Canal/Autor: <strong>${item.canal}</strong> | 
+      Publicação: <strong>${item.data_publicacao || 'N/D'}</strong> 
+      ${item.duracao ? ` | Duração: <strong>${item.duracao}</strong>` : ''}
+      ${item.palavras ? ` | Palavras: <strong>${item.palavras}</strong>` : ''}
+    `;
+    document.getElementById('modalSummary').textContent = item.resumo || 'Sem resumo disponível.';
+
+    const modalTranscriptSec = document.getElementById('modalTranscriptSection');
+    const modalTranscript = document.getElementById('modalTranscript');
+    if (item.preview) {
+      modalTranscriptSec.style.display = 'block';
+      modalTranscript.textContent = item.preview;
+    } else {
+      modalTranscriptSec.style.display = 'none';
+    }
+
+    const fileLink = document.getElementById('modalFileLink');
+    fileLink.href = item.arquivo_rel;
+    fileLink.textContent = item.tipo === 'youtube_transcript' ? 'Abrir Transcrição (.md)' : 'Abrir Obra Original';
+
+    const ytLink = document.getElementById('modalYtLink');
+    if (item.url_original) {
+      ytLink.href = item.url_original;
+      ytLink.style.display = 'inline-flex';
+    } else {
+      ytLink.style.display = 'none';
+    }
+
+    document.getElementById('previewModal').classList.add('active');
+  }
+
+  function closeModal(e) {
+    document.getElementById('previewModal').classList.remove('active');
+  }
+
+  function toggleTheme() {
+    const cur = document.documentElement.getAttribute('data-theme');
+    const next = cur === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('lake_theme', next);
+  }
+
+  function copyCatalogInfo() {
+    const text = `🌊 Academic PKM Lake Catalog\nTotal de Itens: ${items.length}\nTotal Transcrições: ${items.filter(i => i.tipo === 'youtube_transcript').length}\nTotal Livros/PDFs: ${items.filter(i => i.tipo === 'livro_documento').length}`;
+    navigator.clipboard.writeText(text).then(() => {
+      alert('Resumo do catálogo copiado para a área de transferência!');
+    });
+  }
+
+  // Inicialização
+  const savedTheme = localStorage.getItem('lake_theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  renderItems();
+</script>
+
+</body>
+</html>

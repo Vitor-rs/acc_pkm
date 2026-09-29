@@ -1,0 +1,52 @@
+\documentclass[12pt,a4paper]{article}
+
+% --- Pacotes Fundamentais ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[brazil,english]{babel}
+\usepackage{geometry}
+\geometry{a4paper, margin=2.5cm}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage{url}
+
+% --- Metadados do Manuscrito ---
+\title{\textbf{Título da Pesquisa Científica: Subtítulo Explicativo}}
+\author{
+    \textbf{Vitor}\\
+    Programa de Pós-Graduação / Pesquisa em TI\\
+    \texttt{autor@exemplo.com}
+}
+\date{\today}
+
+\begin{document}
+\selectlanguage{brazil}
+
+\maketitle
+
+\begin{abstract}
+Este é o resumo da pesquisa acadêmica. O resumo deve apresentar de forma concisa e objetiva o contexto do problema, a lacuna teórica ou prática identificada, o objetivo principal do trabalho, a metodologia adotada (qualitativa, quantitativa ou métodos mistos) e os principais resultados obtidos ou contribuições esperadas.
+\end{abstract}
+
+\textbf{Palavras-chave:} Pesquisa Científica; Metodologia; Engenharia de Software; Ciência da Computação.
+
+\vspace{1em}
+\hrule
+\vspace{1.5em}
+
+% --- Inclusão Modular de Seções ---
+\input{sections/01_introducao.tex}
+\input{sections/02_trabalhos_relacionados.tex}
+\input{sections/03_metodologia.tex}
+\input{sections/04_resultados.tex}
+\input{sections/05_conclusao.tex}
+
+% --- Referências Bibliográficas ---
+\newpage
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}
