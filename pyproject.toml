@@ -15,4 +15,5 @@ dependencies = [
     "scrapling[all]>=0.4.15",
     "firecrawl-py>=4.45.0",
     "python-dotenv>=1.2.3",
+    "pymupdf4llm>=1.28.2",
 ]

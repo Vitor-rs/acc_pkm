@@ -1,0 +1,541 @@
+{
+  "WMSIQ3BI": {
+    "title": "Reading History Records",
+    "target_file": "static-s_d-Reading_History_Records.md",
+    "dateModified": "",
+    "parsed_with": "metadata_only",
+    "synced_at": "2026-09-29T17:55:18.438610"
+  },
+  "6I63XYBX": {
+    "title": "Information for a better world: normality, virtuality, physicality, inclusivity",
+    "target_file": "Sserwanga_et_al-2023-Information_for_a_better_world_normality_virtuality_physicality_i.md",
+    "dateModified": "",
+    "parsed_with": "metadata_only",
+    "synced_at": "2026-09-29T17:55:31.441860"
+  },
+  "W5J79WT6": {
+    "title": "ANLS* -- a universal document processing metric for generative large language models",
+    "target_file": "Peer_et_al-2024-ANLS_a_universal_document_processing_metric_for_generative_large_.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T17:56:01.164156"
+  },
+  "HKAC8QXR": {
+    "title": "The million-label NER: breaking scale barriers with GLiNER bi-encoder",
+    "target_file": "Stepanov_et_al-2026-The_million_label_NER_breaking_scale_barriers_with_GLiNER_bi_enco.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T17:56:34.393755"
+  },
+  "4GPEY5BD": {
+    "title": "GLiNER: generalist model for named entity recognition using bidirectional transformer",
+    "target_file": "Anonimo-s_d-GLiNER_generalist_model_for_named_entity_recognition_using_bidire.md",
+    "dateModified": "",
+    "parsed_with": "metadata_only",
+    "synced_at": "2026-09-29T17:56:47.358795"
+  },
+  "X7HSG9C2": {
+    "title": "DocFusion: a unified framework for document parsing tasks",
+    "target_file": "Chai_et_al-2024-DocFusion_a_unified_framework_for_document_parsing_tasks.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T17:58:14.448140"
+  },
+  "VUPRZQ8Y": {
+    "title": "Advanced layout analysis models for docling",
+    "target_file": "Livathinos_et_al-2025-Advanced_layout_analysis_models_for_docling.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T17:58:53.465221"
+  },
+  "7EBYC5D8": {
+    "title": "XFUND: a benchmark dataset for multilingual visually rich form understanding",
+    "target_file": "Xu_et_al-2022-XFUND_a_benchmark_dataset_for_multilingual_visually_rich_form_und.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T17:59:41.151465"
+  },
+  "8682SHSR": {
+    "title": "GLiNER2: schema-driven multi-task learning for structured information extraction",
+    "target_file": "Zaratiana_et_al-2025-GLiNER2_schema_driven_multi_task_learning_for_structured_informat.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:00:15.156012"
+  },
+  "9NYBMV6L": {
+    "title": "GLiNER2: an efficient multi-task information extraction system with schema-driven interface",
+    "target_file": "Zaratiana_et_al-2025-GLiNER2_an_efficient_multi_task_information_extraction_system_wit.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:00:50.335238"
+  },
+  "PBPXSMVF": {
+    "title": "Protótipo de ChatBot open source com RAG e dados estruturados para apoio académico",
+    "target_file": "Almeida_et_al-2025-Prototipo_de_ChatBot_open_source_com_RAG_e_dados_estruturados_par.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:01:32.262247"
+  },
+  "ZU2DHWJ8": {
+    "title": "A benchmark of PDF information extraction tools using a multi-task and multi-domain evaluation framework for academic documents",
+    "target_file": "Sserwanga_et_al-2023-A_benchmark_of_PDF_information_extraction_tools_using_a_multi_tas.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:02:17.641617"
+  },
+  "7TIAYM8Z": {
+    "title": "Docling: an efficient open-source toolkit for AI-driven document conversion",
+    "target_file": "Livathinos_et_al-2025-Docling_an_efficient_open_source_toolkit_for_AI_driven_document_c.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:02:44.186493"
+  },
+  "D82QAK2H": {
+    "title": "Portuguese named entity recognition using BERT-CRF",
+    "target_file": "Souza_et_al-2019-Portuguese_named_entity_recognition_using_BERT_CRF.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:03:10.414156"
+  },
+  "E4SZQCPW": {
+    "title": "Multilingual transformer ensembles for portuguese natural language tasks",
+    "target_file": "Ruan_Chaves_Rodrigues_et_al-2020-Multilingual_transformer_ensembles_for_portuguese_natural_languag.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:03:41.941996"
+  },
+  "HXPTCW9M": {
+    "title": "QLoRA: efficient finetuning of quantized LLMs",
+    "target_file": "Dettmers_et_al-2023-QLoRA_efficient_finetuning_of_quantized_LLMs.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:04:43.613535"
+  },
+  "V9LAIV2X": {
+    "title": "The ultimate guide to fine-tuning LLMs from basics to breakthroughs: an exhaustive review of technologies, research, best practices, applied research challenges and opportunities",
+    "target_file": "Parthasarathy_et_al-2024-The_ultimate_guide_to_fine_tuning_LLMs_from_basics_to_breakthroug.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:09:45.635941"
+  },
+  "F8B84GQ5": {
+    "title": "Classificação: acurácia, recall, precisão e métricas relacionadas | machine learning",
+    "target_file": "Anonimo-2025-Classificacao_acuracia_recall_precisao_e_metricas_relacionadas_ma.md",
+    "dateModified": "",
+    "parsed_with": "html_cleaner",
+    "synced_at": "2026-09-29T18:09:59.730633"
+  },
+  "UK8ZZ549": {
+    "title": "Document classification: end-to-end ML workflow explained",
+    "target_file": "Naminas-2025-Document_classification_end_to_end_ML_workflow_explained.md",
+    "dateModified": "",
+    "parsed_with": "html_cleaner",
+    "synced_at": "2026-09-29T18:10:14.804744"
+  },
+  "J9VS7DHV": {
+    "title": "Build a RAG agent with LangChain",
+    "target_file": "Anonimo-2025-Build_a_RAG_agent_with_LangChain.md",
+    "dateModified": "",
+    "parsed_with": "metadata_only",
+    "synced_at": "2026-09-29T18:10:28.539285"
+  },
+  "KX5WRQMB": {
+    "title": "Corrective retrieval augmented generation",
+    "target_file": "Yan_et_al-2024-Corrective_retrieval_augmented_generation.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:11:07.862479"
+  },
+  "TUSEITM2": {
+    "title": "Improving domain adaptation through extended-text reading comprehension",
+    "target_file": "Jiang_et_al-2024-Improving_domain_adaptation_through_extended_text_reading_compreh.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:11:31.928870"
+  },
+  "XN27VL49": {
+    "title": "Retrieval augmented generation (RAG) – nextra",
+    "target_file": "Anonimo-2025-Retrieval_augmented_generation_RAG_nextra.md",
+    "dateModified": "",
+    "parsed_with": "html_cleaner",
+    "synced_at": "2026-09-29T18:11:44.897381"
+  },
+  "RJIXYBEL": {
+    "title": "Leveraging ONNX for interoperable machine learning: a practical guide with java spring boot",
+    "target_file": "Shamaii-2024-Leveraging_ONNX_for_interoperable_machine_learning_a_practical_gu.md",
+    "dateModified": "",
+    "parsed_with": "metadata_only",
+    "synced_at": "2026-09-29T18:11:57.868647"
+  },
+  "ERZX36KZ": {
+    "title": "Scaling laws for discriminative classification in large language models",
+    "target_file": "Wyatte_et_al-2024-Scaling_laws_for_discriminative_classification_in_large_language_.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:12:34.896190"
+  },
+  "6GV5DKIT": {
+    "title": "Combining rule engines and machine learning - nlathia.github.io",
+    "target_file": "Neal_Lathia-2020-Combining_rule_engines_and_machine_learning_nlathiagithubio.md",
+    "dateModified": "",
+    "parsed_with": "metadata_only",
+    "synced_at": "2026-09-29T18:12:47.803677"
+  },
+  "RE4KDDWK": {
+    "title": "A new hybrid classification algorithm for predicting student performance",
+    "target_file": "Alharbi_et_al-2024-A_new_hybrid_classification_algorithm_for_predicting_student_perf.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:13:25.888987"
+  },
+  "D55CHGPZ": {
+    "title": "A robust hybrid approach for textual document classification",
+    "target_file": "Asim_et_al-2019-A_robust_hybrid_approach_for_textual_document_classification.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:13:53.324381"
+  },
+  "6Z95RT7E": {
+    "title": "Rule-based vs. Machine learning AI: which produces better results?",
+    "target_file": "Shai_Samana-2023-Rule_based_vs_Machine_learning_AI_which_produces_better_results.md",
+    "dateModified": "",
+    "parsed_with": "html_cleaner",
+    "synced_at": "2026-09-29T18:14:08.544420"
+  },
+  "2JD8IK3M": {
+    "title": "Retrieval augmented classification: improving text classification with external knowledge",
+    "target_file": "Mansar-2025-Retrieval_augmented_classification_improving_text_classification_.md",
+    "dateModified": "",
+    "parsed_with": "html_cleaner",
+    "synced_at": "2026-09-29T18:14:23.892432"
+  },
+  "2ULKAS9W": {
+    "title": "neuralmind-ai/portuguese-bert",
+    "target_file": "Rodrigo_Nogueira_et_al-2025-neuralmind_aiportuguese_bert.md",
+    "dateModified": "",
+    "parsed_with": "metadata_only",
+    "synced_at": "2026-09-29T18:14:34.532519"
+  },
+  "AYHMWB5S": {
+    "title": "Beyond flesch-kincaid: prompt-based metrics improve difficulty classification of educational texts",
+    "target_file": "Rooein_et_al-2024-Beyond_flesch_kincaid_prompt_based_metrics_improve_difficulty_cla.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:15:11.796247"
+  },
+  "J5Z2PQMA": {
+    "title": "SciLitLLM: how to adapt LLMs for scientific literature understanding",
+    "target_file": "Li_et_al-2024-SciLitLLM_how_to_adapt_LLMs_for_scientific_literature_understandi.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:15:57.358912"
+  },
+  "8ZYYHRBS": {
+    "title": "A comparative analysis of instruction fine-tuning LLMs for financial text classification",
+    "target_file": "Fatemi_et_al-2024-A_comparative_analysis_of_instruction_fine_tuning_LLMs_for_financ.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:16:51.869086"
+  },
+  "FDF9GB2B": {
+    "title": "Parameter-efficient fine-tuning of large language models with LoRA and QLoRA",
+    "target_file": "Dhote-2023-Parameter_efficient_fine_tuning_of_large_language_models_with_LoR.md",
+    "dateModified": "",
+    "parsed_with": "metadata_only",
+    "synced_at": "2026-09-29T18:17:04.112545"
+  },
+  "FY7RU2QJ": {
+    "title": "artidoro/qlora",
+    "target_file": "Pagnoni-2025-artidoroqlora.md",
+    "dateModified": "",
+    "parsed_with": "metadata_only",
+    "synced_at": "2026-09-29T18:17:15.838353"
+  },
+  "XH7NNE4Y": {
+    "title": "Can artificial intelligence transform higher education?",
+    "target_file": "Bates_et_al-2020-Can_artificial_intelligence_transform_higher_education.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:17:42.497563"
+  },
+  "U8DW2KUH": {
+    "title": "Embedding in recommender systems: a survey",
+    "target_file": "Wang_et_al-2026-Embedding_in_recommender_systems_a_survey.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:18:51.957814"
+  },
+  "R6VZ4S8U": {
+    "title": "Retrieval-augmented generation for large language models: a survey",
+    "target_file": "Gao_et_al-2023-Retrieval_augmented_generation_for_large_language_models_a_survey.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:19:38.470252"
+  },
+  "C53SW78E": {
+    "title": "AI in higher education: how AI is reshaping higher education | USAHS",
+    "target_file": "Tsukenjo-2025-AI_in_higher_education_how_AI_is_reshaping_higher_education_USAHS.md",
+    "dateModified": "",
+    "parsed_with": "html_cleaner",
+    "synced_at": "2026-09-29T18:19:51.426629"
+  },
+  "MDDIFY37": {
+    "title": "O trabalho docente nos institutos federais no contexto de expansão da educação superior",
+    "target_file": "Silva_et_al-2018-O_trabalho_docente_nos_institutos_federais_no_contexto_de_expansa.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:20:26.702370"
+  },
+  "4WZ98K9J": {
+    "title": "Fatores determinantes da eficiência relativa dos institutos federais de educação, ciência e tecnologia brasileiros",
+    "target_file": "Silva_et_al-2024-Fatores_determinantes_da_eficiencia_relativa_dos_institutos_feder.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:21:25.433228"
+  },
+  "ZSHTFJM5": {
+    "title": "Perfil das atividades complementares dos graduandos em medicina pela universidade estadual de feira de santana, 2009-2017",
+    "target_file": "Cruz_et_al-2019-Perfil_das_atividades_complementares_dos_graduandos_em_medicina_p.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:21:57.478462"
+  },
+  "RNJY44NP": {
+    "title": "Regulamento da organização didático pedagógica - retificação - IFMS",
+    "target_file": "Ifms_et_al-2024-Regulamento_da_organizacao_didatico_pedagogica_retificacao_IFMS.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:23:06.027415"
+  },
+  "MBMLBIMQ": {
+    "title": "Resolucao 063-2018 - projeto pedagógico do curso superior de análise e desenvolvimento de sitemas - nv - IFMS",
+    "target_file": "Ifms-2021-Resolucao_063_2018_projeto_pedagogico_do_curso_superior_de_analis.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:27:14.700060"
+  },
+  "L5EFP25J": {
+    "title": "O sistema integrado de gestão de atividades acadêmicas (SIGAA) na pós-graduação da UFPA: estudo de caso no NAEA",
+    "target_file": "Vieira_et_al-2021-O_sistema_integrado_de_gestao_de_atividades_academicas_SIGAA_na_p.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:27:56.181583"
+  },
+  "I3BPYB9B": {
+    "title": "Tutorial - banco de horas e creditação de atividades complementares e extensão no SIGAA - universidade federal do ceará",
+    "target_file": "Prex_et_al-2022-Tutorial_banco_de_horas_e_creditacao_de_atividades_complementares.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:28:45.504756"
+  },
+  "A8UTTN7A": {
+    "title": "Tutorial sistec",
+    "target_file": "Sistec-2020-Tutorial_sistec.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:29:25.811117"
+  },
+  "IVV92952": {
+    "title": "Comparing SVM and na&#x00EF;ve bayes classifiers for text categorization with wikitology as knowledge enrichment",
+    "target_file": "Hassan_et_al-2011-Comparing_SVM_and_nax00EFve_bayes_classifiers_for_text_categoriza.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:29:46.277669"
+  },
+  "5SDM28AZ": {
+    "title": "Reconhecimento de entidades nomeadas para o português usando o OpenNLP",
+    "target_file": "Chiele_et_al-2015-Reconhecimento_de_entidades_nomeadas_para_o_portugues_usando_o_Op.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:30:10.910694"
+  },
+  "2UC96RDQ": {
+    "title": "ICDAR2019 competition on scanned receipt OCR and information extraction",
+    "target_file": "Huang_et_al-2019-ICDAR2019_competition_on_scanned_receipt_OCR_and_information_extr.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:30:32.251571"
+  },
+  "WUPEAYL9": {
+    "title": "Enhancing text recognition in OCR systems through image processing with BSRGAN",
+    "target_file": "Lima_et_al-2025-Enhancing_text_recognition_in_OCR_systems_through_image_processin.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:31:03.413744"
+  },
+  "6E5FI5NC": {
+    "title": "Sistemas de informação",
+    "target_file": "Ufsc_et_al-2024-Sistemas_de_informacao.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:31:28.703531"
+  },
+  "8RLAL6Y5": {
+    "title": "A pipeline and comparative study of 12 machine learning models for text classification",
+    "target_file": "Occhipinti_et_al-2022-A_pipeline_and_comparative_study_of_12_machine_learning_models_fo.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:32:37.936257"
+  },
+  "YQTLDPU2": {
+    "title": "Syntactic parsing: where are we going?",
+    "target_file": "Lopes_et_al-2024-Syntactic_parsing_where_are_we_going.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:33:02.077600"
+  },
+  "3GZMLQVK": {
+    "title": "From medical records to research papers: a literature analysis pipeline for supporting medical genomic diagnosis processes",
+    "target_file": "Lopez_Bello_et_al-2019-From_medical_records_to_research_papers_a_literature_analysis_pip.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:33:36.340864"
+  },
+  "3ZYYXA9V": {
+    "title": "An overview of the tesseract OCR engine",
+    "target_file": "Smith-2007-An_overview_of_the_tesseract_OCR_engine.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:33:57.395868"
+  },
+  "QBZ3FUNZ": {
+    "title": "Python OCR tutorial: tesseract, pytesseract, and OpenCV",
+    "target_file": "Anonimo-2023-Python_OCR_tutorial_tesseract_pytesseract_and_OpenCV.md",
+    "dateModified": "",
+    "parsed_with": "html_cleaner",
+    "synced_at": "2026-09-29T18:34:10.248643"
+  },
+  "DU2M79G4": {
+    "title": "Understanding document classification: a step-wise breakdown",
+    "target_file": "Anonimo-2025-Understanding_document_classification_a_step_wise_breakdown.md",
+    "dateModified": "",
+    "parsed_with": "metadata_only",
+    "synced_at": "2026-09-29T18:34:21.444385"
+  },
+  "FGVARUV3": {
+    "title": "Comparing different supervised machine learning algorithms for disease prediction",
+    "target_file": "Uddin_et_al-2019-Comparing_different_supervised_machine_learning_algorithms_for_di.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:35:07.080731"
+  },
+  "2RLCAYI3": {
+    "title": "Segmentação textual baseada em tópicos em português utilizando BERTimbau",
+    "target_file": "Da_Silva_et_al-2024-Segmentacao_textual_baseada_em_topicos_em_portugues_utilizando_BE.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:35:27.941280"
+  },
+  "6WR4HTYB": {
+    "title": "Brno mobile OCR dataset",
+    "target_file": "Kiss_et_al-2019-Brno_mobile_OCR_dataset.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:35:52.314579"
+  },
+  "S8R5TP2W": {
+    "title": "Trustworthy verification of academic credentials through blockchain technology",
+    "target_file": "Kabashi_et_al-2024-Trustworthy_verification_of_academic_credentials_through_blockcha.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:36:24.453947"
+  },
+  "35PWH9FM": {
+    "title": "sOCRates - a post-OCR text correction method",
+    "target_file": "Suarez_Vargas_et_al-2021-sOCRates_a_post_OCR_text_correction_method.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:36:55.569278"
+  },
+  "GVF6AK4H": {
+    "title": "Named entity recognition and classification in historical documents: a survey",
+    "target_file": "Ehrmann_et_al-2024-Named_entity_recognition_and_classification_in_historical_documen.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:38:31.567103"
+  },
+  "4VBHITBC": {
+    "title": "Parsing structured data within PDF documents with apache PDFBox",
+    "target_file": "Howlett-2022-Parsing_structured_data_within_PDF_documents_with_apache_PDFBox.md",
+    "dateModified": "",
+    "parsed_with": "metadata_only",
+    "synced_at": "2026-09-29T18:38:42.768779"
+  },
+  "8DIVSQP9": {
+    "title": "OCR accuracy improvement on document images through a novel pre-processing approach",
+    "target_file": "A_et_al-2015-OCR_accuracy_improvement_on_document_images_through_a_novel_pre_p.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:39:19.486921"
+  },
+  "9GNVERSR": {
+    "title": "In-depth analysis of the impact of OCR errors on named entity recognition and linking",
+    "target_file": "Hamdi_et_al-2023-In_depth_analysis_of_the_impact_of_OCR_errors_on_named_entity_rec.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:40:17.904925"
+  },
+  "ZWV7JUDC": {
+    "title": "Processamento de linguagem natural e classificação de textos em sistemas modulares",
+    "target_file": "Ferreira-2019-Processamento_de_linguagem_natural_e_classificacao_de_textos_em_s.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:42:09.525803"
+  },
+  "LCPFXTFS": {
+    "title": "Etiquetagem morfossintática multigênero para o português do brasil segundo o modelo \"universal dependencies\"",
+    "target_file": "Silva_et_al-2023-Etiquetagem_morfossintatica_multigenero_para_o_portugues_do_brasi.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:42:41.590559"
+  },
+  "C8JEL8RP": {
+    "title": "Improving the accuracy of tesseract 4.0 OCR engine using convolution-based preprocessing",
+    "target_file": "Sporici_et_al-2020-Improving_the_accuracy_of_tesseract_40_OCR_engine_using_convoluti.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:43:34.022137"
+  },
+  "6ZZ7RKC3": {
+    "title": "A Comprehensive Survey on Vector Database: Storage and Retrieval Technique, Challenge",
+    "target_file": "Ma_et_al-2023-A_Comprehensive_Survey_on_Vector_Database_Storage_and_Retrieval_T.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:44:47.966820"
+  },
+  "AQ5N7KZX": {
+    "title": "A structural and generative approach to multilayered software architectures",
+    "target_file": "Kouamou_et_al-2017-A_structural_and_generative_approach_to_multilayered_software_arc.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:45:24.428132"
+  },
+  "4B2Z5XTR": {
+    "title": "A comprehensive survey of text classification techniques and their research applications: observational and experimental insights",
+    "target_file": "Taha_et_al-2024-A_comprehensive_survey_of_text_classification_techniques_and_thei.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:47:34.772203"
+  },
+  "ZVNRGKUA": {
+    "title": "BERT: pre-training of deep bidirectional transformers for language understanding",
+    "target_file": "Devlin_et_al-2018-BERT_pre_training_of_deep_bidirectional_transformers_for_language.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:48:24.849938"
+  },
+  "28FC54M6": {
+    "title": "Document parsing unveiled: techniques, challenges, and prospects for structured information extraction",
+    "target_file": "Zhang_et_al-2024-Document_parsing_unveiled_techniques_challenges_and_prospects_for.md",
+    "dateModified": "",
+    "parsed_with": "pymupdf4llm",
+    "synced_at": "2026-09-29T18:49:52.435814"
+  },
+  "5FFILUGW": {
+    "title": "Seg",
+    "target_file": "Anonimo-2012-Seg.md",
+    "dateModified": "",
+    "parsed_with": "metadata_only",
+    "synced_at": "2026-09-29T18:50:03.396624"
+  }
+}

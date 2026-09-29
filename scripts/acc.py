@@ -151,6 +151,28 @@ def cmd_doctor():
         "Chave ativa no .env (Pesquisa de papers e deep crawl)" if firecrawl_key else "Definir FIRECRAWL_API_KEY em .env"
     )
 
+    # 4. Zotero & PyMuPDF4LLM
+    has_zcli, zcli_path = check_command("zotero-cli")
+    table.add_row(
+        "Zotero CLI",
+        "[green]✔ OK[/green]" if has_zcli else "[red]✘ Ausente[/red]",
+        f"Operacional ({zcli_path})" if has_zcli else "Instalar via uv tool install 'zotero-mcp-server[all]'"
+    )
+
+    try:
+        import pymupdf4llm
+        has_pymupdf4llm = True
+        pymupdf4llm_ver = f"v{pymupdf4llm.__version__}"
+    except Exception:
+        has_pymupdf4llm = False
+        pymupdf4llm_ver = "Ausente"
+
+    table.add_row(
+        "PyMuPDF4LLM (Doc Parsing)",
+        "[green]✔ OK[/green]" if has_pymupdf4llm else "[red]✘ Ausente[/red]",
+        f"{pymupdf4llm_ver} (GFM Markdown com tabelas nativas e equações)"
+    )
+
     console.print(table)
 
 
@@ -333,6 +355,50 @@ def cmd_search_papers(args: list[str]):
     subprocess.run([sys.executable, str(script_path), "search-papers"] + args)
 
 
+def cmd_zotero(args: list[str]):
+    """Gerencia a integração e sincronização com o Zotero."""
+    if not args:
+        console.print("[cyan]Uso: acc zotero [sync|search|add|recent|path][/cyan]")
+        console.print("  [green]sync[/green] [--force] [--limit N] - Sincroniza acervo para resources/_lake com PyMuPDF4LLM")
+        console.print("  [green]search[/green] <termo>           - Busca artigos no Zotero por texto ou tag")
+        console.print("  [green]add[/green] <doi|url|isbn>       - Adiciona item à biblioteca e baixa anexo")
+        console.print("  [green]recent[/green] [--limit N]        - Lista itens recentes")
+        return
+
+    sub = args[0].lower()
+    if sub in ("sync", "sincronizar", "lake"):
+        script_path = ROOT_DIR / "scripts" / "zotero_lake_sync.py"
+        subprocess.run([sys.executable, str(script_path)] + args[1:])
+    elif sub in ("search", "s"):
+        term = " ".join(args[1:])
+        cmd = ["zotero-cli", "search", term]
+        subprocess.run(cmd)
+    elif sub in ("add", "a"):
+        if len(args) < 2:
+            console.print("[red]Especifique o identificador:[/red] acc zotero add <doi|url|isbn>")
+            return
+        identifier = args[1]
+        mode = "doi" if "/" in identifier and not identifier.startswith("http") else ("url" if identifier.startswith("http") else "isbn")
+        cmd = ["zotero-cli", "add", mode, identifier]
+        res = subprocess.run(cmd)
+        if res.returncode == 0:
+            console.print("[green]✔ Item adicionado com sucesso. Sincronizando com o Lake...[/green]")
+            script_path = ROOT_DIR / "scripts" / "zotero_lake_sync.py"
+            subprocess.run([sys.executable, str(script_path)])
+    elif sub in ("recent", "r"):
+        cmd = ["zotero-cli", "get", "recent"] + args[1:]
+        subprocess.run(cmd)
+    elif sub in ("path", "p"):
+        if len(args) < 2:
+            console.print("[red]Especifique a chave do item:[/red] acc zotero path <ITEM_KEY>")
+            return
+        cmd = ["zotero-cli", "path", args[1]]
+        subprocess.run(cmd)
+    else:
+        cmd = ["zotero-cli"] + args
+        subprocess.run(cmd)
+
+
 def main():
     if len(sys.argv) < 2:
         console.print(Panel.fit(
@@ -340,13 +406,14 @@ def main():
             "Comandos disponíveis:\n"
             "  [green]doctor[/green]         - Verifica saúde do ecossistema e dependências\n"
             "  [green]catalog[/green]        - Reindexa o _lake e gera _lake_catalog.html e documents.jsonl\n"
+            "  [green]zotero[/green]         - Sincroniza acervo Zotero com Lake via PyMuPDF4LLM e master.bib\n"
             "  [green]scrape[/green]         - Raspa artigos e páginas web com bypass anti-bot e salva no Lake\n"
             "  [green]search-papers[/green]  - Pesquisa papers acadêmicos e indexa resumos no Lake\n"
             "  [green]new-project[/green]    - Cria um novo projeto acadêmico LaTeX modular\n"
             "  [green]build[/green]          - Compila o manuscrito LaTeX de um projeto\n"
             "  [green]bib-audit[/green]      - Valida a consistência do arquivo master.bib\n"
             "  [green]transcript[/green]     - Transcreve vídeos e playlists do YouTube para o Lake\n\n"
-            "Exemplo: [italic]uv run python scripts/acc.py doctor[/italic]",
+            "Exemplo: [italic]uv run python scripts/acc.py zotero sync[/italic]",
             border_style="cyan"
         ))
         return
@@ -357,6 +424,8 @@ def main():
         cmd_doctor()
     elif action in ("catalog", "reindex", "--reindex"):
         cmd_catalog()
+    elif action in ("zotero", "zot", "z"):
+        cmd_zotero(sys.argv[2:])
     elif action in ("scrape", "web", "harvest"):
         cmd_scrape(sys.argv[2:])
     elif action in ("search-papers", "papers", "paper-search"):

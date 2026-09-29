@@ -8,8 +8,12 @@ Repositório de Gestão de Conhecimento Pessoal (Personal Knowledge Management -
 - `scripts/`: Scripts utilitários, automações e arquivos `.bat` (evitar arquivos soltos na raiz).
 - `.agents/skills/transcript/SKILL.md`: Definição da skill e do comando `/transcript`.
 - `.agents/skills/web-harvest/SKILL.md`: Definição da skill e comandos `/scrape`, `/crawl` e `/paper-search`.
+- `.agents/skills/zotero/SKILL.md`: Definição da skill e comando `/zotero`.
 
 ## Comandos Rápidos
+- `/zotero sync`: Sincroniza todo o acervo do Zotero Desktop para `resources/_lake/` com parsing PyMuPDF4LLM e atualiza `master.bib` e o catálogo.
+- `/zotero search "<termo>"`: Busca instantânea na biblioteca local via SQLite.
+- `/zotero add "<doi>"`: Adiciona artigo por DOI no Zotero, obtém o PDF e puxa para o Lake.
 - `/transcript <url>`: Transcreve um vídeo, salva no Lake e atualiza o catálogo em `resources/`.
 - `/transcript <url1> <url2>`: Transcreve múltiplos vídeos em lote.
 - `/transcript <playlist_url>`: Transcreve automaticamente todos os vídeos de uma playlist.

@@ -141,3 +141,813 @@
   organization = {Institut für Theoretische Informatik, Universität zu Lübeck},
   url          = {https://ctan.org/pkg/pgf}
 }
+
+
+@misc{staticnodate_WMSIQ3BI,
+  title = {Reading History Records},
+  url = {https://github.com/volatile-static/Chartero},
+  abstract = {Reading history data recorded by Chartero.
+Do NOT modify!}
+}
+
+@book{Sserwanga2023_6I63XYBX,
+  title = {Information for a better world: normality, virtuality, physicality, inclusivity},
+  volume = {13972},
+  publisher = {Springer Nature Switzerland},
+  address = {Cham},
+  doi = {10.1007/978-3-031-28032-0_31},
+  isbn = {978-3-031-28031-3 978-3-031-28032-0},
+  url = {https://link.springer.com/10.1007/978-3-031-28032-0_31},
+  year = {2023}
+}
+
+@misc{Peer2024_W5J79WT6,
+  title = {ANLS* -- a universal document processing metric for generative large language models},
+  doi = {10.48550/ARXIV.2402.03848},
+  url = {https://arxiv.org/abs/2402.03848},
+  abstract = {Traditionally, discriminative models have been the predominant choice for tasks like document classification and information extraction. These models make predictions that fall into a limited number of predefined classes, facilitating a binary true or false evaluation and enabling the direct calculation of metrics such as the F1 score. However, recent advancements in generative large language models (GLLMs) have prompted a shift in the field due to their enhanced zero-shot capabilities, which eliminate the need for a downstream dataset and computationally expensive fine-tuning. However, evaluating GLLMs presents a challenge as the binary true or false evaluation used for discriminative models is not applicable to the predictions made by GLLMs. This paper introduces a new metric for generative models called ANLS* for evaluating a wide variety of tasks, including information extraction and classification tasks. The ANLS* metric extends existing ANLS metrics as a drop-in-replacement and is still compatible with previously reported ANLS scores. An evaluation of 7 different datasets, and more than 20 different GLLMs together with 3 different prompting methods using the ANLS* metric is also provided, demonstrating the importance of the proposed metric. We also benchmark a novel approach to generate prompts for documents, called SFT, against other prompting techniques such as LATIN. In almost all cases, SFT outperforms other techniques and improves the state-of-the-art, sometimes by as much as $10$ percentage points. Sources are available at https://github.com/deepopinion/anls_star_metric},
+  author = {Peer, David and Schöpf, Philemon and Nebendahl, Volckmar and Rietzler, Alexander and Stabinger, Sebastian},
+  year = {2024}
+}
+
+@misc{Stepanov2026_HKAC8QXR,
+  title = {The million-label NER: breaking scale barriers with GLiNER bi-encoder},
+  doi = {10.48550/ARXIV.2602.18487},
+  url = {https://arxiv.org/abs/2602.18487},
+  abstract = {This paper introduces GLiNER-bi-Encoder, a novel architecture for Named Entity Recognition (NER) that harmonizes zero-shot flexibility with industrial-scale efficiency. While the original GLiNER framework offers strong generalization, its joint-encoding approach suffers from quadratic complexity as the number of entity labels increases. Our proposed bi-encoder design decouples the process into a dedicated label encoder and a context encoder, effectively removing the context-window bottleneck. This architecture enables the simultaneous recognition of thousands, and potentially millions, of entity types with minimal overhead. Experimental results demonstrate state-of-the-art zero-shot performance, achieving 61.5 percent Micro-F1 on the CrossNER benchmark. Crucially, by leveraging pre-computed label embeddings, GLiNER-bi-Encoder achieves up to a 130 times throughput improvement at 1024 labels compared to its uni-encoder predecessors. Furthermore, we introduce GLiNKER, a modular framework that leverages this architecture for high-performance entity linking across massive knowledge bases such as Wikidata.},
+  author = {Stepanov, Ihor and Shtopko, Mykhailo and Vodianytskyi, Dmytro and Lukashov, Oleksandr},
+  year = {2026}
+}
+
+@misc{nodate_4GPEY5BD,
+  title = {GLiNER: generalist model for named entity recognition using bidirectional transformer},
+  doi = {10.18653/v1/2024.naacl-long.300},
+  url = {https://ar5iv.labs.arxiv.org/html/2311.08526},
+  abstract = {Named Entity Recognition (NER) is essential in various Natural Language Processing (NLP) applications. Traditional NER models are effective but limited to a set of predefined entity types. In contrast, Large Language M…}
+}
+
+
+@misc{Chai2024_X7HSG9C2,
+  title = {DocFusion: a unified framework for document parsing tasks},
+  doi = {10.48550/ARXIV.2412.12505},
+  url = {https://arxiv.org/abs/2412.12505},
+  abstract = {Document parsing is essential for analyzing complex document structures and extracting fine-grained information, supporting numerous downstream applications. However, existing methods often require integrating multiple independent models to handle various parsing tasks, leading to high complexity and maintenance overhead. To address this, we propose DocFusion, a lightweight generative model with only 0.28B parameters. It unifies task representations and achieves collaborative training through an improved objective function. Experiments reveal and leverage the mutually beneficial interaction among recognition tasks, and integrating recognition data significantly enhances detection performance. The final results demonstrate that DocFusion achieves state-of-the-art (SOTA) performance across four key tasks.},
+  author = {Chai, Mingxu and Shen, Ziyu and Zhang, Chong and Zhang, Yue and Wang, Xiao and Dou, Shihan and Kang, Jihua and Zhang, Jiazheng and Zhang, Qi},
+  year = {2024}
+}
+
+@misc{Livathinos2025_VUPRZQ8Y,
+  title = {Advanced layout analysis models for docling},
+  doi = {10.48550/ARXIV.2509.11720},
+  url = {https://arxiv.org/abs/2509.11720},
+  abstract = {This technical report documents the development of novel Layout Analysis models integrated into the Docling document-conversion pipeline. We trained several state-of-the-art object detectors based on the RT-DETR, RT-DETRv2 and DFINE architectures on a heterogeneous corpus of 150,000 documents (both openly available and proprietary). Post-processing steps were applied to the raw detections to make them more applicable to the document conversion task. We evaluated the effectiveness of the layout analysis on various document benchmarks using different methodologies while also measuring the runtime performance across different environments (CPU, Nvidia and Apple GPUs). We introduce five new document layout models achieving 20.6% - 23.9% mAP improvement over Docling's previous baseline, with comparable or better runtime. Our best model, "heron-101", attains 78% mAP with 28 ms/image inference time on a single NVIDIA A100 GPU. Extensive quantitative and qualitative experiments establish best practices for training, evaluating, and deploying document-layout detectors, providing actionable guidance for the document conversion community. All trained checkpoints, code, and documentation are released under a permissive license on HuggingFace.},
+  author = {Livathinos, Nikolaos and Auer, Christoph and Nassar, Ahmed and de Lima, Rafael Teixeira and Lysak, Maksym and Ebouky, Brown and Berrospi, Cesar and Dolfi, Michele and Vagenas, Panagiotis and Omenetti, Matteo and Dinkla, Kasper and Kim, Yusik and Weber, Valery and Morin, Lucas and Meijer, Ingmar and Kuropiatnyk, Viktor and Strohmeyer, Tim and Gurbuz, A. Said and Staar, Peter W. J.},
+  year = {2025}
+}
+
+@inproceedings{Xu2022_7EBYC5D8,
+  title = {XFUND: a benchmark dataset for multilingual visually rich form understanding},
+  pages = {3214-3224},
+  publisher = {Association for Computational Linguistics},
+  address = {Dublin, Ireland},
+  doi = {10.18653/v1/2022.findings-acl.253},
+  url = {https://aclanthology.org/2022.findings-acl.253},
+  author = {Xu, Yiheng and Lv, Tengchao and Cui, Lei and Wang, Guoxin and Lu, Yijuan and Florencio, Dinei and Zhang, Cha and Wei, Furu},
+  year = {2022}
+}
+
+@inproceedings{Zaratiana2025_8682SHSR,
+  title = {GLiNER2: schema-driven multi-task learning for structured information extraction},
+  booktitle = {Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing: System Demonstrations},
+  pages = {130-140},
+  publisher = {Association for Computational Linguistics},
+  address = {Suzhou, China},
+  doi = {10.18653/v1/2025.emnlp-demos.10},
+  isbn = {979-8-89176-334-0},
+  url = {https://aclanthology.org/2025.emnlp-demos.10},
+  abstract = {Information extraction (IE) is fundamental to numerous NLP applications, yet existing solutions often require specialized models for different tasks or rely on computationally expensive large language models. We present GLiNER2, a unified framework that enhances the original GLiNER architecture to support named entity recognition, text classification, and hierarchical structured data extraction within a single efficient model. Built on a fine-tuned encoder architecture, GLiNER2 maintains CPU efficiency and compact size while introducing multi-task composition through an intuitive schema-based interface. Our experiments demonstrate competitive performance across diverse IE tasks with substantial improvements in deployment accessibility compared to LLM-based alternatives. We release GLiNER2 as an open-source library available through pip, complete with pre-trained models and comprehensive documentation.},
+  author = {Zaratiana, Urchade and Pasternak, Gil and Boyd, Oliver and Hurn-Maloney, George and Lewis, Ash},
+  year = {2025}
+}
+
+@misc{Zaratiana2025_9NYBMV6L,
+  title = {GLiNER2: an efficient multi-task information extraction system with schema-driven interface},
+  doi = {10.48550/ARXIV.2507.18546},
+  url = {https://arxiv.org/abs/2507.18546},
+  abstract = {Information extraction (IE) is fundamental to numerous NLP applications, yet existing solutions often require specialized models for different tasks or rely on computationally expensive large language models. We present GLiNER2, a unified framework that enhances the original GLiNER architecture to support named entity recognition, text classification, and hierarchical structured data extraction within a single efficient model. Built pretrained transformer encoder architecture, GLiNER2 maintains CPU efficiency and compact size while introducing multi-task composition through an intuitive schema-based interface. Our experiments demonstrate competitive performance across extraction and classification tasks with substantial improvements in deployment accessibility compared to LLM-based alternatives. We release GLiNER2 as an open-source pip-installable library with pre-trained models and documentation at https://github.com/fastino-ai/GLiNER2.},
+  author = {Zaratiana, Urchade and Pasternak, Gil and Boyd, Oliver and Hurn-Maloney, George and Lewis, Ash},
+  year = {2025}
+}
+
+@article{Almeida2025_PBPXSMVF,
+  title = {Protótipo de ChatBot open source com RAG e dados estruturados para apoio académico},
+  pages = {1-20},
+  publisher = {Universidade Aberta},
+  issn = {1646-6330},
+  url = {http://hdl.handle.net/10400.2/21162},
+  abstract = {Este artigo descreve o desenvolvimento de um protótipo de chatbot educativo open source para apoio a estudantes da Universidade Aberta. Recorrendo a grandes modelos de linguagem natural (LLM) com RAG (Retrieval-Augmented Generation) e integração com bases de dados estruturadas, o sistema fornece respostas a perguntas sobre o percurso académico, a oferta formativa, estrutura curricular e procedimentos administrativos. A arquitetura modular, os modelos de classificação, recuperação e geração, e os testes realizados confirmam a viabilidade técnica da solução.},
+  author = {Almeida, Pedro and Rocio, Vitor},
+  year = {2025}
+}
+
+@incollection{Sserwanga2023_ZU2DHWJ8,
+  title = {A benchmark of PDF information extraction tools using a multi-task and multi-domain evaluation framework for academic documents},
+  booktitle = {Information for a better world: normality, virtuality, physicality, inclusivity},
+  volume = {13972},
+  pages = {383-405},
+  publisher = {Springer Nature Switzerland},
+  address = {Cham},
+  doi = {10.1007/978-3-031-28032-0_31},
+  isbn = {978-3-031-28031-3 978-3-031-28032-0},
+  url = {https://link.springer.com/10.1007/978-3-031-28032-0_31},
+  abstract = {Extracting information from academic PDF documents is crucial for numerous indexing, retrieval, and analysis use cases. Choosing the best tool to extract specific content elements is difficult because many, technically diverse tools are available, but recent performance benchmarks are rare. Moreover, such benchmarks typically cover only a few content elements like header metadata or bibliographic references and use smaller datasets from specific academic disciplines. We provide a large and diverse evaluation framework that supports more extraction tasks than most related datasets. Our framework builds upon DocBank, a multi-domain dataset of 1.5M annotated content elements extracted from 500K pages of research papers on arXiv. Using the new framework, we benchmark ten freely available tools in extracting document metadata, bibliographic references, tables, and other content elements from academic PDF documents. GROBID achieves the best metadata and reference extraction results, followed by CERMINE and Science Parse. For table extraction, Adobe Extract outperforms other tools, even though the performance is much lower than for other content elements. All tools struggle to extract lists, footers, and equations. We conclude that more research on improving and combining tools is necessary to achieve satisfactory extraction quality for most content elements. Evaluation datasets and frameworks like the one we present support this line of research. We make our data and code publicly available to contribute toward this goal.},
+  author = {Meuschke, Norman and Jagdale, Apurva and Spinde, Timo and Mitrović, Jelena and Gipp, Bela},
+  year = {2023}
+}
+
+@misc{Livathinos2025_7TIAYM8Z,
+  title = {Docling: an efficient open-source toolkit for AI-driven document conversion},
+  publisher = {arXiv},
+  doi = {10.48550/ARXIV.2501.17887},
+  url = {https://arxiv.org/abs/2501.17887},
+  abstract = {We introduce Docling, an easy-to-use, self-contained, MIT-licensed, open-source toolkit for document conversion, that can parse several types of popular document formats into a unified, richly structured representation. It is powered by state-of-the-art specialized AI models for layout analysis (DocLayNet) and table structure recognition (TableFormer), and runs efficiently on commodity hardware in a small resource budget. Docling is released as a Python package and can be used as a Python API or as a CLI tool. Docling's modular architecture and efficient document representation make it easy to implement extensions, new features, models, and customizations. Docling has been already integrated in other popular open-source frameworks (e.g., LangChain, LlamaIndex, spaCy), making it a natural fit for the processing of documents and the development of high-end applications. The open-source community has fully engaged in using, promoting, and developing for Docling, which gathered 10k stars on GitHub in less than a month and was reported as the No. 1 trending repository in GitHub worldwide in November 2024.},
+  author = {Livathinos, Nikolaos and Auer, Christoph and Lysak, Maksym and Nassar, Ahmed and Dolfi, Michele and Vagenas, Panos and Ramis, Cesar Berrospi and Omenetti, Matteo and Dinkla, Kasper and Kim, Yusik and Gupta, Shubham and de Lima, Rafael Teixeira and Weber, Valery and Morin, Lucas and Meijer, Ingmar and Kuropiatnyk, Viktor and Staar, Peter W. J.},
+  year = {2025}
+}
+
+@misc{Souza2019_D82QAK2H,
+  title = {Portuguese named entity recognition using BERT-CRF},
+  doi = {10.48550/ARXIV.1909.10649},
+  url = {https://arxiv.org/abs/1909.10649},
+  abstract = {Recent advances in language representation using neural networks have made it viable to transfer the learned internal states of a trained model to downstream natural language processing tasks, such as named entity recognition (NER) and question answering. It has been shown that the leverage of pre-trained language models improves the overall performance on many tasks and is highly beneficial when labeled data is scarce. In this work, we train Portuguese BERT models and employ a BERT-CRF architecture to the NER task on the Portuguese language, combining the transfer capabilities of BERT with the structured predictions of CRF. We explore feature-based and fine-tuning training strategies for the BERT model. Our fine-tuning approach obtains new state-of-the-art results on the HAREM I dataset, improving the F1-score by 1 point on the selective scenario (5 NE classes) and by 4 points on the total scenario (10 NE classes).},
+  author = {Souza, Fábio and Nogueira, Rodrigo and Lotufo, Roberto},
+  year = {2019}
+}
+
+@inproceedings{Rodrigues2020_E4SZQCPW,
+  title = {Multilingual transformer ensembles for portuguese natural language tasks},
+  booktitle = {Researchgate},
+  url = {https://www.researchgate.net/publication/340236502_Multilingual_Transformer_Ensembles_for_Portuguese_Natural_Language_Tasks},
+  abstract = {PDF | Due to the technical gap between the language models available for low-resource languages and the state-of-the-art models available in English and... | Find, read and cite all the research you need on ResearchGate},
+  author = {Ruan Chaves Rodrigues and Jéssica Rodrigues Da Silva and Pedro Castro and Nádia Félix Felipe Da Silva},
+  year = {2020}
+}
+
+@misc{Dettmers2023_HXPTCW9M,
+  title = {QLoRA: efficient finetuning of quantized LLMs},
+  doi = {10.48550/ARXIV.2305.14314},
+  url = {https://arxiv.org/abs/2305.14314},
+  abstract = {We present QLoRA, an efficient finetuning approach that reduces memory usage enough to finetune a 65B parameter model on a single 48GB GPU while preserving full 16-bit finetuning task performance. QLoRA backpropagates gradients through a frozen, 4-bit quantized pretrained language model into Low Rank Adapters~(LoRA). Our best model family, which we name Guanaco, outperforms all previous openly released models on the Vicuna benchmark, reaching 99.3% of the performance level of ChatGPT while only requiring 24 hours of finetuning on a single GPU. QLoRA introduces a number of innovations to save memory without sacrificing performance: (a) 4-bit NormalFloat (NF4), a new data type that is information theoretically optimal for normally distributed weights (b) double quantization to reduce the average memory footprint by quantizing the quantization constants, and (c) paged optimziers to manage memory spikes. We use QLoRA to finetune more than 1,000 models, providing a detailed analysis of instruction following and chatbot performance across 8 instruction datasets, multiple model types (LLaMA, T5), and model scales that would be infeasible to run with regular finetuning (e.g. 33B and 65B parameter models). Our results show that QLoRA finetuning on a small high-quality dataset leads to state-of-the-art results, even when using smaller models than the previous SoTA. We provide a detailed analysis of chatbot performance based on both human and GPT-4 evaluations showing that GPT-4 evaluations are a cheap and reasonable alternative to human evaluation. Furthermore, we find that current chatbot benchmarks are not trustworthy to accurately evaluate the performance levels of chatbots. A lemon-picked analysis demonstrates where Guanaco fails compared to ChatGPT. We release all of our models and code, including CUDA kernels for 4-bit training.},
+  author = {Dettmers, Tim and Pagnoni, Artidoro and Holtzman, Ari and Zettlemoyer, Luke},
+  year = {2023}
+}
+
+@misc{Parthasarathy2024_V9LAIV2X,
+  title = {The ultimate guide to fine-tuning LLMs from basics to breakthroughs: an exhaustive review of technologies, research, best practices, applied research challenges and opportunities},
+  doi = {10.48550/ARXIV.2408.13296},
+  url = {https://arxiv.org/abs/2408.13296},
+  abstract = {This report examines the fine-tuning of Large Language Models (LLMs), integrating theoretical insights with practical applications. It outlines the historical evolution of LLMs from traditional Natural Language Processing (NLP) models to their pivotal role in AI. A comparison of fine-tuning methodologies, including supervised, unsupervised, and instruction-based approaches, highlights their applicability to different tasks. The report introduces a structured seven-stage pipeline for fine-tuning LLMs, spanning data preparation, model initialization, hyperparameter tuning, and model deployment. Emphasis is placed on managing imbalanced datasets and optimization techniques. Parameter-efficient methods like Low-Rank Adaptation (LoRA) and Half Fine-Tuning are explored for balancing computational efficiency with performance. Advanced techniques such as memory fine-tuning, Mixture of Experts (MoE), and Mixture of Agents (MoA) are discussed for leveraging specialized networks and multi-agent collaboration. The report also examines novel approaches like Proximal Policy Optimization (PPO) and Direct Preference Optimization (DPO), which align LLMs with human preferences, alongside pruning and routing optimizations to improve efficiency. Further sections cover validation frameworks, post-deployment monitoring, and inference optimization, with attention to deploying LLMs on distributed and cloud-based platforms. Emerging areas such as multimodal LLMs, fine-tuning for audio and speech, and challenges related to scalability, privacy, and accountability are also addressed. This report offers actionable insights for researchers and practitioners navigating LLM fine-tuning in an evolving landscape.},
+  author = {Parthasarathy, Venkatesh Balavadhani and Zafar, Ahtsham and Khan, Aafaq and Shahid, Arsalan},
+  year = {2024}
+}
+
+@misc{2025_F8B84GQ5,
+  title = {Classificação: acurácia, recall, precisão e métricas relacionadas | machine learning},
+  url = {https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall?hl=pt-br},
+  abstract = {Saiba como calcular três métricas de classificação principais (acurácia, precisão e recall) e como escolher a métrica adequada para avaliar um determinado modelo de classificação binária.},
+  year = {2025}
+}
+
+@misc{Naminas2025_UK8ZZ549,
+  title = {Document classification: end-to-end ML workflow explained},
+  url = {https://labelyourdata.com/articles/document-classification},
+  abstract = {▶️ Learn how document classification works in practice. This guide walks through preprocessing, labeling, model training, OCR cleanup, and pipeline monitoring.},
+  author = {Naminas, Karyna},
+  year = {2025}
+}
+
+@misc{2025_J9VS7DHV,
+  title = {Build a RAG agent with LangChain},
+  url = {https://docs.langchain.com/oss/python/langchain/rag},
+  abstract = {One of the most powerful applications enabled by LLMs is sophisticated question-answering (Q&A) chatbots. These are applications that can answer questions about specific source information. These applications use a technique known as Retrieval Augmented Generation, or RAG.},
+  year = {2025}
+}
+
+@misc{Yan2024_KX5WRQMB,
+  title = {Corrective retrieval augmented generation},
+  publisher = {arXiv},
+  doi = {10.48550/ARXIV.2401.15884},
+  url = {https://arxiv.org/abs/2401.15884},
+  abstract = {Large language models (LLMs) inevitably exhibit hallucinations since the accuracy of generated texts cannot be secured solely by the parametric knowledge they encapsulate. Although retrieval-augmented generation (RAG) is a practicable complement to LLMs, it relies heavily on the relevance of retrieved documents, raising concerns about how the model behaves if retrieval goes wrong. To this end, we propose the Corrective Retrieval Augmented Generation (CRAG) to improve the robustness of generation. Specifically, a lightweight retrieval evaluator is designed to assess the overall quality of retrieved documents for a query, returning a confidence degree based on which different knowledge retrieval actions can be triggered. Since retrieval from static and limited corpora can only return sub-optimal documents, large-scale web searches are utilized as an extension for augmenting the retrieval results. Besides, a decompose-then-recompose algorithm is designed for retrieved documents to selectively focus on key information and filter out irrelevant information in them. CRAG is plug-and-play and can be seamlessly coupled with various RAG-based approaches. Experiments on four datasets covering short- and long-form generation tasks show that CRAG can significantly improve the performance of RAG-based approaches.},
+  author = {Yan, Shi-Qi and Gu, Jia-Chen and Zhu, Yun and Ling, Zhen-Hua},
+  year = {2024}
+}
+
+@misc{Jiang2024_TUSEITM2,
+  title = {Improving domain adaptation through extended-text reading comprehension},
+  doi = {10.48550/ARXIV.2401.07284},
+  url = {https://arxiv.org/abs/2401.07284},
+  abstract = {To enhance the domain-specific capabilities of large language models, continued pre-training on a domain-specific corpus is a prevalent method. Recent work demonstrates that adapting models using reading comprehension data formatted by regex-based patterns can significantly improve performance on domain-specific tasks. However, regex-based patterns are incapable of parsing raw corpora using domain-specific knowledge. Furthermore, the question and answer pairs are extracted directly from the corpus in predefined formats offers limited context. To address this limitation, we improve reading comprehension via LLM and clustering. LLM focuses on leveraging domain knowledge within the corpus to refine comprehension stage, while clustering supplies relevant knowledge by extending the context to enrich reading stage. Additionally, our method incorporates parameter-efficient fine-tuning to improve the efficiency of domain adaptation. In comparison to AdaptLLM, our method achieves an improvement exceeding 5% in domain-specific tasks. Our code will available at https://github.com/microsoft/LMOps.},
+  author = {Jiang, Ting and Huang, Shaohan and Luo, Shengyue and Zhang, Zihan and Huang, Haizhen and Wei, Furu and Deng, Weiwei and Sun, Feng and Zhang, Qi and Wang, Deqing and Zhuang, Fuzhen},
+  year = {2024}
+}
+
+@misc{2025_XN27VL49,
+  title = {Retrieval augmented generation (RAG) – nextra},
+  doi = {10.55248/gengpi.6.0125.0635},
+  url = {https://www.promptingguide.ai/techniques/rag},
+  abstract = {A Comprehensive Overview of Prompt Engineering},
+  year = {2025}
+}
+
+@misc{Shamaii2024_RJIXYBEL,
+  title = {Leveraging ONNX for interoperable machine learning: a practical guide with java spring boot},
+  url = {https://medium.com/@kiarash.shamaii/leveraging-onnx-for-interoperable-machine-learning-a-practical-guide-with-java-spring-boot-67a2ffbe7bf1},
+  abstract = {What is ONNX?},
+  author = {Shamaii, Kiarash},
+  year = {2024}
+}
+
+@misc{Wyatte2024_ERZX36KZ,
+  title = {Scaling laws for discriminative classification in large language models},
+  doi = {10.48550/ARXIV.2405.15765},
+  url = {https://arxiv.org/abs/2405.15765},
+  abstract = {Modern large language models (LLMs) represent a paradigm shift in what can plausibly be expected of machine learning models. The fact that LLMs can effectively generate sensible answers to a diverse range of queries suggests that they would be useful in customer support applications. While powerful, LLMs have been observed to be prone to hallucination which unfortunately makes their near term use in customer support applications challenging. To address this issue we present a system that allows us to use an LLM to augment our customer support advocates by re-framing the language modeling task as a discriminative classification task. In this framing, we seek to present the top-K best template responses for a customer support advocate to use when responding to a customer. We present the result of both offline and online experiments where we observed offline gains and statistically significant online lifts for our experimental system. Along the way, we present observed scaling curves for validation loss and top-K accuracy, resulted from model parameter ablation studies. We close by discussing the space of trade-offs with respect to model size, latency, and accuracy as well as and suggesting future applications to explore.},
+  author = {Wyatte, Dean and Tahmasbi, Fatemeh and Li, Ming and Markovich, Thomas},
+  year = {2024}
+}
+
+@misc{Lathia2020_6GV5DKIT,
+  title = {Combining rule engines and machine learning - nlathia.github.io},
+  url = {https://nlathia.github.io/2020/10/ML-and-rule-engines.html},
+  author = {Neal Lathia},
+  year = {2020}
+}
+
+@article{Alharbi2024_RE4KDDWK,
+  title = {A new hybrid classification algorithm for predicting student performance},
+  journal = {AIMS Mathematics},
+  volume = {9},
+  number = {7},
+  pages = {18308-18323},
+  doi = {10.3934/math.2024893},
+  issn = {2473-6988},
+  url = {http://www.aimspress.com/article/doi/10.3934/math.2024893},
+  abstract = {<abstract><p>Education is essential and increasingly crucial for the development of almost all countries worldwide. As educational data has become increasingly available, scholars have shown a growing interest in exploring the correlation between students' academic achievements and other factors that may impact their performance using machine learning algorithms. This research paper introduces a novel hybrid classifier that aims to predict the academic performance of students by using a combination of different single algorithms. The proposed hybrid classifier (PHC) is compared to six available classification algorithms (random forest (RF), C4.5, classification and regression trees (CART), support vector machines (SVM), naive Bayes (NB) and K-nearest neighbors (KNN)) using recall, precision, F1-score, and accuracy evaluation measures. Our experimental results reveal that the PHC classifier consistently outperforms the individual classifiers across multiple evaluation metrics. Specifically, the PHC classifier achieved an accuracy rate of 92.40%, surpassing the RF, C4.5, and CART classifiers, which were the next best performers. In terms of precision and F1 score, the PHC also demonstrated superior performance, indicating its robustness in correctly identifying positive instances and providing balanced accuracy. While the C4.5 classifier performed comparably to the PHC classifier concerning the recall metric, the hybrid model's overall performance highlights its effectiveness in leveraging the complementary strengths of the included classifiers. The suggested hybrid model has the potential to enhance students' academic performance and success more effectively and efficiently. It could benefit students, educators, and academic institutions. Additionally, it provides practical insights for educators and institutions striving to improve student achievement using predictive analysis.</p></abstract>},
+  author = {Alharbi, Abdulmajeed Atiah and Allohibi, Jeza},
+  year = {2024}
+}
+
+@inproceedings{Asim2019_D55CHGPZ,
+  title = {A robust hybrid approach for textual document classification},
+  pages = {1390-1396},
+  publisher = {IEEE},
+  address = {Sydney, Australia},
+  doi = {10.1109/ICDAR.2019.00224},
+  isbn = {978-1-7281-3014-9},
+  url = {https://ieeexplore.ieee.org/document/8978119/},
+  abstract = {Text document classification is an important task for diverse natural language processing based applications. Traditional machine learning approaches mainly focused on reducing dimensionality of textual data to perform classification. This although improved the overall classification accuracy, the classifiers still faced sparsity problem due to lack of better data representation techniques. Deep learning based text document classification, on the other hand, benefitted greatly from the invention of word embeddings that have solved the sparsity problem and researchers focus mainly remained on the development of deep architectures. Deeper architectures, however, learn some redundant features that limit the performance of deep learning based solutions. In this paper, we propose a two stage text document classification methodology which combines traditional feature engineering with automatic feature engineering (using deep learning). The proposed methodology comprises a filter based feature selection (FSE) algorithm followed by a deep convolutional neural network. This methodology is evaluated on the two most commonly used public datasets, i.e., 20 Newsgroups data and BBC news data. Evaluation results reveal that the proposed methodology outperforms the state-of-the-art of both the (traditional) machine learning and deep learning based text document classification methodologies with a significant margin of 7.7% on 20 Newsgroups and 6.6% on BBC news datasets.},
+  author = {Asim, Muhammad Nabeel and Khan, Muhammad Usman Ghani and Malik, Muhammad Imran and Dengel, Andreas and Ahmed, Sheraz},
+  year = {2019}
+}
+
+@misc{Samana2023_6Z95RT7E,
+  title = {Rule-based vs. Machine learning AI: which produces better results?},
+  url = {https://www.pecan.ai/blog/rule-based-vs-machine-learning-ai-which-produces-better-results/},
+  abstract = {There’s a reason (or three) why business leaders choose machine learning over rule-based AI. Learn the strengths and weaknesses of both.},
+  author = {Shai Samana},
+  year = {2023}
+}
+
+@misc{Mansar2025_2JD8IK3M,
+  title = {Retrieval augmented classification: improving text classification with external knowledge},
+  url = {https://towardsdatascience.com/retrieval-augmented-classification-improving-text-classification-with-external-knowledge/},
+  abstract = {When and How to best use LLMs as text classifiers},
+  author = {Mansar, Youness},
+  year = {2025}
+}
+
+@misc{Nogueira2025_2ULKAS9W,
+  title = {neuralmind-ai/portuguese-bert},
+  url = {https://github.com/neuralmind-ai/portuguese-bert},
+  abstract = {Portuguese pre-trained BERT models},
+  year = {2025}
+}
+
+@misc{Rooein2024_AYHMWB5S,
+  title = {Beyond flesch-kincaid: prompt-based metrics improve difficulty classification of educational texts},
+  doi = {10.48550/ARXIV.2405.09482},
+  url = {https://arxiv.org/abs/2405.09482},
+  abstract = {Using large language models (LLMs) for educational applications like dialogue-based teaching is a hot topic. Effective teaching, however, requires teachers to adapt the difficulty of content and explanations to the education level of their students. Even the best LLMs today struggle to do this well. If we want to improve LLMs on this adaptation task, we need to be able to measure adaptation success reliably. However, current Static metrics for text difficulty, like the Flesch-Kincaid Reading Ease score, are known to be crude and brittle. We, therefore, introduce and evaluate a new set of Prompt-based metrics for text difficulty. Based on a user study, we create Prompt-based metrics as inputs for LLMs. They leverage LLM's general language understanding capabilities to capture more abstract and complex features than Static metrics. Regression experiments show that adding our Prompt-based metrics significantly improves text difficulty classification over Static metrics alone. Our results demonstrate the promise of using LLMs to evaluate text adaptation to different education levels.},
+  author = {Rooein, Donya and Rottger, Paul and Shaitarova, Anastassia and Hovy, Dirk},
+  year = {2024}
+}
+
+@misc{Li2024_J5Z2PQMA,
+  title = {SciLitLLM: how to adapt LLMs for scientific literature understanding},
+  doi = {10.48550/ARXIV.2408.15545},
+  url = {https://arxiv.org/abs/2408.15545},
+  abstract = {Scientific literature understanding is crucial for extracting targeted information and garnering insights, thereby significantly advancing scientific discovery. Despite the remarkable success of Large Language Models (LLMs), they face challenges in scientific literature understanding, primarily due to (1) a lack of scientific knowledge and (2) unfamiliarity with specialized scientific tasks. To develop an LLM specialized in scientific literature understanding, we propose a hybrid strategy that integrates continual pre-training (CPT) and supervised fine-tuning (SFT), to simultaneously infuse scientific domain knowledge and enhance instruction-following capabilities for domain-specific tasks.cIn this process, we identify two key challenges: (1) constructing high-quality CPT corpora, and (2) generating diverse SFT instructions. We address these challenges through a meticulous pipeline, including PDF text extraction, parsing content error correction, quality filtering, and synthetic instruction creation. Applying this strategy, we present a suite of LLMs: SciLitLLM, specialized in scientific literature understanding. These models demonstrate promising performance on scientific literature understanding benchmarks. Our contributions are threefold: (1) We present an effective framework that integrates CPT and SFT to adapt LLMs to scientific literature understanding, which can also be easily adapted to other domains. (2) We propose an LLM-based synthesis method to generate diverse and high-quality scientific instructions, resulting in a new instruction set -- SciLitIns -- for supervised fine-tuning in less-represented scientific domains. (3) SciLitLLM achieves promising performance improvements on scientific literature understanding benchmarks.},
+  author = {Li, Sihang and Huang, Jin and Zhuang, Jiaxi and Shi, Yaorui and Cai, Xiaochen and Xu, Mingjun and Wang, Xiang and Zhang, Linfeng and Ke, Guolin and Cai, Hengxing},
+  year = {2024}
+}
+
+@misc{Fatemi2024_8ZYYHRBS,
+  title = {A comparative analysis of instruction fine-tuning LLMs for financial text classification},
+  doi = {10.48550/ARXIV.2411.02476},
+  url = {https://arxiv.org/abs/2411.02476},
+  abstract = {Large Language Models (LLMs) have demonstrated impressive capabilities across diverse Natural Language Processing (NLP) tasks, including language understanding, reasoning, and generation. However, general-domain LLMs often struggle with financial tasks due to the technical and specialized nature of financial texts. This study investigates the efficacy of instruction fine-tuning smaller-scale LLMs, including Mistral-7B, Llama3-8B, and Phi3-mini, to enhance their performance in financial text classification tasks. We fine-tuned both instruction-tuned and base models across four financial classification tasks, achieving significant improvements in task-specific performance. Furthermore, we evaluated the zero-shot capabilities of these fine-tuned models on three unseen complex financial tasks, including argument classification, deal completeness classification, and causal classification. Our results indicate while base model fine-tuning led to greater degradation, instruction-tuned models maintained more robust performance. To address this degradation, we employed model merging techniques, integrating single-task domain-specific fine-tuned models with the base model. Using this merging method resulted in significant enhancements in zero-shot performance, even exceeding the original model's accuracy on certain datasets. Our findings underscore the effectiveness of instruction fine-tuning and model merging for adapting LLMs to specialized financial text classification tasks.},
+  author = {Fatemi, Sorouralsadat and Hu, Yuheng and Mousavi, Maryam},
+  year = {2024}
+}
+
+@misc{Dhote2023_FDF9GB2B,
+  title = {Parameter-efficient fine-tuning of large language models with LoRA and QLoRA},
+  url = {https://www.analyticsvidhya.com/blog/2023/08/lora-and-qlora/},
+  abstract = {We will delve into the intricate categories of PEFT techniques, and decipher the inner workings of two remarkable techniques: LoRA and QLoRA.},
+  author = {Dhote, Shalini},
+  year = {2023}
+}
+
+@misc{Pagnoni2025_FY7RU2QJ,
+  title = {artidoro/qlora},
+  url = {https://github.com/artidoro/qlora},
+  abstract = {QLoRA: Efficient Finetuning of Quantized LLMs},
+  year = {2025}
+}
+
+@article{Bates2020_XH7NNE4Y,
+  title = {Can artificial intelligence transform higher education?},
+  journal = {International Journal of Educational Technology in Higher Education},
+  volume = {17},
+  number = {1},
+  pages = {42, s41239-020-00218-x},
+  doi = {10.1186/s41239-020-00218-x},
+  issn = {2365-9440},
+  url = {https://educationaltechnologyjournal.springeropen.com/articles/10.1186/s41239-020-00218-x},
+  abstract = {* Correspondence: tony.bates@ubc.ca Chang School of Continuing Education, Ryerson University, Toronto, Canada Contact North, Greater Sudbury, Ontario, Canada Full list of author information is available at the end of the article The aim of this edition Many have argued that the development of artificial intelligence has more potential to change higher education than any other technological advance. For instance, Klutka et al. (2018) has listed the following goals for AI in higher education:},
+  author = {Bates, Tony and Cobo, Cristóbal and Mariño, Olga and Wheeler, Steve},
+  year = {2020}
+}
+
+@article{Wang2026_U8DW2KUH,
+  title = {Embedding in recommender systems: a survey},
+  journal = {ACM Transactions on Information Systems},
+  volume = {abs/2310.18608},
+  pages = {3812652},
+  publisher = {arXiv},
+  doi = {10.1145/3812652},
+  issn = {1046-8188, 1558-2868},
+  url = {https://dl.acm.org/doi/10.1145/3812652},
+  abstract = {Recommender systems have become an essential component of many online platforms, providing personalized recommendations to users. A crucial aspect is embedding techniques that convert the high-dimensional discrete features, such as user and item IDs, into low-dimensional continuous vectors, which can enhance the recommendation performance. Embedding techniques have revolutionized the capture of complex entity relationships, generating significant research interest. This survey presents a comprehensive analysis of recent advances in recommender system embedding techniques. We examine centralized embedding approaches across matrix, sequential, and graph structures. In matrix-based scenarios, collaborative filtering generates embeddings that effectively model user-item preferences, particularly in sparse data environments. For sequential data, we explore various approaches including recurrent neural networks and self-supervised methods such as contrastive and generative learning. In graph-structured contexts, we analyze techniques like node2vec that leverage network relationships, along with applicable self-supervised methods. Our survey addresses critical scalability challenges in embedding methods and explores innovative directions in recommender systems. We introduce emerging approaches, including AutoML, hashing techniques, and quantization methods, to enhance performance while reducing computational complexity. Additionally, we examine the promising role of Large Language Models (LLMs) in embedding enhancement. Through detailed discussion of various architectures and methodologies, this survey aims to provide a thorough overview of state-of-the-art embedding techniques in recommender systems, while highlighting key challenges and future research directions. To facilitate development, evaluation, and comparison of embedding-based recommender systems, we provide an open-source repository 1 .},
+  author = {Wang, Maolin and Zhao, Xinjian and Wang, Wanyu and Zhang, Sheng and Li, Jiansheng and Yu, Bowen and Wang, Binhao and Zhou, Shucheng and Yin, Dawei and Li, Qing and Guo, Ruocheng and Zhao, Xiangyu},
+  year = {2026}
+}
+
+@misc{Gao2023_R6VZ4S8U,
+  title = {Retrieval-augmented generation for large language models: a survey},
+  doi = {10.48550/ARXIV.2312.10997},
+  url = {https://arxiv.org/abs/2312.10997},
+  abstract = {Large Language Models (LLMs) showcase impressive capabilities but encounter challenges like hallucination, outdated knowledge, and non-transparent, untraceable reasoning processes. Retrieval-Augmented Generation (RAG) has emerged as a promising solution by incorporating knowledge from external databases. This enhances the accuracy and credibility of the generation, particularly for knowledge-intensive tasks, and allows for continuous knowledge updates and integration of domain-specific information. RAG synergistically merges LLMs' intrinsic knowledge with the vast, dynamic repositories of external databases. This comprehensive review paper offers a detailed examination of the progression of RAG paradigms, encompassing the Naive RAG, the Advanced RAG, and the Modular RAG. It meticulously scrutinizes the tripartite foundation of RAG frameworks, which includes the retrieval, the generation and the augmentation techniques. The paper highlights the state-of-the-art technologies embedded in each of these critical components, providing a profound understanding of the advancements in RAG systems. Furthermore, this paper introduces up-to-date evaluation framework and benchmark. At the end, this article delineates the challenges currently faced and points out prospective avenues for research and development.},
+  author = {Gao, Yunfan and Xiong, Yun and Gao, Xinyu and Jia, Kangxiang and Pan, Jinliu and Bi, Yuxi and Dai, Yi and Sun, Jiawei and Wang, Meng and Wang, Haofen},
+  year = {2023}
+}
+
+@misc{Tsukenjo2025_C53SW78E,
+  title = {AI in higher education: how AI is reshaping higher education | USAHS},
+  url = {https://www.usa.edu/blog/ai-in-higher-education-how-ai-is-reshaping-higher-education/},
+  abstract = {Explore how AI is reshaping higher education, enhancing learning experiences, streamlining administrative tasks and transforming the future of academia.},
+  author = {Tsukenjo, Suzanne},
+  year = {2025}
+}
+
+@article{Silva2018_MDDIFY37,
+  title = {O trabalho docente nos institutos federais no contexto de expansão da educação superior},
+  journal = {Educação E Pesquisa},
+  volume = {44},
+  number = {0},
+  pages = {18-35},
+  publisher = {Faculdade de Educação da Universidade de São Paulo},
+  doi = {10.1590/s1678-4634201844177066},
+  issn = {1678-4634, 1517-9702},
+  url = {http://www.scielo.br/scielo.php?script=sci_arttext&pid=S1517-97022018000100314&lng=pt&tlng=pt},
+  abstract = {Resumo Este artigo apresenta e discute alguns dos resultados de uma pesquisa concluída em 2015, que analisou o processo de reordenamento da Rede Federal de Educação Profissional e Tecnológica no contexto da expansão da educação superior, bem como sua repercussão sobre o trabalho dos docentes dos cursos superiores dos Institutos Federais. Por meio desta pesquisa, buscou-se identificar o que interferia no exercício da docência nos cursos superiores, a fim de compreender quais condições, facilidades, problemas ou dificuldades são encontrados pelos docentes em sua atuação. A investigação teve caráter qualitativo e utilizou, como instrumentos de coleta de dados, a pesquisa documental, a observação e entrevistas. O estudo evidenciou que a oferta de educação superior em meio às reformas da educação profissional e tecnológica vem se consolidando na Rede Federal de Educação Profissional e Tecnológica desde 2008, por meio dos Institutos Federais, que atuam como agentes de expansão da educação superior. A experiência estudada foi o processo de reordenamento, também chamado de ifetização, do Instituto Federal do Norte de Minas Gerais (IFNMG), com foco nas condições de trabalho dos docentes que atuam nas graduações. A forma como a expansão da instituição e de seus cursos ocorre submete os docentes a condições de trabalho precárias, já que não lhes são possibilitadas todas as condições materiais necessárias. Não obstante, espera-se dos docentes um perfil multifuncional, com vistas a desenvolver múltiplas atividades e cobrir as lacunas institucionais. O estudo revelou peculiaridades nas condições de trabalho docente nos cursos superiores da instituição e também demonstrou a existência de generalidades que se apresentam para o conjunto desses trabalhadores na atualidade. , Abstract The present paper presents and discusses some of the results of a research conducted in 2015, which analyzed the process of rearrangement of the Federal Professional and Technical Education Network in the context of the expansion of higher education, as well as its impact on the work of Federal Institute faculty members. It sought to identify what interfered with higher-education teaching, in order to understand the conditions, advantages, problems and hindrances found by teachers in their professional exercise. Research was qualitative in nature, and used documentary research, observation and interviews as data collection tools. The study evidenced that higher-education offer in the midst of professional and technical education reform had been consolidating in the Federal Professional and Technical Education Network since 2008, by means of Federal Institutes, which have acted as higher-education expansion agents. The experience under study was the rearrangement process, also called ifetization, of the Instituto Federal do Norte de Minas Gerais [Federal Institute of Northern Minas Gerais] (IFNMG), with an emphasis on the work of faculty members in undergraduate programs. As it happened, expansion placed teachers under insufficient work conditions, as it failed to provide them the necessary means. However, faculty members were expected to have a multi-functional profile, with a view to develop multiple tasks and fill institutional gaps. Research revealed the peculiarities in teaching work conditions in the institution’s higher education programs, and also demonstrated the existence of more general conditions currently in place for these workers.},
+  author = {Silva, Paula Francisca Da and Melo, Savana Diniz Gomes},
+  year = {2018}
+}
+
+@article{Silva2024_4WZ98K9J,
+  title = {Fatores determinantes da eficiência relativa dos institutos federais de educação, ciência e tecnologia brasileiros},
+  journal = {Avaliação: Revista Da Avaliação Da Educação Superior (Campinas)},
+  volume = {29},
+  pages = {e024005},
+  publisher = {Publicação da Rede de Avaliação Institucional da Educação Superior (RAIES), da Universidade Estadual de Campinas (UNICAMP) e da Universidade de Sorocaba (UNISO).},
+  doi = {10.1590/1982-57652024v29id278790},
+  issn = {1982-5765, 1414-4077},
+  url = {http://www.scielo.br/scielo.php?script=sci_arttext&pid=S1414-40772024000100304&tlng=pt},
+  abstract = {Resumo A Rede Federal de Educação Profissional, Científica e Tecnológica, vinculada ao Ministério da Educação, possui 38 Institutos Federais presentes em todos os estados brasileiros e no Distrito Federal. Criado em 2005, o Plano de Expansão da Rede Federal de Educação Profissional teve como objetivo ampliar a presença destas instituições em todo o território nacional. Partindo da premissa da importância da educação pública federal, este artigo tem como objetivo analisar a eficiência relativa da gestão de recursos públicos financeiros dos Institutos Federais de Educação, Ciência e Tecnologia brasileiros. A pesquisa possui abordagem quantitativa e contempla o quadriênio 2016-2019. Quanto ao tipo de amostragem, a pesquisa trabalhou com o universo de pesquisa, a partir de uma análise documental nos relatórios anuais de análise dos indicadores de gestão dessas instituições. A pesquisa utiliza a Análise por Envoltória de Dados (DEA) para mensurar a eficiência relativa desses institutos e o modelo de análise de regressão Tobit para verificar os fatores condicionantes desses níveis de eficiência. Com o conjunto de resultados identificou-se grande heterogeneidade entre as instituições analisadas no período, revelando que apenas 39,5% dos IFETs brasileiros operam acima do escore médio de eficiência relativa. As instituições que apresentaram os melhores escores de eficiência ampliaram gradativamente a oferta de cursos e o número de vagas ao longo dos anos para otimizar a força de trabalho já existente. , Abstract The Federal Network of Professional, Scientific and Technological Education, linked to the Ministry of Education, has 38 Federal Institutes present in all Brazilian states and the Federal District. Created in 2005, the Expansion Plan for the Federal Network of Vocational Education aimed to expand the presence of these institutions throughout the national territory. Starting from the premise of the importance of federal public education, this paper analyzes the relative efficiency of the management of public financial resources of the Brazilian Federal Institutes of Education, Science and Technology. The research has a quantitative approach and covers the four-year period 2016-2019. As for the type of sampling, the research worked with the research universe, based on a document analysis in the annual analysis reports of the management indicators of these institutions. The research uses Data Envelopment Analysis (DEA) to measure the relative efficiency of these institutes and the Tobit regression analysis model to verify the conditioning factors of these efficiency levels. The result set has shown a great heterogeneity between the institutions analyzed in the period, revealing that only 39.5% of Brazilian IFETs operate above the average relative efficiency score. The institutions that presented the best efficiency scores gradually expanded the course offerings and the number of vacancies over the years to optimize the existing workforce. , Resumen La Red Federal de Educación Profesional, Científica y Tecnológica, vinculada al Ministerio de Educación, cuenta con 38 Institutos Federales presentes en todos los estados brasileños y en el Distrito Federal. Creado en 2005, el Plan de Expansión de la Red Federal de Educación Profesional tuvo como objetivo ampliar la presencia de estas instituciones en todo el territorio nacional. Partiendo de la premisa de la importancia de la educación pública federal, este artículo tiene como objetivo analizar la eficiencia relativa de la gestión de los recursos financieros públicos en los Institutos Federales de Educación, Ciencia y Tecnología de Brasil. La investigación tiene un enfoque cuantitativo y abarca el cuatrienio 20162019. En cuanto al tipo de muestreo, la investigación trabajó con el universo de investigación, a partir de un análisis documental de los informes anuales analizando los indicadores de gestión de estas instituciones. La investigación utiliza el Análisis Envolvente de Datos (DEA) para medir la eficiencia relativa de estos institutos y el modelo de análisis de regresión Tobit para verificar los factores condicionantes de estos niveles de eficiencia. Como resultado, se identificó una gran heterogeneidad entre las instituciones analizadas en el período, revelando que sólo el 39,5% de los IFET brasileños operan por encima del puntaje promedio de eficiencia relativa. Las instituciones que presentaron los mejores puntajes de eficiencia ampliaron gradualmente la oferta de cursos y el número de vacantes a lo largo de los años para optimizar la fuerza laboral existente.},
+  author = {Silva, Sheldon William and Benedicto, Gideon Carvalho De and Carvalho, Francisval De Melo},
+  year = {2024}
+}
+
+@article{Cruz2019_ZSHTFJM5,
+  title = {Perfil das atividades complementares dos graduandos em medicina pela universidade estadual de feira de santana, 2009-2017},
+  journal = {Revista Brasileira De Educação Médica},
+  volume = {43},
+  number = {1 suppl 1},
+  pages = {265-275},
+  publisher = {Associação Brasileira de Educação Médica},
+  doi = {10.1590/1981-5271v43suplemento1-20190026},
+  issn = {1981-5271, 0100-5502},
+  url = {http://www.scielo.br/scielo.php?script=sci_arttext&pid=S0100-55022019000500265&tlng=pt},
+  abstract = {RESUMO As atividades complementares (AC) têm a finalidade de enriquecer o processo ensino-aprendizagem, privilegiando a complementação da formação social e profissional, sendo realizadas por meio de atividades acadêmico-científico-culturais com o objetivo de aprimorar a formação acadêmica. Este estudo tem como objetivo caracterizar o perfil das atividades complementares realizadas pelos graduandos do curso de Medicina da Universidade Estadual de Feira de Santana (UEFS) no período de 2009 a 2017. Trata-se de uma pesquisa documental de natureza descritiva. A coleta foi conduzida por meio da revisão dos dados constantes nos pareceres do colegiado de curso e certificados entregues pelos estudantes. Após a digitação, os dados foram processados por meio do programa estatístico Statistical Package for the Social Sciences (SPSS), versão 20.0 para Windows, e apresentados em gráficos e tabelas, com a subsequente análise descritiva das variáveis de interesse. A amostra foi composta por 171 estudantes, com predomínio do gênero feminino (56,1%). A maioria das atividades realizadas pelos estudantes ocorreu na modalidade participação em eventos científicos (51,6%). Observou-se que atividades culturais e esportivas não são aproveitadas pelo colegiado. Os estágios extracurriculares mais procurados foram na área de Urgência e Emergência (38,5%). Observou-se a média de quase um artigo publicado por aluno, sendo a Pediatria a área de conhecimento com maior número de publicações (24,8%). Além disso, encontrou-se grande disparidade entre carga horária apresentada pelo aluno e carga horária aproveitada pelo colegiado de curso, com perdas de 74% nos estágios extracurriculares e de 63% em monitoria + iniciação científica + extensão. Os resultados deste estudo apontam a necessidade de discussão e revisão do Regimento de Atividades Complementares do curso de Medicina da UEFS e podem contribuir para a educação médica por discutirem um tema esquecido pela maioria dos cursos de graduação em Medicina. , ABSTRACT Complementary Activities aim at enriching the teaching-learning process, favoring the complementation of social and professional formation, being carried out through academic-scientific-cultural activities, of which objective is to improve the academic training. This article aims to characterize the profile of the complementary activities carried out by last-year medical students from Feira de Santana State University (UEFS), from 2009 to 2017. This was a cross-sectional, retrospective and descriptive study. Data collection was carried out by reviewing the data contained in the opinions of the course collegiate and certificates delivered by the students. Subsequently, the data were processed using the software Statistical Package for the Social Sciences (SPSS), version 20.0 for Windows, and presented as charts and tables, with subsequent descriptive analysis of the variables of interest. The sample consisted of 171 students, with a predominance of females (56,1%); most of the activities performed by the students took place as participation in scientific events (51,6%); it was observed that cultural and sports activities are not used by the collegiate. The most sought after extracurricular trainings were in the urgency and emergency area (38.5 %); there was an average of 0.93 articles published per student, with Pediatrics being the area with the highest number of publications (24,8%). Moreover, there was a great disparity between the students’ course load and the hours utilized by the course collegiate, with losses of 74% in the extracurricular training activities and 63% in monitoring + scientific initiation + extension activities. The results of this study point to the need to discuss and revise the Complementary Activities Regulations of the UEFS medical course, and may contribute to medical education, for discussing a topic disregarded by most undergraduate medical courses.},
+  author = {Cruz, Marcelo Leandro Santana and Peixoto, Marcelo Torres and Silva, Carlos Alberto Lima Da and Damas, Wanessa Galvão and Oliveira, Ana Beatriz Menezes De},
+  year = {2019}
+}
+
+@misc{Ifms2024_RNJY44NP,
+  title = {Regulamento da organização didático pedagógica - retificação - IFMS},
+  url = {https://www.ifms.edu.br/centrais-de-conteudo/documentos-institucionais/regulamentos/regulamento-da-organizacao-didatico-pedagogica-retificacao-1},
+  author = {Ifms and Cosup},
+  year = {2024}
+}
+
+@misc{Ifms2021_MBMLBIMQ,
+  title = {Resolucao 063-2018 - projeto pedagógico do curso superior de análise e desenvolvimento de sitemas - nv - IFMS},
+  url = {https://www.ifms.edu.br/centrais-de-conteudo/documentos-institucionais/projetos-pedagogicos/projetos-pedagogicos-dos-cursos-de-graduacao/anexo-resolucao-063-2018-projeto-pedagogico-do-curso-superior-de-tecnologia-em-analise-e-desenvolvimento-de-sistemas-nv.pdf},
+  author = {Ifms},
+  year = {2021}
+}
+
+@article{Vieira2021_L5EFP25J,
+  title = {O sistema integrado de gestão de atividades acadêmicas (SIGAA) na pós-graduação da UFPA: estudo de caso no NAEA},
+  journal = {Novos Cadernos NAEA},
+  volume = {23},
+  number = {3},
+  pages = {1-68},
+  doi = {10.5801/ncn.v23i3.8891},
+  issn = {2179-7536, 1516-6481},
+  url = {https://periodicos.ufpa.br/index.php/ncn/article/view/8891},
+  abstract = {Este artigo procura analisar o Sistema Integrado de Gestão de Atividades Acadêmicas (SIGAA) e sua relação com a gestão pública no âmbito organizacional de programas de pós-graduação da Universidade Federal do Pará (UFPA). Para tanto, realizou-se um estudo de caso com a utilização de métodos mistos (qualitativo e quantitativo), no Programa de Pós-Graduação em Desenvolvimento Sustentável do Trópico Úmido (PPGDSTU) oferecido pelo Núcleo de Altos Estudos Amazônicos (NAEA) da UFPA. Os pesquisadores investigaram a utilidade do SIGAA para o gerenciamento acadêmico e administrativo nesse programa na opinião de docentes, discentes e servidores técnico-administrativos. Os resultados apontaram que o SIGAA tem se mostrado útil para o gerenciamento acadêmico-administrativo dos cursos, sendo capaz de fornecer dados e informações que contribuem para o processo de tomada de decisão. Porém, para alguns discentes, o SIGAA poderia ser mais bem explorado, sobretudo por parte de alguns docentes que resistem em explorar todas as potencialidades presentes no sistema.},
+  author = {Vieira, José Nilberlanio and Corbin, Hisakhana Pahoona},
+  year = {2021}
+}
+
+@misc{Prex2022_I3BPYB9B,
+  title = {Tutorial - banco de horas e creditação de atividades complementares e extensão no SIGAA - universidade federal do ceará},
+  url = {https://prex.ufc.br/wp-content/uploads/2022/08/tutorial-banco-de-horas-e-creditacao-1.pdf},
+  author = {Prex and Ufc and Prograd},
+  year = {2022}
+}
+
+@misc{Sistec2020_A8UTTN7A,
+  title = {Tutorial sistec},
+  url = {https://www.gov.br/mec/pt-br/acesso-a-informacao/institucional/estrutura-organizacional/orgaos-especificos-singulares/secretaria-de-educacao-profissional/TutorialrgoValidadorCiclodeMatrcula.pdf},
+  author = {Sistec},
+  year = {2020}
+}
+
+@inproceedings{Hassan2011_IVV92952,
+  title = {Comparing SVM and na&#x00EF;ve bayes classifiers for text categorization with wikitology as knowledge enrichment},
+  booktitle = {Researchgate},
+  pages = {31-34},
+  publisher = {IEEE},
+  address = {Karachi, Pakistan},
+  doi = {10.1109/INMIC.2011.6151495},
+  isbn = {978-1-4577-0657-8 978-1-4577-0654-7 978-1-4577-0656-1},
+  url = {http://ieeexplore.ieee.org/document/6151495/},
+  abstract = {PDF | The activity of labeling of documents according to their content is known as text categorization. Many experiments have been carried out to... | Find, read and cite all the research you need on ResearchGate},
+  author = {Hassan, Sundus and Rafi, Muhammad and Shaikh, Muhammad Shahid},
+  year = {2011}
+}
+
+@article{Chiele2015_5SDM28AZ,
+  title = {Reconhecimento de entidades nomeadas para o português usando o OpenNLP},
+  pages = {1-5},
+  url = {https://repositorio.pucrs.br/dspace/handle/10923/14040},
+  author = {Chiele, Gabriel and Fonseca, Evandro Brasil and Vanim, Aline and Vieira, Renata},
+  year = {2015}
+}
+
+@inproceedings{Huang2019_2UC96RDQ,
+  title = {ICDAR2019 competition on scanned receipt OCR and information extraction},
+  pages = {1516-1520},
+  publisher = {IEEE},
+  address = {Sydney, Australia},
+  doi = {10.1109/ICDAR.2019.00244},
+  isbn = {978-1-7281-3014-9},
+  url = {https://ieeexplore.ieee.org/document/8977955/},
+  abstract = {Scanned receipts OCR and key information extraction (SROIE) represent the processeses of recognizing text from scanned receipts and extracting key texts from them and save the extracted tests to structured documents. SROIE plays critical roles for many document analysis applications and holds great commercial potentials, but very little research works and advances have been published in this area. In recognition of the technical challenges, importance and huge commercial potentials of SROIE, we organized the ICDAR 2019 competition on SROIE. In this competition, we set up three tasks, namely, Scanned Receipt Text Localisation (Task 1), Scanned Receipt OCR (Task 2) and Key Information Extraction from Scanned Receipts (Task 3). A new dataset with 1000 whole scanned receipt images and annotations is created for the competition. In this report we will presents the motivation, competition datasets, task definition, evaluation protocol, submission statistics, performance of submitted methods and results analysis.},
+  author = {Huang, Zheng and Chen, Kai and He, Jianhua and Bai, Xiang and Karatzas, Dimosthenis and Lu, Shijian and Jawahar, C. V.},
+  year = {2019}
+}
+
+@inproceedings{Lima2025_WUPEAYL9,
+  title = {Enhancing text recognition in OCR systems through image processing with BSRGAN},
+  booktitle = {Simpósio Brasileiro De Sistemas De Informação (SBSI)},
+  pages = {497-505},
+  publisher = {Sociedade Brasileira de Computação},
+  address = {Brasil},
+  doi = {10.5753/sbsi.2025.246551},
+  issn = {0000-0000},
+  url = {https://sol.sbc.org.br/index.php/sbsi/article/view/34366},
+  abstract = {Context: Image enhancement is essential for advancing Optical Character Recognition (OCR), a technology widely applied across various Information Systems (IS) to enable accurate text extraction from scanned documents, IDs, invoices, and other document types. Problem: Despite OCR’s importance, challenges such as noise, variable illumination, and low-resolution scans often compromise recognition quality, leading to distorted and inaccurate results. These issues can impact the reliability and effectiveness of IS. Solution: This study presents a methodology to improve the quality of low-resolution images by combining image filtering techniques with OpenCV, super-resolution using the BSRGAN model, and EasyOCR for character extraction. IS Theory: The research is anchored in the Information Quality theory in IS, addressing the importance of improving input data to enhance system outputs and reliability. Method: The proposed methodology consists of two main stages. First, low-resolution images are processed using the BSRGAN super-resolution model, which enhances image quality for improved OCR performance. Then, the enhanced images are processed by an OCR system to extract and convert characters into text. Validation was conducted on three datasets: Brazilian Identity Document (BID), IIIT 5K-Word, and SVHN, simulating real-world application conditions. Summary of Results: The results demonstrate the proposed methodology’s effectiveness in enhancing OCR accuracy, significantly reducing error rates in various contexts. Contributions and Impact on IS: This work contributes to the IS field by providing a solution that enhances OCR input quality, benefiting academia through advanced image processing research and the industry by enabling more reliable text recognition in practical applications.},
+  author = {Lima, Fernando Baptistella De and Silva, Eraylson Galdino Da},
+  year = {2025}
+}
+
+@misc{Ufsc2024_6E5FI5NC,
+  title = {Sistemas de informação},
+  doi = {10.5753/compbr.2018.38.4538},
+  url = {https://sin.ufsc.br/procedimentos-2/atividades-complementares/},
+  abstract = {Curso de Graduação em Sistemas de Informação},
+  author = {Ufsc and SeTIC},
+  year = {2024}
+}
+
+@misc{Occhipinti2022_8RLAL6Y5,
+  title = {A pipeline and comparative study of 12 machine learning models for text classification},
+  doi = {10.48550/ARXIV.2204.06518},
+  url = {https://arxiv.org/abs/2204.06518},
+  abstract = {Text-based communication is highly favoured as a communication method, especially in business environments. As a result, it is often abused by sending malicious messages, e.g., spam emails, to deceive users into relaying personal information, including online accounts credentials or banking details. For this reason, many machine learning methods for text classification have been proposed and incorporated into the services of most email providers. However, optimising text classification algorithms and finding the right tradeoff on their aggressiveness is still a major research problem. We present an updated survey of 12 machine learning text classifiers applied to a public spam corpus. A new pipeline is proposed to optimise hyperparameter selection and improve the models' performance by applying specific methods (based on natural language processing) in the preprocessing stage. Our study aims to provide a new methodology to investigate and optimise the effect of different feature sizes and hyperparameters in machine learning classifiers that are widely used in text classification problems. The classifiers are tested and evaluated on different metrics including F-score (accuracy), precision, recall, and run time. By analysing all these aspects, we show how the proposed pipeline can be used to achieve a good accuracy towards spam filtering on the Enron dataset, a widely used public email corpus. Statistical tests and explainability techniques are applied to provide a robust analysis of the proposed pipeline and interpret the classification outcomes of the 12 machine learning models, also identifying words that drive the classification results. Our analysis shows that it is possible to identify an effective machine learning model to classify the Enron dataset with an F-score of 94%.},
+  author = {Occhipinti, Annalisa and Rogers, Louis and Angione, Claudio},
+  year = {2022}
+}
+
+@inproceedings{Lopes2024_YQTLDPU2,
+  title = {Syntactic parsing: where are we going?},
+  booktitle = {Simpósio Brasileiro De Tecnologia Da Informação E Da Linguagem Humana (STIL)},
+  pages = {67-74},
+  publisher = {Sociedade Brasileira de Computação},
+  address = {Brasil},
+  doi = {10.5753/stil.2024.245043},
+  issn = {0000-0000},
+  url = {https://sol.sbc.org.br/index.php/stil/article/view/31117},
+  abstract = {In this review & opinion paper, we discuss the options and challenges for syntactic parsing. Despite significant advances in recent years, driven primarily by neural network architectures, parsing accuracy appears to be approaching a plateau. This paper proposes a reflection on the factors that may possibly be influencing such results and suggests some future paths.},
+  author = {Lopes, Lucelene and Pardo, Thiago Alexandre Salgueiro and Duran, Magali S.},
+  year = {2024}
+}
+
+@article{LópezBello2019_3GZMLQVK,
+  title = {From medical records to research papers: a literature analysis pipeline for supporting medical genomic diagnosis processes},
+  journal = {Informatics in Medicine Unlocked},
+  volume = {15},
+  pages = {100181},
+  publisher = {Elsevier BV},
+  doi = {10.1016/j.imu.2019.100181},
+  issn = {23529148},
+  url = {https://linkinghub.elsevier.com/retrieve/pii/S2352914819300309},
+  abstract = {In this paper, we introduce a framework for processing genetics and genomics literature, based on ontologies and lexical resources from the biomedical domain. The main objective is to support the diagnosis process that is done by medical geneticists who extract knowledge from published works. We constructed a pipeline that gathers several genetics- and genomics-related resources and applies natural language processing techniques, which include named entity recognition and relation extraction. Working on a corpus created from PubMed abstracts, we built a knowledge database that can be used for processing medical records written in Spanish. Given a medical record from Uruguayan healthcare patients, we show how we can map it to the database and perform graph queries for relevant knowledge paths. The framework is not an end user application, but an extensible processing structure to be leveraged by external applications, enabling software developers to streamline incorporation of the extracted knowledge.},
+  author = {López Bello, Fernando and Naya, Hugo and Raggio, Víctor and Rosá, Aiala},
+  year = {2019}
+}
+
+@inproceedings{Smith2007_3ZYYXA9V,
+  title = {An overview of the tesseract OCR engine},
+  booktitle = {Ninth International Conference on Document Analysis and Recognition (ICDAR 2007)},
+  volume = {2},
+  pages = {629-633},
+  publisher = {IEEE},
+  address = {Curitiba, Parana, Brazil},
+  doi = {10.1109/ICDAR.2007.4376991},
+  isbn = {978-0-7695-2822-9},
+  issn = {1520-5363},
+  url = {http://ieeexplore.ieee.org/document/4376991/},
+  abstract = {The Tesseract OCR engine, as was the HP Research Prototype in the UNLV Fourth Annual Test of OCR Accuracy, is described in a comprehensive overview. Emphasis is placed on aspects that are novel or at least unusual in an OCR engine, including in particular the line finding, features/classification methods, and the adaptive classifier.},
+  author = {Smith, R.},
+  year = {2007}
+}
+
+@misc{2023_QBZ3FUNZ,
+  title = {Python OCR tutorial: tesseract, pytesseract, and OpenCV},
+  url = {https://nanonets.com/blog/ocr-with-tesseract/},
+  abstract = {Dive deep into OCR with Tesseract, including Pytesseract integration, training with custom data, limitations, and comparisons with enterprise solutions.},
+  year = {2023}
+}
+
+@misc{2025_DU2M79G4,
+  title = {Understanding document classification: a step-wise breakdown},
+  url = {https://www.docsumo.com/blogs/ocr/document-classification},
+  abstract = {Learn how AI-led OCR technology automates document classification via computer vision and textual recognition techniques in real-world use cases.},
+  year = {2025}
+}
+
+@article{Uddin2019_FGVARUV3,
+  title = {Comparing different supervised machine learning algorithms for disease prediction},
+  journal = {BMC Medical Informatics and Decision Making},
+  volume = {19},
+  number = {1},
+  pages = {281},
+  doi = {10.1186/s12911-019-1004-8},
+  issn = {1472-6947},
+  url = {https://bmcmedinformdecismak.biomedcentral.com/articles/10.1186/s12911-019-1004-8},
+  abstract = {Abstract Background Supervised machine learning algorithms have been a dominant method in the data mining field. Disease prediction using health data has recently shown a potential application area for these methods. This study aims to identify the key trends among different types of supervised machine learning algorithms, and their performance and usage for disease risk prediction. Methods In this study, extensive research efforts were made to identify those studies that applied more than one supervised machine learning algorithm on single disease prediction. Two databases (i.e., Scopus and PubMed) were searched for different types of search items. Thus, we selected 48 articles in total for the comparison among variants supervised machine learning algorithms for disease prediction. Results We found that the Support Vector Machine (SVM) algorithm is applied most frequently (in 29 studies) followed by the Naïve Bayes algorithm (in 23 studies). However, the Random Forest (RF) algorithm showed superior accuracy comparatively. Of the 17 studies where it was applied, RF showed the highest accuracy in 9 of them, i.e., 53%. This was followed by SVM which topped in 41% of the studies it was considered. Conclusion This study provides a wide overview of the relative performance of different variants of supervised machine learning algorithms for disease prediction. This important information of relative performance can be used to aid researchers in the selection of an appropriate supervised machine learning algorithm for their studies.},
+  author = {Uddin, Shahadat and Khan, Arif and Hossain, Md Ekramul and Moni, Mohammad Ali},
+  year = {2019}
+}
+
+@inproceedings{DaSilva2024_2RLCAYI3,
+  title = {Segmentação textual baseada em tópicos em português utilizando BERTimbau},
+  booktitle = {Anais Do XV Simpósio Brasileiro De Tecnologia Da Informação E Da Linguagem Humana (STIL 2024)},
+  pages = {32-36},
+  publisher = {Sociedade Brasileira de Computação},
+  address = {Brasil},
+  doi = {10.5753/stil.2024.245080},
+  issn = {0000-0000},
+  url = {https://sol.sbc.org.br/index.php/stil/article/view/31113},
+  abstract = {Neste trabalho, exploramos a segmentação textual para o português utilizando o modelo BERTimbau, com bases de dados construídas usando tradução automática e a partir de notícias online. Obtivemos Pk = 6,89 para uma avaliação dentro do domínio, mas resultados piores em avaliações fora do domínio, destacando a importância de uma base de treinamento diversificada para melhorar a generalização em múltiplos domínios.},
+  author = {Da Silva, Luciano A. C. and Rodrigues, Maiara S. F. and Archanjo, Adriana P. and Pessoa, Luis and Silva, Miguel L. and De Almeida, Thiago F. and Silveira, Leonardo},
+  year = {2024}
+}
+
+@inproceedings{Kiss2019_6WR4HTYB,
+  title = {Brno mobile OCR dataset},
+  pages = {1352-1357},
+  publisher = {IEEE},
+  address = {Sydney, Australia},
+  doi = {10.1109/ICDAR.2019.00218},
+  isbn = {978-1-7281-3014-9},
+  url = {https://ieeexplore.ieee.org/document/8978020/},
+  abstract = {We introduce the Brno Mobile OCR Dataset (B-MOD) for document Optical Character Recognition from low-quality images captured by handheld mobile devices. While OCR of high-quality scanned documents is a mature field where many commercial tools are available, and large datasets of text in the wild exist, no existing datasets can be used to develop and test document OCR methods robust to non-uniform lighting, image blur, strong noise, built-in denoising, sharpening, compression and other artifacts present in many photographs from mobile devices. This dataset contains 2 113 unique pages from random scientific papers, which were photographed by multiple people using 23 different mobile devices. The resulting 19 728 photographs of various visual quality are accompanied by precise positions and text annotations of 500k text lines. We further provide an evaluation methodology, including an evaluation server and a testset with non-public annotations. We provide a state-of-the-art text recognition baseline build on convolutional and recurrent neural networks trained with Connectionist Temporal Classification loss. This baseline achieves 2 %, 22 % and 73 % word error rates on easy, medium and hard parts of the dataset, respectively, confirming that the dataset is challenging. The presented dataset will enable future development and evaluation of document analysis for low-quality images. It is primarily intended for line-level text recognition, and can be further used for line localization, layout analysis, image restoration and text binarization.},
+  author = {Kiss, Martin and Hradis, Michal and Kodym, Oldrich},
+  year = {2019}
+}
+
+@article{Kabashi2024_S8R5TP2W,
+  title = {Trustworthy verification of academic credentials through blockchain technology},
+  journal = {International Journal of Online and Biomedical Engineering (iJOE)},
+  volume = {20},
+  number = {9},
+  pages = {51-64},
+  doi = {10.3991/ijoe.v20i09.48999},
+  issn = {2626-8493},
+  url = {https://online-journals.org/index.php/i-joe/article/view/48999},
+  abstract = {The increasing demand for a secure and transparent mechanism for verifying academic credentials has led to the exploration of blockchain technology (BT) as a viable solution. This paper presents a three-layered application for the reliable verification of academic credentials, leveraging the immutable and decentralized nature of BT. The system includes a data layer (DL), a blockchain layer (BL), and an application layer (AL). The DL records student records, faculty staff records, and credentials. The BL utilizes smart contracts to record and verify academic records, ensuring their authenticity and integrity. The AL provides a userfriendly interface for various stakeholders, such as students, educational institutions, and employers, to communicate with the system. This effort aims to determine how BT can be utilized to enhance the security, transparency, and efficiency of academic credential verification processes. Efficiency in academic credential verification processes ultimately contributes to a more reliable and effective educational ecosystem.},
+  author = {Kabashi, Faton and Snopçe, Halil and Luma, Artan and Neziri, Vehbi},
+  year = {2024}
+}
+
+@inproceedings{SuarezVargas2021_35PWH9FM,
+  title = {sOCRates - a post-OCR text correction method},
+  booktitle = {Anais Do XXXVI Simpósio Brasileiro De Banco De Dados (SBBD 2021)},
+  pages = {61-72},
+  publisher = {Sociedade Brasileira de Computação - SBC},
+  address = {Brasil},
+  doi = {10.5753/sbbd.2021.17866},
+  issn = {2763-8979},
+  url = {https://sol.sbc.org.br/index.php/sbbd/article/view/17866},
+  abstract = {A significant portion of the textual information of interest to an organization is stored in PDF files that should be converted into plain text before their contents can be processed by an information retrieval or text mining system. When the PDF documents consist of scanned documents, optical character recognition (OCR) is typically used to extract the textual contents. OCR errors can have a negative impact on the quality of information retrieval systems since the terms in the query will not match incorrectly extracted terms in the documents. This work introduces sOCRates, a post-OCR text correction method that relies on contextual word embeddings and on a classifier that uses format, semantic, and syntactic features. Our experimental evaluation on a test collection in Portuguese showed that sOCRates can accurately correct errors and improve retrieval results.},
+  author = {Suarez Vargas, Danny and Lima De Oliveira, Lucas and P. Moreira, Viviane and Torresan Bazzo, Guilherme and Acauan Lorentz, Gustavo},
+  year = {2021}
+}
+
+@article{Ehrmann2024_GVF6AK4H,
+  title = {Named entity recognition and classification in historical documents: a survey},
+  journal = {ACM Computing Surveys},
+  volume = {56},
+  number = {2},
+  pages = {1-47},
+  publisher = {Association for Computing Machinery (ACM)},
+  doi = {10.1145/3604931},
+  issn = {0360-0300, 1557-7341},
+  url = {https://dl.acm.org/doi/10.1145/3604931},
+  abstract = {After decades of massive digitisation, an unprecedented number of historical documents are available in digital format, along with their machine-readable texts. While this represents a major step forward with respect to preservation and accessibility, it also opens up new opportunities in terms of content mining and the next fundamental challenge is to develop appropriate technologies to efficiently search, retrieve, and explore information from this ‘big data of the past’. Among semantic indexing opportunities, the recognition and classification of named entities are in great demand among humanities scholars. Yet, named entity recognition (NER) systems are heavily challenged with diverse, historical, and noisy inputs. In this survey, we present the array of challenges posed by historical documents to NER, inventory existing resources, describe the main approaches deployed so far, and identify key priorities for future developments.},
+  author = {Ehrmann, Maud and Hamdi, Ahmed and Pontes, Elvys Linhares and Romanello, Matteo and Doucet, Antoine},
+  year = {2024}
+}
+
+@misc{Howlett2022_4VBHITBC,
+  title = {Parsing structured data within PDF documents with apache PDFBox},
+  url = {https://robinhowlett.com/blog/2019/11/29/parsing-structured-data-complex-pdf-layouts/},
+  author = {Howlett, Robin},
+  year = {2022}
+}
+
+@article{A2015_8DIVSQP9,
+  title = {OCR accuracy improvement on document images through a novel pre-processing approach},
+  journal = {Signal & Image Processing : an International Journal},
+  volume = {6},
+  number = {4},
+  pages = {01-18},
+  doi = {10.5121/sipij.2015.6401},
+  issn = {22293922, 0976710X},
+  url = {http://www.aircconline.com/sipij/V6N4/6415sipij01.pdf},
+  abstract = {Digital camera and mobile document image acquisition are new trends arising in the world of Optical Character Recognition and text detection. In some cases, such process integrates many distortions and produces poorly scanned text or text-photo images and natural images, leading to an unreliable OCR digitization. In this paper, we present a novel nonparametric and unsupervised method to compensate for undesirable document image distortions aiming to optimally improve OCR accuracy. Our approach relies on a very efficient stack of document image enhancing techniques to recover deformation of the entire document image. First, we propose a local brightness and contrast adjustment method to effectively handle lighting variations and the irregular distribution of image illumination. Second, we use an optimized greyscale conversion algorithm to transform our document image to greyscale level. Third, we sharpen the useful information in the resulting greyscale image using Un-sharp Masking method. Finally, an optimal global binarization approach is used to prepare the final document image to OCR recognition. The proposed approach can significantly improve text detection rate and optical character recognition accuracy. To demonstrate the efficiency of our approach, an exhaustive experimentation on a standard dataset is presented.},
+  author = {A, El Harraj and N, Raissouni},
+  year = {2015}
+}
+
+@article{Hamdi2023_9GNVERSR,
+  title = {In-depth analysis of the impact of OCR errors on named entity recognition and linking},
+  journal = {Natural Language Engineering},
+  volume = {29},
+  number = {2},
+  pages = {425-448},
+  doi = {10.1017/S1351324922000110},
+  issn = {1351-3249, 1469-8110},
+  url = {https://www.cambridge.org/core/product/identifier/S1351324922000110/type/journal_article},
+  abstract = {Abstract Named entities (NEs) are among the most relevant type of information that can be used to properly index digital documents and thus easily retrieve them. It has long been observed that NEs are key to accessing the contents of digital library portals as they are contained in most user queries. However, most digitized documents are indexed through their optical character recognition (OCRed) version which include numerous errors. Although OCR engines have considerably improved over the last few years, OCR errors still considerably impact document access. Previous works were conducted to evaluate the impact of OCR errors on named entity recognition (NER) and named entity linking (NEL) techniques separately. In this article, we experimented with a variety of OCRed documents with different levels and types of OCR noise to assess in depth the impact of OCR on named entity processing. We provide a deep analysis of OCR errors that impact the performance of NER and NEL. We then present the resulting exhaustive study and subsequent recommendations on the adequate documents, the OCR quality levels, and the post-OCR correction strategies required to perform reliable NER and NEL.},
+  author = {Hamdi, Ahmed and Linhares Pontes, Elvys and Sidere, Nicolas and Coustaty, Mickaël and Doucet, Antoine},
+  year = {2023}
+}
+
+@article{Ferreira2019_ZWV7JUDC,
+  title = {Processamento de linguagem natural e classificação de textos em sistemas modulares},
+  pages = {1-71},
+  url = {https://bdm.unb.br/handle/10483/25114},
+  abstract = {Sistemas modulares são implementados de forma que cada componente possa, individualmente, alcançar seus objetivos e contribuir para o correto funcionamento do sistema. A extração de dados textuais de fontes online pode ter alterações e depende de fornecer meios simples de modificar apenas módulos individuais responsáveis por estas tarefas, adequando-se às atualizações das fontes de dados sem afetar o resto do sistema. Os processos devem estar adequados à dinâmica do ambiente que estão disponíveis, visando escalabilidade e processamento de forma eficiente. O ambiente é estocástico e força os diferentes módulos a serem o mais completos e generalistas possível e seus componentes facilmente manuteníveis. A língua portuguesa também é um grande desafio, devido sua heterogeneidade, a diversidade de fontes e de modos de escrita, este trabalho busca encontrar padrões e metodologias de normalização e limpeza de dados que sirvam também a outros contextos e a outras línguas. Esse trabalho propõe uma arquitetura com diversos módulos que realizem tarefas de captura de dados textuais, fluxos de pré-processamento de dados, extração de entidades de textos em linguagem natural, estruturação e formatação dos dados, armazenamento destes dados de forma eficiente e resiliente, processamento de linguagem natural, classificação de textos em na língua portuguesa. Esta arquitetura se baseia em um fluxo completo que contempla a obtenção, processamento e análise dos dados. Este trabalho também visa aplicar suas metodologias sobre dados governamentais, buscando gerar insumos para a identificação de comportamento de cartéis de empresas em obras públicas por meio de técnicas de aprendizado de máquina e inteligência artificial. Experimentos indicam resultados positivos para a estruturação de uma arquitetura que possa extrair os dados e processá-los corretamente, trazendo os indícios necessários para uma análise de dados e oferecendo informações para aprofundar no campo de conhecimento de aplicação do processamento de linguagem natural em sistemas modulares e inteligentes.},
+  author = {Ferreira, Hugo Honda},
+  year = {2019}
+}
+
+@inproceedings{Silva2023_LCPFXTFS,
+  title = {Etiquetagem morfossintática multigênero para o português do brasil segundo o modelo "universal dependencies"},
+  booktitle = {Simpósio Brasileiro De Tecnologia Da Informação E Da Linguagem Humana (STIL)},
+  pages = {63-73},
+  publisher = {Sociedade Brasileira de Computação},
+  address = {Brasil},
+  doi = {10.5753/stil.2023.233848},
+  issn = {0000-0000},
+  url = {https://sol.sbc.org.br/index.php/stil/article/view/25438},
+  abstract = {A etiquetagem morfossintática é um processo que busca identificar as classes gramaticais de palavras e símbolos (tokens) em uma sentença. Para o português brasileiro, há uma variedade de trabalhos utilizando corpora de gênero jornalístico com diferentes conjuntos de etiquetas. Neste artigo, apresentamos resultados que superam o estado da arte atual, investigando metodos de etiquetagem e avaliando sua capacidade de análise multigênero em corpora dos gêneros jornalístico, acadêmico e de "user-generated content". Para tanto, usamos o modelo "Universal Dependencies". Por fim, apresentamos uma avaliação qualitativa dos erros sistemáticos cometidos pelo modelo.},
+  author = {Silva, Emanuel Huber and Pardo, Thiago Alexandre Salgueiro and Roman, Norton Trevisan},
+  year = {2023}
+}
+
+@article{Sporici2020_C8JEL8RP,
+  title = {Improving the accuracy of tesseract 4.0 OCR engine using convolution-based preprocessing},
+  journal = {Symmetry},
+  volume = {12},
+  number = {5},
+  pages = {715},
+  publisher = {MDPI AG},
+  doi = {10.3390/sym12050715},
+  issn = {2073-8994},
+  url = {https://www.mdpi.com/2073-8994/12/5/715},
+  abstract = {Optical Character Recognition (OCR) is the process of identifying and converting texts rendered in images using pixels to a more computer-friendly representation. The presented work aims to prove that the accuracy of the Tesseract 4.0 OCR engine can be further enhanced by employing convolution-based preprocessing using specific kernels. As Tesseract 4.0 has proven great performance when evaluated against a favorable input, its capability of properly detecting and identifying characters in more realistic, unfriendly images is questioned. The article proposes an adaptive image preprocessing step guided by a reinforcement learning model, which attempts to minimize the edit distance between the recognized text and the ground truth. It is shown that this approach can boost the character-level accuracy of Tesseract 4.0 from 0.134 to 0.616 (+359% relative change) and the F1 score from 0.163 to 0.729 (+347% relative change) on a dataset that is considered challenging by its authors.},
+  author = {Sporici, Dan and Cușnir, Elena and Boiangiu, Costin-Anton},
+  year = {2020}
+}
+
+@misc{Ma2023_6ZZ7RKC3,
+  title = {A Comprehensive Survey on Vector Database: Storage and Retrieval Technique, Challenge},
+  doi = {10.48550/ARXIV.2310.11703},
+  url = {https://arxiv.org/abs/2310.11703},
+  abstract = {As high-dimensional vector data increasingly surpasses the processing capabilities of traditional database management systems, Vector Databases (VDBs) have emerged and become tightly integrated with large language models, being widely applied in modern artificial intelligence systems. However, existing research has primarily focused on underlying technologies such as approximate nearest neighbor search, with relatively few studies providing a systematic architectural-level review of VDBs or analyzing how these core technologies collectively support the overall capacity of VDBs. This survey aims to offer a comprehensive overview of the core designs and algorithms of VDBs, establishing a holistic understanding of this rapidly evolving field. First, we systematically review the key technologies and design principles of VDBs from the two core dimensions of storage and retrieval, tracing their technological evolution. Next, we conduct an in-depth comparison of several mainstream VDB architectures, summarizing their strengths, limitations, and typical application scenarios. Finally, we explore emerging directions for integrating VDBs with large language models, including open research challenges and trends such as novel indexing strategies. This survey serves as a systematic reference guide for researchers and practitioners, helping readers quickly grasp the technological landscape and development trends in the field of vector databases, and promoting further innovation in both theoretical and applied aspects.},
+  author = {Ma, Le and Zhang, Ran and Han, Yikun and Yu, Shirui and Wang, Zaitian and Ning, Zhiyuan and Zhang, Jinghan and Xu, Ping and Li, Pengjiang and Qiao, Ziyue and Ju, Wei and Chen, Chong and Wang, Dongjie and Liu, Kunpeng and Wang, Pengyang and Wang, Pengfei and Fu, Yanjie and Liu, Chunjiang and Zhou, Yuanchun and Lu, Chang-Tien},
+  year = {2023}
+}
+
+@article{Kouamou2017_AQ5N7KZX,
+  title = {A structural and generative approach to multilayered software architectures},
+  journal = {Journal of Software Engineering and Applications},
+  volume = {10},
+  number = {8},
+  pages = {677-692},
+  publisher = {Scientific Research Publishing},
+  doi = {10.4236/jsea.2017.108037},
+  issn = {1945-3116, 1945-3124},
+  url = {https://www.scirp.org/journal/paperinformation?paperid=77545},
+  abstract = {The layered software architecture is the model commonly adopted for the development of information systems since it favors the modularity and the scalability of the systems. On the other hand, the emergence of model engineering aims to raise the level of abstraction to allow developers to reason on models, and less in code. The research question is to combine the two approaches to facilitate the work of developers. The proposal resulting from this study is based on a set of concepts defined using the UML profiles. These concepts include services, business components, and data persistence. Then the Kruchten model is adopted to represent the development cycle according to several views, each view being represented by UML diagrams derived from the previously defined profiles. Finally, rules are available for checking inter-view consistency, from refinement to code generation. The result is a step towards the definition of a domain specific ADL and a development process as much as it includes the expected characteristics of such a language, namely: the fundamental concepts, the support tools and the multiview development.},
+  author = {Kouamou, Georges Edouard and Kungne, Willy Kengne},
+  year = {2017}
+}
+
+@article{Taha2024_4B2Z5XTR,
+  title = {A comprehensive survey of text classification techniques and their research applications: observational and experimental insights},
+  journal = {Computer Science Review},
+  volume = {54},
+  pages = {100664},
+  doi = {10.1016/j.cosrev.2024.100664},
+  issn = {15740137},
+  url = {https://linkinghub.elsevier.com/retrieve/pii/S1574013724000480},
+  abstract = {The exponential growth of textual data presents substantial challenges in management and analysis, notably due to high storage and processing costs. Text classification, a vital aspect of text mining, provides robust solutions by enabling efficient categorization and organization of text data. These techniques allow individuals, researchers, and businesses to derive meaningful patterns and insights from large volumes of text. This survey paper introduces a comprehensive taxonomy specifically designed for text classification based on research fields. The taxonomy is structured into hierarchical levels: research field-based category, research field-based sub-category, methodology-based technique, methodology sub-technique, and research field applications. We employ a dual evaluation approach: empirical and experimental. Empirically, we assess text classification techniques across four critical criteria. Experimentally, we compare and rank the methodology sub-techniques within the same methodology technique and within the same overall research field sub-category. This structured taxonomy, coupled with thorough evaluations, provides a detailed and nuanced understanding of text classification algorithms and their applications, empowering researchers to make informed decisions based on precise, field-specific insights.},
+  author = {Taha, Kamal and Yoo, Paul D. and Yeun, Chan and Homouz, Dirar and Taha, Aya},
+  year = {2024}
+}
+
+@article{Devlin2018_ZVNRGKUA,
+  title = {BERT: pre-training of deep bidirectional transformers for language understanding},
+  pages = {1-16},
+  publisher = {arXiv},
+  doi = {10.48550/ARXIV.1810.04805},
+  url = {https://arxiv.org/abs/1810.04805},
+  abstract = {We introduce a new language representation model called BERT, which stands for Bidirectional Encoder Representations from Transformers. Unlike recent language representation models, BERT is designed to pre-train deep bidirectional representations from unlabeled text by jointly conditioning on both left and right context in all layers. As a result, the pre-trained BERT model can be fine-tuned with just one additional output layer to create state-of-the-art models for a wide range of tasks, such as question answering and language inference, without substantial task-specific architecture modifications. BERT is conceptually simple and empirically powerful. It obtains new state-of-the-art results on eleven natural language processing tasks, including pushing the GLUE score to 80.5% (7.7% point absolute improvement), MultiNLI accuracy to 86.7% (4.6% absolute improvement), SQuAD v1.1 question answering Test F1 to 93.2 (1.5 point absolute improvement) and SQuAD v2.0 Test F1 to 83.1 (5.1 point absolute improvement).},
+  author = {Devlin, Jacob and Chang, Ming-Wei and Lee, Kenton and Toutanova, Kristina},
+  year = {2018}
+}
+
+@misc{Zhang2024_28FC54M6,
+  title = {Document parsing unveiled: techniques, challenges, and prospects for structured information extraction},
+  doi = {10.48550/ARXIV.2410.21169},
+  url = {https://arxiv.org/abs/2410.21169},
+  abstract = {Document parsing (DP) transforms unstructured or semi-structured documents into structured, machine-readable representations, enabling downstream applications such as knowledge base construction and retrieval-augmented generation (RAG). This survey provides a comprehensive and timely review of document parsing research. We propose a systematic taxonomy that organizes existing approaches into modular pipeline-based systems and unified models driven by Vision-Language Models (VLMs). We provide a detailed review of key components in pipeline systems, including layout analysis and the recognition of heterogeneous content such as text, tables, mathematical expressions, and visual elements, and then systematically track the evolution of specialized VLMs for document parsing. Additionally, we summarize widely adopted evaluation metrics and high-quality benchmarks that establish current standards for parsing quality. Finally, we discuss key open challenges, including robustness to complex layouts, reliability of VLM-based parsing, and inference efficiency, and outline directions for building more accurate and scalable document intelligence systems.},
+  author = {Zhang, Qintong and Wang, Bin and Huang, Victor Shea-Jay and Zhang, Junyuan and Wang, Zhengren and Liang, Hao and He, Conghui and Zhang, Wentao},
+  year = {2024}
+}
+
+@misc{2012_5FFILUGW,
+  title = {Seg},
+  url = {https://www.udesc.br/cead/seg/ac},
+  year = {2012}
+}

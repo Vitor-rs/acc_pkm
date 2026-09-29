@@ -62,3 +62,31 @@ Sempre que o usuário enviar comandos iniciando com `/scrape`, `/crawl`, `/paper
 4. **Pós-processamento:**
    - O catálogo `resources/_lake_catalog.html` e `resources/_catalog/documents.jsonl` são sincronizados automaticamente.
    - Apresente sempre links clicáveis (`file:///...`) para o conteúdo salvo e para o catálogo.
+
+---
+
+## 4. Comando de Barra do Zotero (`/zotero` e `/zot`)
+
+Sempre que o usuário enviar comandos iniciando com `/zotero` ou `/zot`:
+
+1. **Sincronização Completa Zotero ➔ Lake (`/zotero sync` ou `/zot sync`):**
+   Executa a extração em lote com PyMuPDF4LLM e atualiza catálogo e `master.bib`:
+   ```bash
+   uv run python scripts/zotero_lake_sync.py [--force]
+   ```
+
+2. **Busca na Biblioteca Local (`/zotero search "<termo>"`):**
+   ```bash
+   zotero-cli --json search "<termo>"
+   ```
+
+3. **Adição por DOI / URL (`/zotero add "<doi_ou_url>"`):**
+   Adiciona ao Zotero Desktop e puxa diretamente para o Lake:
+   ```bash
+   uv run python scripts/acc.py zotero add "<doi_ou_url>"
+   ```
+
+4. **Auditoria e BibTeX (`/zotero bib`):**
+   ```bash
+   uv run python scripts/acc.py bib-audit
+   ```
