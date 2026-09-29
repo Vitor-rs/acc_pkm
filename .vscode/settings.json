@@ -134,11 +134,45 @@
   ],
   "ltex.language": "pt-BR",
   "ltex.additionalRules.enablePickyRules": true,
-  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
+  "python.defaultInterpreterPath": "C:\\Users\\user\\AppData\\Roaming\\uv\\python\\cpython-3.13.11-windows-x86_64-none\\python.exe",
   "python.envFile": "${workspaceFolder}/.env",
   "python.terminal.useEnvFile": true,
   "workbench.editorAssociations": {
     "*.pdf": "latex-workshop-pdf-hook"
+  },
+  "workbench.tree.indent": 18,
+  "workbench.tree.renderIndentGuides": "always",
+  "explorer.compactFolders": false,
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": false,
+  "explorer.fileNesting.patterns": {
+    "*.tex": "${capture}.pdf, ${capture}.aux, ${capture}.bbl, ${capture}.blg, ${capture}.log, ${capture}.out, ${capture}.toc, ${capture}.lof, ${capture}.lot, ${capture}.fls, ${capture}.fdb_latexmk, ${capture}.synctex.gz, ${capture}.nav, ${capture}.snm, ${capture}.vrb",
+    "*.py": "${capture}.pyi, ${capture}.pyc",
+    "pyproject.toml": "uv.lock, requirements.txt, .python-version",
+    "README.md": "AGENTS.md, GEMINI.md, LICENSE*"
+  },
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "**/__pycache__": true,
+    "**/.pytest_cache": true,
+    "**/*.pyc": true
+  },
+  "search.exclude": {
+    "**/.git": true,
+    "**/.venv": true,
+    "**/build": true,
+    "**/__pycache__": true
+  },
+  "workbench.colorCustomizations": {
+    "statusBar.background": "#075985",
+    "statusBar.foreground": "#f0f9ff",
+    "statusBar.debuggingBackground": "#0369a1",
+    "tree.indentGuidesStroke": "#38bdf888"
   },
   "files.associations": {
     "*.tex": "latex",

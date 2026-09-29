@@ -3,6 +3,7 @@
 Repositório de Gestão de Conhecimento Pessoal (Personal Knowledge Management - PKM) exclusivamente acadêmico e científico (metodologia, pesquisa quanti/quali, revisões sistemáticas, redação de dissertações/teses). **Totalmente isolado do projeto Startuzeiro.**
 
 ## Estrutura do Projeto
+
 - `resources/_lake/`: Data Lake onde ficam as transcrições Markdown (`.md`) e os livros/artigos em `.pdf` e `.epub`.
 - `resources/_lake_catalog.html`: Painel web interativo para busca, filtros e leitura do acervo (localização única, sem duplicatas na raiz).
 - `scripts/`: Scripts utilitários, automações e arquivos `.bat` (evitar arquivos soltos na raiz).
@@ -12,6 +13,7 @@ Repositório de Gestão de Conhecimento Pessoal (Personal Knowledge Management -
 - `.agents/skills/latex/SKILL.md`: Definição da skill e comandos `/latex` e `/overleaf`.
 
 ## Comandos Rápidos
+
 - `/latex new <nome> [--template sbc|tcc]`: Cria projeto acadêmico a partir dos templates SBC ou ABNT.
 - `/latex build [projeto]`: Compila manuscrito via latexmk com SyncTeX e diagnósticos no VS Code.
 - `/overleaf pack <projeto>`: Empacota projeto limpo em `.zip` com citações resolvidas de `master.bib` para o Overleaf.
@@ -26,4 +28,3 @@ Repositório de Gestão de Conhecimento Pessoal (Personal Knowledge Management -
 - `/scrape <url>`: Raspa página web com Scrapling stealth e fallback Firecrawl, salva no Lake e cataloga.
 - `/paper-search "<termo>"`: Busca literatura científica e preprints via Firecrawl Research Index.
 - `/crawl <url>`: Rastreamento recursivo de documentação para o Lake.
-

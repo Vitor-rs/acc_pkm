@@ -83,15 +83,18 @@ uv run scripts/acc.py catalog
 ## 📝 Escrita Acadêmica com LaTeX
 
 ### 1. No VS Code
+
 - Abra o repositório no VS Code. O arquivo [`.vscode/settings.json`](file:///.vscode/settings.json) já está configurado com:
   - **LaTeX Workshop:** Compilação isolada para a pasta `build/` (evita poluir as pastas dos projetos).
   - **LTeX:** Corretor ortográfico e gramatical configurado em Português (`pt-BR`) e Inglês (`en-US`).
   - **Interpretador Python:** Aponta automaticamente para `.venv` gerado pelo `uv`.
 
 ### 2. No GitHub Actions (CI/CD)
+
 - Qualquer push em `projects/**` aciona automaticamente o workflow [`.github/workflows/latex.yml`](file:///.github/workflows/latex.yml), que compila o PDF em ambiente Ubuntu + TeXLive e disponibiliza o PDF compilado como artefato para download.
 
 ### 3. No Overleaf
+
 - Cada pasta dentro de `projects/` (como `projects/_template/`) é autocontida e pode ser zipada ou sincronizada diretamente com o Overleaf.
 
 ---
@@ -99,6 +102,7 @@ uv run scripts/acc.py catalog
 ## 📺 Ingestão de Transcrições do YouTube & Data Lake
 
 ### Comando de Barra no Chat Antigravity
+
 No chat com o agente no Antigravity, utilize o comando `/transcript`:
 
 ```text
@@ -109,6 +113,7 @@ No chat com o agente no Antigravity, utilize o comando `/transcript`:
 ```
 
 ### Via Terminal
+
 ```bash
 # Transcrever vídeo individual
 uv run scripts/yt_transcribe_and_catalog.py "https://www.youtube.com/watch?v=VIDEO_ID"
@@ -126,17 +131,20 @@ uv run scripts/yt_transcribe_and_catalog.py "https://www.youtube.com/watch?v=...
 
 O ecossistema integra uma arquitetura de raspagem em cascata híbrida, combinando execução local sem custos com inteligência em nuvem:
 
-### Cascata Híbrida:
+### Cascata Híbrida
+
 1. **Tier 1 — Scrapling HTTP (0 créditos, ultra rápido):** Requisita a página com impersonação de TLS fingerprint do Chrome, extraindo Markdown higienizado.
 2. **Tier 2 — Scrapling Stealth Browser (0 créditos, anti-bot):** Se detectar Cloudflare Turnstile, CAPTCHAs ou bloqueios, aciona o navegador furtivo Patchright para resolver os desafios localmente.
 3. **Tier 3 — Firecrawl Cloud API (Resiliência global):** Para sites com proteções extremas ou que exigem proxies residenciais, delega a raspagem para a API em nuvem do Firecrawl.
 
-### Comandos de Barra no Chat:
+### Comandos de Barra no Chat
+
 - `/scrape <url>` (ou `/web <url>`): Raspa uma página web ou artigo e salva em `resources/_lake/` com frontmatter YAML e catálogo atualizado.
 - `/paper-search "<termo>"` (ou `/paper "<termo>"`): Pesquisa papers acadêmicos e preprints científicos (arXiv, PubMed, etc.) e salva os fichamentos com `--save`.
 - `/crawl <url>`: Rastreia documentações e sitemaps recursivamente.
 
-### Via Terminal & Scripts:
+### Via Terminal & Scripts
+
 ```bash
 # Raspar artigo com tags
 uv run scripts/web_harvester.py scrape "https://arxiv.org/abs/2301.00000" --tags "ia,metodologia"
@@ -154,6 +162,7 @@ scripts\buscar_papers.bat "machine learning healthcare" --save
 ## 📊 Catálogo Web Interativo (`resources/_lake_catalog.html`)
 
 O catálogo web [`resources/_lake_catalog.html`](file:///resources/_lake_catalog.html) permite explorar visualmente o acervo:
+
 - **Busca em tempo real:** Pesquisa por título, autor, canal ou tags.
 - **Modos de visualização:** Grid com cards visuais ou tabela detalhada.
 - **Prévia e leitura rápida:** Visualização do resumo e trecho da obra sem abrir leitor externo.
