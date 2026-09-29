@@ -135,6 +135,11 @@
   "ltex.language": "pt-BR",
   "ltex.additionalRules.enablePickyRules": true,
   "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
+  "python.envFile": "${workspaceFolder}/.env",
+  "python.terminal.useEnvFile": true,
+  "workbench.editorAssociations": {
+    "*.pdf": "latex-workshop-pdf-hook"
+  },
   "files.associations": {
     "*.tex": "latex",
     "*.bib": "bibtex",
