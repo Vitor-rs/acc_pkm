@@ -33,3 +33,32 @@ Sempre que o usuário enviar uma mensagem iniciando com `/transcript` ou `/yt`:
 2. **Pós-processamento Automático:**
    - O script atualiza o catálogo `resources/_lake_catalog.html` de forma 100% automática ao final de cada execução.
    - Retorne sempre ao usuário os links clicáveis (`file:///...`) dos novos arquivos `.md` gravados em `resources/_lake/` e do catálogo web em `resources/_lake_catalog.html`.
+
+---
+
+## 3. Comandos de Barra de Web Scraping & Literatura (`/scrape`, `/crawl`, `/paper-search`)
+
+Sempre que o usuário enviar comandos iniciando com `/scrape`, `/crawl`, `/paper-search` (ou `/paper`, `/web`):
+
+1. **Raspagem de Páginas Web e Artigos (`/scrape <url>` ou `/web <url>`):**
+   Execute o motor de colheita com a cascata híbrida (Scrapling HTTP -> Scrapling Stealth Browser -> Firecrawl Cloud):
+   ```bash
+   uv run python scripts/web_harvester.py scrape "<url>" [--tags "<tags>"]
+   ```
+
+2. **Pesquisa Semântica de Papers Acadêmicos (`/paper-search <termo>` ou `/paper <termo>`):**
+   Execute a busca de literatura científica no índice Firecrawl Research:
+   ```bash
+   uv run python scripts/web_harvester.py search-papers "<termo>" -k 5 --save
+   ```
+   Com a flag `--save`, os resumos e metadados estruturados dos artigos são gravados no Data Lake (`resources/_lake/`) e catalogados imediatamente no painel HTML.
+
+3. **Rastreamento Recursivo de Documentação (`/crawl <url>`):**
+   Rastreia seções inteiras de documentações e bibliotecas para o Lake:
+   ```bash
+   uv run scripts/web_harvester.py crawl "<url>" --max-pages 10
+   ```
+
+4. **Pós-processamento:**
+   - O catálogo `resources/_lake_catalog.html` e `resources/_catalog/documents.jsonl` são sincronizados automaticamente.
+   - Apresente sempre links clicáveis (`file:///...`) para o conteúdo salvo e para o catálogo.

@@ -425,30 +425,41 @@ def scan_lake_items(lake_dir: Path) -> List[Dict[str, Any]]:
                         body = content
 
                     # Extrair resumo do body se não estiver no frontmatter
-                    summary = meta.get("summary") or ""
+                    summary = meta.get("summary") or meta.get("resumo") or ""
                     if not summary:
                         sum_match = re.search(r"## 📌 Assunto Resumido\s*\n+([^\n#]+)", body)
                         if sum_match:
                             summary = sum_match.group(1).strip()
+                        else:
+                            clean_b = re.sub(r"[#*`>\[\]]", "", body).strip()
+                            first_p = clean_b.split("\n\n")[0] if clean_b else ""
+                            summary = (first_p[:220] + "...") if len(first_p) > 220 else first_p
 
-                    # Transcrição preview
+                    # Transcrição preview ou Artigo preview
                     trans_match = re.search(r"## 🎙️ Transcrição Completa\s*\n+(.+)", body, re.DOTALL)
                     transcript_preview = ""
                     if trans_match:
                         raw_preview = trans_match.group(1).strip()
                         transcript_preview = raw_preview[:800] + ("..." if len(raw_preview) > 800 else "")
+                    else:
+                        clean_b = re.sub(r"[#*`>\[\]]", "", body).strip()
+                        transcript_preview = clean_b[:800] + ("..." if len(clean_b) > 800 else "")
 
                     video_id = meta.get("video_id") or ""
                     thumbnail_url = meta.get("thumbnail_url") or (f"https://i.ytimg.com/vi/{video_id}/hqdefault.jpg" if video_id else "")
+                    is_yt = bool(video_id) or "youtube" in (meta.get("url") or "")
+
+                    tipo = meta.get("tipo") or meta.get("type") or meta.get("source_type") or ("youtube_transcript" if is_yt else "web_article")
+                    canal = meta.get("channel") or meta.get("canal") or meta.get("site_name") or meta.get("author") or ("YouTube" if is_yt else "Web")
 
                     items.append({
                         "id": video_id or f.stem,
-                        "tipo": "youtube_transcript",
+                        "tipo": tipo,
                         "titulo": meta.get("title") or meta.get("titulo_original") or f.stem.replace("_", " ").title(),
-                        "canal": meta.get("channel") or meta.get("canal") or "YouTube",
-                        "canal_url": meta.get("channel_url") or "",
-                        "data_publicacao": meta.get("publish_date") or meta.get("data_publicacao") or "",
-                        "data_transcricao": meta.get("transcription_date") or meta.get("data_transcricao") or "",
+                        "canal": canal,
+                        "canal_url": meta.get("channel_url") or meta.get("url") or "",
+                        "data_publicacao": meta.get("publish_date") or meta.get("data_publicacao") or meta.get("scraped_at", "")[:10] if meta.get("scraped_at") else "",
+                        "data_transcricao": meta.get("transcription_date") or meta.get("data_transcricao") or meta.get("scraped_at", "")[:10] if meta.get("scraped_at") else "",
                         "duracao": meta.get("duration_formatted") or "",
                         "duracao_segundos": meta.get("duration_seconds") or 0,
                         "views": meta.get("views") or meta.get("visualizacoes") or "",
@@ -459,7 +470,7 @@ def scan_lake_items(lake_dir: Path) -> List[Dict[str, Any]]:
                         "preview": transcript_preview,
                         "arquivo_rel": f"_lake/{f.name}",
                         "nome_arquivo": f.name,
-                        "tags": meta.get("tags") or ["youtube", "transcricao"],
+                        "tags": meta.get("tags") or (["youtube", "transcricao"] if is_yt else ["web", "pesquisa"]),
                         "thumbnail_url": thumbnail_url,
                         "tamanho_bytes": f.stat().st_size,
                     })
@@ -508,7 +519,8 @@ def generate_catalog_html(lake_items: List[Dict[str, Any]], catalog_file: Path):
     # Ordenar por data mais recente / nome
     yt_count = sum(1 for i in lake_items if i.get("tipo") == "youtube_transcript")
     doc_count = sum(1 for i in lake_items if i.get("tipo") == "livro_documento")
-    total_words = sum(i.get("palavras", 0) for i in lake_items if i.get("tipo") == "youtube_transcript")
+    web_count = sum(1 for i in lake_items if i.get("tipo") in ["web_article", "academic_paper", "documentation"])
+    total_words = sum(i.get("palavras", 0) for i in lake_items if i.get("tipo") in ["youtube_transcript", "web_article", "academic_paper", "documentation"])
     total_sec = sum(i.get("duracao_segundos", 0) for i in lake_items if i.get("tipo") == "youtube_transcript")
 
     total_hours = round(total_sec / 3600, 1)
@@ -877,6 +889,11 @@ def generate_catalog_html(lake_items: List[Dict[str, Any]], catalog_file: Path):
       color: #fff;
     }}
 
+    .badge-web {{
+      background: #0284c7;
+      color: #fff;
+    }}
+
     .card-duration {{
       position: absolute;
       bottom: 12px;
@@ -1119,6 +1136,13 @@ def generate_catalog_html(lake_items: List[Dict[str, Any]], catalog_file: Path):
         <div class="kpi-label">Livros & Artigos (.pdf/.epub)</div>
       </div>
     </div>
+    <div class="kpi-card">
+      <div class="kpi-icon">🌐</div>
+      <div class="kpi-info">
+        <div class="kpi-value">{web_count}</div>
+        <div class="kpi-label">Artigos Web & Papers (.md)</div>
+      </div>
+    </div>
   </div>
 
   <!-- Controls Bar -->
@@ -1133,6 +1157,7 @@ def generate_catalog_html(lake_items: List[Dict[str, Any]], catalog_file: Path):
         <button class="pill active" onclick="setTypeFilter('all', this)">Todos</button>
         <button class="pill" onclick="setTypeFilter('youtube_transcript', this)">🎬 YouTube</button>
         <button class="pill" onclick="setTypeFilter('livro_documento', this)">📚 Livros/PDFs</button>
+        <button class="pill" onclick="setTypeFilter('web_article', this)">🌐 Web / Artigos</button>
       </div>
 
       <select id="sortSelect" class="filter-select" onchange="renderItems()">
@@ -1230,8 +1255,12 @@ def generate_catalog_html(lake_items: List[Dict[str, Any]], catalog_file: Path):
     const sort = document.getElementById('sortSelect').value;
 
     let filtered = items.filter(item => {{
-      if (currentTypeFilter !== 'all' && item.tipo !== currentTypeFilter) {{
-        return false;
+      if (currentTypeFilter !== 'all') {{
+        if (currentTypeFilter === 'web_article') {{
+          if (!['web_article', 'academic_paper', 'documentation'].includes(item.tipo)) return false;
+        }} else if (item.tipo !== currentTypeFilter) {{
+          return false;
+        }}
       }}
       if (!query) return true;
       const haystack = [
@@ -1277,15 +1306,22 @@ def generate_catalog_html(lake_items: List[Dict[str, Any]], catalog_file: Path):
 
     grid.innerHTML = list.map(item => {{
       const isYT = item.tipo === 'youtube_transcript';
-      const badge = isYT ? '<span class="card-badge badge-yt">YouTube</span>' : `<span class="card-badge badge-doc">${{item.extensao || 'Doc'}}</span>`;
-      const duration = isYT ? `<span class="card-duration">${{item.duracao || '00:00'}}</span>` : `<span class="card-duration">${{item.tamanho_mb || ''}}</span>`;
+      const isDoc = item.tipo === 'livro_documento';
+      const isWeb = ['web_article', 'academic_paper', 'documentation'].includes(item.tipo);
+
+      let badge = '<span class="card-badge badge-doc">Doc</span>';
+      if (isYT) badge = '<span class="card-badge badge-yt">YouTube</span>';
+      else if (isWeb) badge = '<span class="card-badge badge-web">🌐 Web</span>';
+      else if (isDoc) badge = `<span class="card-badge badge-doc">${{item.extensao || 'Livro'}}</span>`;
+
+      const duration = isYT ? `<span class="card-duration">${{item.duracao || '00:00'}}</span>` : (isDoc ? `<span class="card-duration">${{item.tamanho_mb || ''}}</span>` : `<span class="card-duration">${{item.palavras ? item.palavras + ' pal.' : ''}}</span>`);
 
       const mediaHtml = isYT && item.thumbnail_url 
         ? `<img src="${{item.thumbnail_url}}" alt="${{item.titulo}}" loading="lazy" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'360\\' height=\\'200\\' fill=\\'%231e293b\\'><rect width=\\'100%\\' height=\\'100%\\'/></svg>'">`
-        : `<div class="card-media-doc">${{isYT ? '🎬' : '📚'}}</div>`;
+        : `<div class="card-media-doc">${{isYT ? '🎬' : (isWeb ? '🌐' : '📚')}}</div>`;
 
       const tagsHtml = (item.tags || []).map(t => `<span class="tag">#${{t}}</span>`).join('');
-      const ytLinkBtn = isYT && item.url_original ? `<a href="${{item.url_original}}" target="_blank" class="btn" style="padding: 6px 12px; font-size: 0.8rem;">Assistir ↗</a>` : '';
+      const linkBtn = item.url_original ? `<a href="${{item.url_original}}" target="_blank" class="btn" style="padding: 6px 12px; font-size: 0.8rem;">${{isYT ? 'Assistir ↗' : 'Fonte ↗'}}</a>` : '';
 
       return `
         <div class="card">
@@ -1299,7 +1335,7 @@ def generate_catalog_html(lake_items: List[Dict[str, Any]], catalog_file: Path):
             <div class="card-meta">
               <span>👤 ${{item.canal}}</span>
               ${{item.data_publicacao ? `<span>📅 ${{item.data_publicacao}}</span>` : ''}}
-              ${{isYT && item.palavras ? `<span>📝 ${{item.palavras}} palavras</span>` : ''}}
+              ${{item.palavras ? `<span>📝 ${{item.palavras}} palavras</span>` : ''}}
             </div>
             <p class="card-summary">${{item.resumo || 'Sem resumo disponível.'}}</p>
             <div class="card-tags">${{tagsHtml}}</div>
@@ -1307,7 +1343,7 @@ def generate_catalog_html(lake_items: List[Dict[str, Any]], catalog_file: Path):
               <a href="${{item.arquivo_rel}}" class="btn btn-primary" style="padding: 6px 12px; font-size: 0.8rem;">Abrir Arquivo</a>
               <div style="display: flex; gap: 6px;">
                 <button class="btn" style="padding: 6px 12px; font-size: 0.8rem;" onclick="openPreview('${{item.id}}')">Ver Prévia</button>
-                ${{ytLinkBtn}}
+                ${{linkBtn}}
               </div>
             </div>
           </div>
@@ -1325,8 +1361,9 @@ def generate_catalog_html(lake_items: List[Dict[str, Any]], catalog_file: Path):
 
     tbody.innerHTML = list.map(item => {{
       const isYT = item.tipo === 'youtube_transcript';
-      const typeLabel = isYT ? '🎬 Transcrição' : `📚 ${{item.extensao ? item.extensao.toUpperCase() : 'Doc'}}`;
-      const dur = isYT ? item.duracao : item.tamanho_mb;
+      const isWeb = ['web_article', 'academic_paper', 'documentation'].includes(item.tipo);
+      const typeLabel = isYT ? '🎬 Transcrição' : (isWeb ? '🌐 Artigo Web' : `📚 ${{item.extensao ? item.extensao.toUpperCase() : 'Doc'}}`);
+      const dur = isYT ? item.duracao : (item.tamanho_mb || (item.palavras ? item.palavras + ' pal.' : '-'));
       const tags = (item.tags || []).map(t => `<span class="tag">#${{t}}</span>`).join(' ');
 
       return `
@@ -1340,7 +1377,7 @@ def generate_catalog_html(lake_items: List[Dict[str, Any]], catalog_file: Path):
           <td>
             <div style="display: flex; gap: 6px;">
               <button class="btn" style="padding: 4px 8px; font-size: 0.75rem;" onclick="openPreview('${{item.id}}')">Prévia</button>
-              ${{isYT && item.url_original ? `<a href="${{item.url_original}}" target="_blank" class="btn" style="padding: 4px 8px; font-size: 0.75rem;">Vídeo ↗</a>` : ''}}
+              ${{item.url_original ? `<a href="${{item.url_original}}" target="_blank" class="btn" style="padding: 4px 8px; font-size: 0.75rem;">${{isYT ? 'Vídeo ↗' : 'Fonte ↗'}}</a>` : ''}}
             </div>
           </td>
         </tr>

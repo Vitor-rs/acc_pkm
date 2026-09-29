@@ -41,7 +41,10 @@ acc_pkm/
 │   └── _lake/                  # Data Lake local (PDFs, EPUBs e transcrições .md)
 └── scripts/                    # Utilitários e CLI central
     ├── acc.py                  # CLI unificada (doctor, catalog, build, new-project)
+    ├── web_harvester.py        # Motor híbrido Scrapling + Firecrawl (PEP 723)
     ├── yt_transcribe_and_catalog.py  # Automação de extração do YouTube
+    ├── raspar.bat              # Atalho Windows para raspagem web
+    ├── buscar_papers.bat       # Atalho Windows para busca de papers
     ├── transcrever.bat         # Atalho Windows para transcrições
     └── atualizar_catalogo.bat  # Atalho Windows para reindexação do Lake
 ```
@@ -53,19 +56,25 @@ acc_pkm/
 O repositório inclui a CLI `acc.py`, gerenciada com `uv` sem necessidade de ativação manual de ambiente virtual:
 
 ```bash
-# 1. Diagnóstico completo do ambiente (Python, MiKTeX/LaTeX, Git, Lake, BibTeX)
+# 1. Diagnóstico completo do ambiente (Python, MiKTeX/LaTeX, Git, Lake, BibTeX, Scrapling, Firecrawl)
 uv run scripts/acc.py doctor
 
-# 2. Criar um novo projeto de manuscrito a partir do template
+# 2. Raspar página web com bypass anti-bot e salvar limpo no Lake
+uv run scripts/acc.py scrape "https://exemplo.org/artigo" --tags "metodologia,qualitativa"
+
+# 3. Pesquisar papers acadêmicos e preprints científicos
+uv run scripts/acc.py search-papers "systematic literature review" --save
+
+# 4. Criar um novo projeto de manuscrito a partir do template
 uv run scripts/acc.py new-project "meu_artigo_2026"
 
-# 3. Compilar um projeto LaTeX para PDF (com BibTeX e saída limpa em build/)
+# 5. Compilar um projeto LaTeX para PDF (com BibTeX e saída limpa em build/)
 uv run scripts/acc.py build projects/_template
 
-# 4. Auditar integridade da base bibliográfica BibTeX
+# 6. Auditar integridade da base bibliográfica BibTeX
 uv run scripts/acc.py bib-audit
 
-# 5. Reindexar o acervo de livros e transcrições no Lake
+# 7. Reindexar o acervo de livros, transcrições e artigos no Lake
 uv run scripts/acc.py catalog
 ```
 
@@ -109,6 +118,35 @@ uv run scripts/yt_transcribe_and_catalog.py "https://www.youtube.com/playlist?li
 
 # Traduzir automaticamente para português
 uv run scripts/yt_transcribe_and_catalog.py "https://www.youtube.com/watch?v=..." --translate-to pt
+```
+
+---
+
+## 🌐 Motor de Web Scraping & Pesquisa de Literatura (Scrapling + Firecrawl)
+
+O ecossistema integra uma arquitetura de raspagem em cascata híbrida, combinando execução local sem custos com inteligência em nuvem:
+
+### Cascata Híbrida:
+1. **Tier 1 — Scrapling HTTP (0 créditos, ultra rápido):** Requisita a página com impersonação de TLS fingerprint do Chrome, extraindo Markdown higienizado.
+2. **Tier 2 — Scrapling Stealth Browser (0 créditos, anti-bot):** Se detectar Cloudflare Turnstile, CAPTCHAs ou bloqueios, aciona o navegador furtivo Patchright para resolver os desafios localmente.
+3. **Tier 3 — Firecrawl Cloud API (Resiliência global):** Para sites com proteções extremas ou que exigem proxies residenciais, delega a raspagem para a API em nuvem do Firecrawl.
+
+### Comandos de Barra no Chat:
+- `/scrape <url>` (ou `/web <url>`): Raspa uma página web ou artigo e salva em `resources/_lake/` com frontmatter YAML e catálogo atualizado.
+- `/paper-search "<termo>"` (ou `/paper "<termo>"`): Pesquisa papers acadêmicos e preprints científicos (arXiv, PubMed, etc.) e salva os fichamentos com `--save`.
+- `/crawl <url>`: Rastreia documentações e sitemaps recursivamente.
+
+### Via Terminal & Scripts:
+```bash
+# Raspar artigo com tags
+uv run scripts/web_harvester.py scrape "https://arxiv.org/abs/2301.00000" --tags "ia,metodologia"
+# Ou via atalho Windows:
+scripts\raspar.bat "https://exemplo.org/artigo"
+
+# Buscar literatura científica e salvar fichamentos no Lake
+uv run scripts/web_harvester.py search-papers "machine learning healthcare" -k 5 --save
+# Ou via atalho Windows:
+scripts\buscar_papers.bat "machine learning healthcare" --save
 ```
 
 ---

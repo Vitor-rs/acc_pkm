@@ -48,8 +48,13 @@ if sys.platform == "win32":
     except Exception:
         pass
 
+from dotenv import load_dotenv
+
 console = Console()
 ROOT_DIR = Path(__file__).resolve().parent.parent
+
+# Carregar variáveis de ambiente
+load_dotenv(ROOT_DIR / ".env")
 
 
 def check_command(cmd: str) -> tuple[bool, str]:
@@ -124,20 +129,47 @@ def cmd_doctor():
         f"{bib_count} referências indexadas ({master_bib.relative_to(ROOT_DIR)})"
     )
 
+    # 3. Automação de Web Scraping & Pesquisa
+    try:
+        import scrapling
+        has_scrapling = True
+        scrapling_ver = f"v{scrapling.__version__}"
+    except Exception:
+        has_scrapling = False
+        scrapling_ver = "Ausente"
+
+    table.add_row(
+        "Scrapling (Stealth Engine)",
+        "[green]✔ OK[/green]" if has_scrapling else "[red]✘ Ausente[/red]",
+        f"{scrapling_ver} (Anti-bot e Cloudflare Turnstile local)"
+    )
+
+    firecrawl_key = os.getenv("FIRECRAWL_API_KEY")
+    table.add_row(
+        "Firecrawl API (Cloud & Papers)",
+        "[green]✔ Configurada[/green]" if firecrawl_key else "[yellow]⚠ Ausente (.env)[/yellow]",
+        "Chave ativa no .env (Pesquisa de papers e deep crawl)" if firecrawl_key else "Definir FIRECRAWL_API_KEY em .env"
+    )
+
     console.print(table)
 
 
 def cmd_catalog():
     """Invoca o motor de catalogação e gera documents.jsonl estruturado."""
     console.print("[cyan]🔄 Sincronizando catálogo e gerando índice estruturado...[/cyan]")
-    script_path = ROOT_DIR / "scripts" / "yt_transcribe_and_catalog.py"
-    
     # 1. Atualizar catálogo HTML
-    res = subprocess.run([sys.executable, str(script_path), "reindex"], capture_output=True, text=True)
-    if res.returncode != 0:
-        console.print(f"[red]Erro ao atualizar catálogo HTML:[/red] {res.stderr}")
-    else:
+    try:
+        scripts_dir = ROOT_DIR / "scripts"
+        if str(scripts_dir) not in sys.path:
+            sys.path.insert(0, str(scripts_dir))
+        if str(ROOT_DIR) not in sys.path:
+            sys.path.insert(0, str(ROOT_DIR))
+        import yt_transcribe_and_catalog as ytc
+        items = ytc.scan_lake_items(ROOT_DIR / "resources" / "_lake")
+        ytc.generate_catalog_html(items, ROOT_DIR / "resources" / "_lake_catalog.html")
         console.print("[green]✔ Catálogo HTML resources/_lake_catalog.html atualizado com sucesso.[/green]")
+    except Exception as e:
+        console.print(f"[red]Erro ao atualizar catálogo HTML:[/red] {e}")
 
     # 2. Gerar documents.jsonl para controle fino no Git
     lake_dir = ROOT_DIR / "resources" / "_lake"
@@ -289,6 +321,18 @@ def cmd_transcript(args: list[str]):
     subprocess.run([sys.executable, str(script_path)] + args)
 
 
+def cmd_scrape(args: list[str]):
+    """Encaminha chamadas de scraping (Scrapling + Firecrawl) para o motor de colheita."""
+    script_path = ROOT_DIR / "scripts" / "web_harvester.py"
+    subprocess.run([sys.executable, str(script_path), "scrape"] + args)
+
+
+def cmd_search_papers(args: list[str]):
+    """Encaminha buscas de literatura acadêmica para o Firecrawl Research Index."""
+    script_path = ROOT_DIR / "scripts" / "web_harvester.py"
+    subprocess.run([sys.executable, str(script_path), "search-papers"] + args)
+
+
 def main():
     if len(sys.argv) < 2:
         console.print(Panel.fit(
@@ -296,6 +340,8 @@ def main():
             "Comandos disponíveis:\n"
             "  [green]doctor[/green]         - Verifica saúde do ecossistema e dependências\n"
             "  [green]catalog[/green]        - Reindexa o _lake e gera _lake_catalog.html e documents.jsonl\n"
+            "  [green]scrape[/green]         - Raspa artigos e páginas web com bypass anti-bot e salva no Lake\n"
+            "  [green]search-papers[/green]  - Pesquisa papers acadêmicos e indexa resumos no Lake\n"
             "  [green]new-project[/green]    - Cria um novo projeto acadêmico LaTeX modular\n"
             "  [green]build[/green]          - Compila o manuscrito LaTeX de um projeto\n"
             "  [green]bib-audit[/green]      - Valida a consistência do arquivo master.bib\n"
@@ -311,6 +357,10 @@ def main():
         cmd_doctor()
     elif action in ("catalog", "reindex", "--reindex"):
         cmd_catalog()
+    elif action in ("scrape", "web", "harvest"):
+        cmd_scrape(sys.argv[2:])
+    elif action in ("search-papers", "papers", "paper-search"):
+        cmd_search_papers(sys.argv[2:])
     elif action in ("new-project", "project", "novo"):
         name = sys.argv[2] if len(sys.argv) > 2 else "novo_artigo"
         cmd_new_project(name)
