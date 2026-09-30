@@ -1087,6 +1087,14 @@ def generate_catalog_html(lake_items: List[Dict[str, Any]], catalog_file: Path):
       margin-bottom: 12px;
     }}
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {{
+      if (window.mermaid) {{
+        mermaid.initialize({{ startOnLoad: true, theme: 'dark' }});
+      }}
+    }});
+  </script>
 </head>
 <body>
 

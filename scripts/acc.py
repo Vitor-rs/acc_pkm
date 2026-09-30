@@ -58,9 +58,24 @@ load_dotenv(ROOT_DIR / ".env")
 
 
 def check_command(cmd: str) -> tuple[bool, str]:
-    """Verifica se um executável está disponível no PATH do sistema."""
+    """Verifica se um executável está disponível no PATH do sistema ou locais conhecidos."""
     path = shutil.which(cmd)
     if not path:
+        local_app = os.environ.get("LOCALAPPDATA", "")
+        prog_files = os.environ.get("ProgramFiles", "")
+        prog_files_x86 = os.environ.get("ProgramFiles(x86)", "")
+        candidates = [
+            Path(local_app) / "Pandoc" / f"{cmd}.exe",
+            Path(prog_files) / "Pandoc" / f"{cmd}.exe",
+            Path(prog_files_x86) / "Pandoc" / f"{cmd}.exe",
+            Path(local_app) / "Programs" / "Pandoc" / f"{cmd}.exe",
+        ]
+        for c in candidates:
+            if c.exists():
+                p_dir = str(c.parent)
+                if p_dir not in os.environ.get("PATH", ""):
+                    os.environ["PATH"] = f"{p_dir};{os.environ.get('PATH', '')}"
+                return True, str(c)
         return False, "Não encontrado"
     return True, path
 
@@ -89,6 +104,9 @@ def cmd_doctor():
 
     has_gh, gh_info = check_command("gh")
     table.add_row("GitHub CLI (gh)", "[green]✔ OK[/green]" if has_gh else "[yellow]⚠ Opcional[/yellow]", gh_info)
+
+    has_pandoc, pandoc_info = check_command("pandoc")
+    table.add_row("Pandoc (Doc Converter)", "[green]✔ OK[/green]" if has_pandoc else "[yellow]⚠ Opcional[/yellow]", pandoc_info)
 
     has_pdflatex, pdf_info = check_command("pdflatex")
     table.add_row("pdfLaTeX", "[green]✔ OK[/green]" if has_pdflatex else "[red]✘ Ausente[/red]", pdf_info)
@@ -499,6 +517,12 @@ def cmd_fleet(args: list[str]):
     subprocess.run([sys.executable, str(script_path)] + args)
 
 
+def cmd_convert(args: list[str]):
+    """Encaminha comandos de conversão para o conversor Pandoc (DOCX, PDF, LaTeX)."""
+    script_path = ROOT_DIR / "scripts" / "pandoc_converter.py"
+    subprocess.run([sys.executable, str(script_path)] + args)
+
+
 def main():
     if len(sys.argv) < 2:
         console.print(Panel.fit(
@@ -506,6 +530,7 @@ def main():
             "Comandos disponíveis:\n"
             "  [green]doctor[/green]         - Verifica saúde do ecossistema e dependências\n"
             "  [green]catalog[/green]        - Reindexa o _lake e gera _lake_catalog.html e documents.jsonl\n"
+            "  [green]convert[/green]        - Converte documentos acadêmicos via Pandoc (Markdown ⇄ DOCX ⇄ LaTeX)\n"
             "  [green]fleet[/green]          - Consulta mini-frota concorrente (arXiv, OpenAlex, S2, CrossRef, etc.)\n"
             "  [green]consensus[/green]      - Pesquisa no Consensus.app (medidor de consenso e 200M+ papers)\n"
             "  [green]zotero[/green]         - Sincroniza acervo Zotero com Lake via PyMuPDF4LLM e master.bib\n"
@@ -516,7 +541,7 @@ def main():
             "  [green]overleaf[/green]       - Ponte Overleaf: pack, unpack, sync-bib e git-info\n"
             "  [green]bib-audit[/green]      - Valida a consistência do arquivo master.bib\n"
             "  [green]transcript[/green]     - Transcreve vídeos e playlists do YouTube para o Lake\n\n"
-            "Exemplo: [italic]uv run python scripts/acc.py fleet \"vision language models\" --save[/italic]",
+            "Exemplo: [italic]uv run python scripts/acc.py convert artigo.md -o artigo.docx --csl abnt[/italic]",
             border_style="cyan"
         ))
         return
@@ -527,6 +552,8 @@ def main():
         cmd_doctor()
     elif action in ("catalog", "reindex", "--reindex"):
         cmd_catalog()
+    elif action in ("convert", "conv", "pandoc"):
+        cmd_convert(sys.argv[2:])
     elif action in ("fleet", "fl", "frota"):
         cmd_fleet(sys.argv[2:])
     elif action in ("providers", "provider", "provedores"):

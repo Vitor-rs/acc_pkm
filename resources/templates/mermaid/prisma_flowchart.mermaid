@@ -1,0 +1,34 @@
+```mermaid
+flowchart TD
+    subgraph Identificacao["1. Identificação"]
+        A1["Bases de Dados:<br>OpenAlex (n = 450)<br>arXiv (n = 210)<br>Consensus (n = 85)"]
+        A2["Registros Identificados<br>(n = 745)"]
+        A3["Registros Duplicados Removidos<br>(n = 180)"]
+        A1 --> A2 --> A3
+    end
+
+    subgraph Triagem["2. Triagem"]
+        B1["Registros Triados por Título/Resumo<br>(n = 565)"]
+        B2["Registros Excluídos<br>(n = 480)"]
+        A3 --> B1
+        B1 -->|Não atendem ao escopo| B2
+    end
+
+    subgraph Elegibilidade["3. Elegibilidade"]
+        C1["Relatórios Recuperados para Texto Completo<br>(n = 85)"]
+        C2["Relatórios Excluídos com Justificativa:<br>• Sem dados empíricos (n = 35)<br>• Modelo fora do escopo (n = 22)<br>• Idioma não suportado (n = 8)"]
+        B1 -->|Atendem aos critérios| C1
+        C1 -->|Critérios de exclusão| C2
+    end
+
+    subgraph Inclusao["4. Inclusão"]
+        D1["Estudos Incluídos na Síntese Qualitativa<br>(n = 20)"]
+        D2["Estudos Incluídos na Metanálise/Síntese<br>(n = 12)"]
+        C1 -->|Aprovados| D1 --> D2
+    end
+
+    classDef primary fill:#1e293b,stroke:#38bdf8,stroke-width:2px,color:#f8fafc;
+    classDef highlight fill:#0284c7,stroke:#38bdf8,stroke-width:2px,color:#ffffff;
+    class A1,A2,A3,B1,B2,C1,C2,D1,D2 primary;
+    class D1,D2 highlight;
+```

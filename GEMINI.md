@@ -14,8 +14,7 @@ Repositório de Gestão de Conhecimento Pessoal (Personal Knowledge Management -
 - `.agents/skills/consensus/SKILL.md`: Definição da skill e comando `/consensus`.
 - `.agents/skills/fleet/SKILL.md`: Definição da skill e comando `/fleet` (Mini-Frota Acadêmica Concorrente).
 
-## Comandos Rápidos
-
+- `/convert <input> [-o output.docx] [--csl abnt|apa|ieee]`: Converte documentos acadêmicos via Pandoc com resolução CSL e BibTeX.
 - `/fleet "<termo>"`: Consulta concorrente em múltiplos provedores (arXiv, OpenAlex, S2, CrossRef, Consensus) com desduplicação e síntese no Lake com `--save`.
 - `/consensus "<pergunta>"`: Busca evidências científicas e consenso no Consensus.app e salva no Lake com `--save`.
 - `/consensus auth`: Inicia fluxo de autorização OAuth no navegador para o Consensus MCP.
@@ -33,4 +32,6 @@ Repositório de Gestão de Conhecimento Pessoal (Personal Knowledge Management -
 - `/scrape <url>`: Raspa página web com Scrapling stealth e fallback Firecrawl, salva no Lake e cataloga.
 - `/paper-search "<termo>"`: Busca literatura científica e preprints via Firecrawl Research Index.
 - `/crawl <url>`: Rastreamento recursivo de documentação para o Lake.
+- **Templates Mermaid:** em `resources/templates/mermaid/` (PRISMA, Gantt, Pipeline).
+
 

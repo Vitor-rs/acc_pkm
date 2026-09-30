@@ -1,0 +1,28 @@
+```mermaid
+flowchart LR
+    subgraph Coleta["1. Coleta Concorrente"]
+        A1["arXiv (Preprints)"]
+        A2["OpenAlex (250M+)"]
+        A3["CrossRef (DOIs)"]
+        A4["Consensus (Evidências)"]
+        A5["Scrapling / Firecrawl (Web)"]
+    end
+
+    subgraph Orquestracao["2. Mini-Frota Agêntica"]
+        B["acc fleet / ThreadPoolExecutor"]
+        C["Desduplicação por DOI & Título"]
+    end
+
+    subgraph CamadasPKM["3. Lakehouse Acadêmico"]
+        D["Bronze/Silver: resources/_lake/<br>[provider]_...md & [fleet]_...md"]
+        E["Gold: Zotero Desktop<br>PyMuPDF4LLM + master.bib"]
+        F["Lente Visual: Obsidian Vault<br>(Zero-Copy sobre resources/)"]
+        G["Exportação: Pandoc Converter<br>(.docx / .tex / .pdf com CSL)"]
+    end
+
+    A1 & A2 & A3 & A4 & A5 --> B --> C
+    C --> D
+    D -->|Curadoria do Pesquisador| E
+    D --> F
+    D & E --> G
+```

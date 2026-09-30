@@ -193,4 +193,32 @@ Sempre que o usuário enviar comandos iniciando com `/fleet` ou `/frota`:
 3. **Pós-processamento:**
    - Retorne sempre os links clicáveis (`file:///...`) dos arquivos gerados no Data Lake e do catálogo HTML.
 
+---
+
+## 8. Comando de Barra de Conversão com Pandoc (`/convert` ou `acc convert`)
+
+Sempre que o usuário solicitar conversão de documentos para `.docx`, `.pdf` ou `.tex`:
+
+1. **Conversão de Documentos com CSL & BibTeX:**
+   ```bash
+   uv run python scripts/acc.py convert "<arquivo_origem>" [-o "<arquivo_destino>"] [--csl abnt|apa|ieee] [--toc]
+   ```
+   - **Padrão:** Converte notas do Lake ou manuscritos para `.docx` formatado com citações e bibliografia em ABNT (`resources/csl/abnt.csl`) resolvidas de `references/master.bib`.
+   - **Formatos:** Suporta Markdown, DOCX, LaTeX, PDF e HTML5.
+
+2. **Pós-processamento:**
+   - Retorne o link clicável (`file:///...`) do arquivo final convertido.
+
+---
+
+## 9. Padrão de Diagramação Visual com Mermaid.js
+
+- **Formato Obrigatório:** Diagramas visuais metodológicos, fluxogramas de triagem, cronogramas e pipelines devem ser expressos em blocos de código com linguagem `mermaid`.
+- **Compatibilidade Nativa:** O Mermaid roda sem extensões extras no Obsidian Vault, no preview de Markdown do VS Code, no GitHub e no painel web `resources/_lake_catalog.html`.
+- **Templates Padrão:**
+  - Fluxo PRISMA 2020 para Revisões Sistemáticas: [`resources/templates/mermaid/prisma_flowchart.mermaid`](file:///c:/Users/user/Documents/Vitor/acc_pkm/resources/templates/mermaid/prisma_flowchart.mermaid)
+  - Cronograma de Pesquisa (Gantt): [`resources/templates/mermaid/research_gantt.mermaid`](file:///c:/Users/user/Documents/Vitor/acc_pkm/resources/templates/mermaid/research_gantt.mermaid)
+  - Pipeline Metodológico: [`resources/templates/mermaid/methodology_workflow.mermaid`](file:///c:/Users/user/Documents/Vitor/acc_pkm/resources/templates/mermaid/methodology_workflow.mermaid)
+
+
 
