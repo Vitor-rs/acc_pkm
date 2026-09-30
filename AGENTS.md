@@ -144,3 +144,25 @@ Sempre que o usuário enviar comandos iniciando com `/latex`, `/overleaf` ou `/t
    uv run python scripts/acc.py overleaf sync-bib <caminho_do_projeto>
    uv run python scripts/acc.py overleaf git-info
    ```
+
+---
+
+## 6. Comando de Barra do Consensus (`/consensus`)
+
+Sempre que o usuário enviar comandos iniciando com `/consensus`:
+
+1. **Pesquisa Acadêmica & Consenso Científico (`/consensus <pergunta>`):**
+   Consulta a base de mais de 200M+ de artigos revisados por pares do Consensus.app:
+
+   ```bash
+   uv run python scripts/acc.py consensus "<pergunta_ou_hipotese>" [--save] [--open-access]
+   ```
+   - Com a flag `--save`: gera fichamento em `resources/_lake/`, atualiza `master.bib` e sincroniza `_lake_catalog.html`.
+
+2. **Autorização OAuth do MCP (`/consensus auth`):**
+   Abre o navegador para autenticação segura com o servidor oficial Consensus MCP:
+
+   ```bash
+   uv run python scripts/consensus.py auth
+   ```
+

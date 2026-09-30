@@ -173,6 +173,17 @@ def cmd_doctor():
         f"{pymupdf4llm_ver} (GFM Markdown com tabelas nativas e equações)"
     )
 
+    # 5. Consensus Research MCP & API
+    consensus_key = os.getenv("CONSENSUS_API_KEY")
+    mcp_auth_dir = Path.home() / ".mcp-auth"
+    has_oauth = any(mcp_auth_dir.glob("mcp-remote*")) if mcp_auth_dir.exists() else False
+
+    table.add_row(
+        "Consensus Research (MCP / API)",
+        "[green]✔ Configurado[/green]" if (consensus_key or has_oauth) else "[yellow]⚠ Requer Auth/Key[/yellow]",
+        "Chave CONSENSUS_API_KEY ativa" if consensus_key else ("OAuth configurado em ~/.mcp-auth" if has_oauth else "Executar: uv run python scripts/consensus.py auth")
+    )
+
     console.print(table)
 
 
@@ -476,6 +487,12 @@ def cmd_zotero(args: list[str]):
         subprocess.run(cmd)
 
 
+def cmd_consensus(args: list[str]):
+    """Encaminha consultas científicas para o motor Consensus."""
+    script_path = ROOT_DIR / "scripts" / "consensus.py"
+    subprocess.run([sys.executable, str(script_path)] + args)
+
+
 def main():
     if len(sys.argv) < 2:
         console.print(Panel.fit(
@@ -483,6 +500,7 @@ def main():
             "Comandos disponíveis:\n"
             "  [green]doctor[/green]         - Verifica saúde do ecossistema e dependências\n"
             "  [green]catalog[/green]        - Reindexa o _lake e gera _lake_catalog.html e documents.jsonl\n"
+            "  [green]consensus[/green]      - Pesquisa no Consensus.app (medidor de consenso e 200M+ papers)\n"
             "  [green]zotero[/green]         - Sincroniza acervo Zotero com Lake via PyMuPDF4LLM e master.bib\n"
             "  [green]scrape[/green]         - Raspa artigos e páginas web com bypass anti-bot e salva no Lake\n"
             "  [green]search-papers[/green]  - Pesquisa papers acadêmicos e indexa resumos no Lake\n"
@@ -491,7 +509,7 @@ def main():
             "  [green]overleaf[/green]       - Ponte Overleaf: pack, unpack, sync-bib e git-info\n"
             "  [green]bib-audit[/green]      - Valida a consistência do arquivo master.bib\n"
             "  [green]transcript[/green]     - Transcreve vídeos e playlists do YouTube para o Lake\n\n"
-            "Exemplo: [italic]uv run python scripts/acc.py overleaf pack projects/meu_artigo[/italic]",
+            "Exemplo: [italic]uv run python scripts/acc.py consensus \"does exercise improve cognition\" --save[/italic]",
             border_style="cyan"
         ))
         return
@@ -502,6 +520,8 @@ def main():
         cmd_doctor()
     elif action in ("catalog", "reindex", "--reindex"):
         cmd_catalog()
+    elif action in ("consensus", "cons", "c"):
+        cmd_consensus(sys.argv[2:])
     elif action in ("zotero", "zot", "z"):
         cmd_zotero(sys.argv[2:])
     elif action in ("scrape", "web", "harvest"):

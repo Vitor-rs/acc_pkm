@@ -11,9 +11,12 @@ Repositório de Gestão de Conhecimento Pessoal (Personal Knowledge Management -
 - `.agents/skills/web-harvest/SKILL.md`: Definição da skill e comandos `/scrape`, `/crawl` e `/paper-search`.
 - `.agents/skills/zotero/SKILL.md`: Definição da skill e comando `/zotero`.
 - `.agents/skills/latex/SKILL.md`: Definição da skill e comandos `/latex` e `/overleaf`.
+- `.agents/skills/consensus/SKILL.md`: Definição da skill e comando `/consensus`.
 
 ## Comandos Rápidos
 
+- `/consensus "<pergunta>"`: Busca evidências científicas e consenso no Consensus.app e salva no Lake com `--save`.
+- `/consensus auth`: Inicia fluxo de autorização OAuth no navegador para o Consensus MCP.
 - `/latex new <nome> [--template sbc|tcc]`: Cria projeto acadêmico a partir dos templates SBC ou ABNT.
 - `/latex build [projeto]`: Compila manuscrito via latexmk com SyncTeX e diagnósticos no VS Code.
 - `/overleaf pack <projeto>`: Empacota projeto limpo em `.zip` com citações resolvidas de `master.bib` para o Overleaf.
@@ -28,3 +31,4 @@ Repositório de Gestão de Conhecimento Pessoal (Personal Knowledge Management -
 - `/scrape <url>`: Raspa página web com Scrapling stealth e fallback Firecrawl, salva no Lake e cataloga.
 - `/paper-search "<termo>"`: Busca literatura científica e preprints via Firecrawl Research Index.
 - `/crawl <url>`: Rastreamento recursivo de documentação para o Lake.
+
