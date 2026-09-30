@@ -179,5 +179,12 @@
     "*.bib": "bibtex",
     "*.cls": "latex",
     "*.sty": "latex"
-  }
+  },
+  "python-envs.pythonProjects": [
+    {
+      "path": ".",
+      "envManager": "ms-python.python:venv",
+      "packageManager": "ms-python.python:pip"
+    }
+  ]
 }

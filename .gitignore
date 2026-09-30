@@ -67,3 +67,7 @@ desktop.ini
 .env
 .env.local
 *.secret
+
+# --- Multi-root Workspace Subfolder Settings ---
+*/**/.vscode/
+
