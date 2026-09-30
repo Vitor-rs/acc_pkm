@@ -493,6 +493,12 @@ def cmd_consensus(args: list[str]):
     subprocess.run([sys.executable, str(script_path)] + args)
 
 
+def cmd_fleet(args: list[str]):
+    """Encaminha consultas científicas para a mini-frota de pesquisa acadêmica."""
+    script_path = ROOT_DIR / "scripts" / "academic_fleet.py"
+    subprocess.run([sys.executable, str(script_path)] + args)
+
+
 def main():
     if len(sys.argv) < 2:
         console.print(Panel.fit(
@@ -500,6 +506,7 @@ def main():
             "Comandos disponíveis:\n"
             "  [green]doctor[/green]         - Verifica saúde do ecossistema e dependências\n"
             "  [green]catalog[/green]        - Reindexa o _lake e gera _lake_catalog.html e documents.jsonl\n"
+            "  [green]fleet[/green]          - Consulta mini-frota concorrente (arXiv, OpenAlex, S2, CrossRef, etc.)\n"
             "  [green]consensus[/green]      - Pesquisa no Consensus.app (medidor de consenso e 200M+ papers)\n"
             "  [green]zotero[/green]         - Sincroniza acervo Zotero com Lake via PyMuPDF4LLM e master.bib\n"
             "  [green]scrape[/green]         - Raspa artigos e páginas web com bypass anti-bot e salva no Lake\n"
@@ -509,7 +516,7 @@ def main():
             "  [green]overleaf[/green]       - Ponte Overleaf: pack, unpack, sync-bib e git-info\n"
             "  [green]bib-audit[/green]      - Valida a consistência do arquivo master.bib\n"
             "  [green]transcript[/green]     - Transcreve vídeos e playlists do YouTube para o Lake\n\n"
-            "Exemplo: [italic]uv run python scripts/acc.py consensus \"does exercise improve cognition\" --save[/italic]",
+            "Exemplo: [italic]uv run python scripts/acc.py fleet \"vision language models\" --save[/italic]",
             border_style="cyan"
         ))
         return
@@ -520,6 +527,10 @@ def main():
         cmd_doctor()
     elif action in ("catalog", "reindex", "--reindex"):
         cmd_catalog()
+    elif action in ("fleet", "fl", "frota"):
+        cmd_fleet(sys.argv[2:])
+    elif action in ("providers", "provider", "provedores"):
+        cmd_fleet(["--list-providers"] + sys.argv[2:])
     elif action in ("consensus", "cons", "c"):
         cmd_consensus(sys.argv[2:])
     elif action in ("zotero", "zot", "z"):

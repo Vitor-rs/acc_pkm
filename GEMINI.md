@@ -12,9 +12,11 @@ Repositório de Gestão de Conhecimento Pessoal (Personal Knowledge Management -
 - `.agents/skills/zotero/SKILL.md`: Definição da skill e comando `/zotero`.
 - `.agents/skills/latex/SKILL.md`: Definição da skill e comandos `/latex` e `/overleaf`.
 - `.agents/skills/consensus/SKILL.md`: Definição da skill e comando `/consensus`.
+- `.agents/skills/fleet/SKILL.md`: Definição da skill e comando `/fleet` (Mini-Frota Acadêmica Concorrente).
 
 ## Comandos Rápidos
 
+- `/fleet "<termo>"`: Consulta concorrente em múltiplos provedores (arXiv, OpenAlex, S2, CrossRef, Consensus) com desduplicação e síntese no Lake com `--save`.
 - `/consensus "<pergunta>"`: Busca evidências científicas e consenso no Consensus.app e salva no Lake com `--save`.
 - `/consensus auth`: Inicia fluxo de autorização OAuth no navegador para o Consensus MCP.
 - `/latex new <nome> [--template sbc|tcc]`: Cria projeto acadêmico a partir dos templates SBC ou ABNT.

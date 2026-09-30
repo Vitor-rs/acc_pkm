@@ -166,3 +166,31 @@ Sempre que o usuário enviar comandos iniciando com `/consensus`:
    uv run python scripts/consensus.py auth
    ```
 
+---
+
+## 7. Comando de Barra da Frota Acadêmica Multibases (`/fleet` e `/frota`)
+
+Sempre que o usuário enviar comandos iniciando com `/fleet` ou `/frota`:
+
+1. **Pesquisa Concorrente Multibases (`/fleet "<termo>"`):**
+   Consulta em paralelo todos os provedores acadêmicos (arXiv, OpenAlex, CrossRef, Semantic Scholar, Consensus):
+
+   ```bash
+   uv run python scripts/acc.py fleet "<termo_ou_pergunta>" [--save] [-p <provedores>] [-n <limite>]
+   ```
+   - Com a flag `--save`:
+     - Grava fichamentos individuais por base com tags padronizadas em `resources/_lake/[provider]_[slug].md`.
+     - Grava a síntese executiva consolidada em `resources/_lake/[fleet]_[slug].md`.
+     - Sincroniza referências únicas no `references/master.bib`.
+     - Atualiza o catálogo `resources/_lake_catalog.html` e `documents.jsonl`.
+
+2. **Listagem de Provedores Conectados (`/fleet providers` ou `acc providers`):**
+
+   ```bash
+   uv run python scripts/acc.py providers
+   ```
+
+3. **Pós-processamento:**
+   - Retorne sempre os links clicáveis (`file:///...`) dos arquivos gerados no Data Lake e do catálogo HTML.
+
+
