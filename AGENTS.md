@@ -220,5 +220,24 @@ Sempre que o usuário solicitar conversão de documentos para `.docx`, `.pdf` ou
   - Cronograma de Pesquisa (Gantt): [`resources/templates/mermaid/research_gantt.mermaid`](file:///c:/Users/user/Documents/Vitor/acc_pkm/resources/templates/mermaid/research_gantt.mermaid)
   - Pipeline Metodológico: [`resources/templates/mermaid/methodology_workflow.mermaid`](file:///c:/Users/user/Documents/Vitor/acc_pkm/resources/templates/mermaid/methodology_workflow.mermaid)
 
+---
+
+## 10. Comandos de Revisão Sistemática & Protocolo (`/protocol` e `/matrix`)
+
+Sempre que o usuário for estruturar uma revisão de literatura ou triar evidências:
+
+1. **Geração de Protocolo Formal (PRISMA-P & SALSA):**
+   ```bash
+   uv run python scripts/acc.py protocol "<titulo_da_revisao>" [--framework pico|spider] [--author "<nome>"]
+   ```
+   - Gera documento auditável em `resources/protocols/protocolo_<slug>.md` congelado pré-coleta para controle de viés.
+
+2. **Geração de Matriz Estruturada de Extração e Triagem:**
+   ```bash
+   uv run python scripts/acc.py matrix "<caminho_arquivo_lake_fleet.md>"
+   ```
+   - Extrai artigos de um dossiê do Lake e gera tabela de triagem e formulário padronizado em Markdown e CSV em `resources/protocols/`.
+
+
 
 

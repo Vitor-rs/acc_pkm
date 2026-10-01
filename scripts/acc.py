@@ -523,6 +523,18 @@ def cmd_convert(args: list[str]):
     subprocess.run([sys.executable, str(script_path)] + args)
 
 
+def cmd_protocol(args: list[str]):
+    """Encaminha comandos de protocolo de revisão sistemática."""
+    script_path = ROOT_DIR / "scripts" / "systematic_review.py"
+    subprocess.run([sys.executable, str(script_path), "protocol"] + args)
+
+
+def cmd_matrix(args: list[str]):
+    """Encaminha comandos de matriz de extração e triagem."""
+    script_path = ROOT_DIR / "scripts" / "systematic_review.py"
+    subprocess.run([sys.executable, str(script_path), "matrix"] + args)
+
+
 def main():
     if len(sys.argv) < 2:
         console.print(Panel.fit(
@@ -532,6 +544,8 @@ def main():
             "  [green]catalog[/green]        - Reindexa o _lake e gera _lake_catalog.html e documents.jsonl\n"
             "  [green]convert[/green]        - Converte documentos acadêmicos via Pandoc (Markdown ⇄ DOCX ⇄ LaTeX)\n"
             "  [green]fleet[/green]          - Consulta mini-frota concorrente (arXiv, OpenAlex, S2, CrossRef, etc.)\n"
+            "  [green]protocol[/green]       - Cria protocolo formal de revisão sistemática (PRISMA-P / PICO / SPIDER)\n"
+            "  [green]matrix[/green]         - Gera matriz de extração e triagem (Markdown & CSV) de buscas do Lake\n"
             "  [green]consensus[/green]      - Pesquisa no Consensus.app (medidor de consenso e 200M+ papers)\n"
             "  [green]zotero[/green]         - Sincroniza acervo Zotero com Lake via PyMuPDF4LLM e master.bib\n"
             "  [green]scrape[/green]         - Raspa artigos e páginas web com bypass anti-bot e salva no Lake\n"
@@ -541,7 +555,7 @@ def main():
             "  [green]overleaf[/green]       - Ponte Overleaf: pack, unpack, sync-bib e git-info\n"
             "  [green]bib-audit[/green]      - Valida a consistência do arquivo master.bib\n"
             "  [green]transcript[/green]     - Transcreve vídeos e playlists do YouTube para o Lake\n\n"
-            "Exemplo: [italic]uv run python scripts/acc.py convert artigo.md -o artigo.docx --csl abnt[/italic]",
+            "Exemplo: [italic]uv run python scripts/acc.py protocol \"RAG em Modelos Multimodais\" --framework pico[/italic]",
             border_style="cyan"
         ))
         return
@@ -556,6 +570,10 @@ def main():
         cmd_convert(sys.argv[2:])
     elif action in ("fleet", "fl", "frota"):
         cmd_fleet(sys.argv[2:])
+    elif action in ("protocol", "proto", "prisma"):
+        cmd_protocol(sys.argv[2:])
+    elif action in ("matrix", "mat", "triagem"):
+        cmd_matrix(sys.argv[2:])
     elif action in ("providers", "provider", "provedores"):
         cmd_fleet(["--list-providers"] + sys.argv[2:])
     elif action in ("consensus", "cons", "c"):
