@@ -35,6 +35,7 @@ MASTER_BIB = REPO_ROOT / "references" / "master.bib"
 CSL_DIR = REPO_ROOT / "resources" / "csl"
 TEMPLATES_DIR = REPO_ROOT / "resources" / "templates"
 PROTOCOLS_DIR = REPO_ROOT / "resources" / "protocols"
+DIAGRAMS_DIR = REPO_ROOT / "resources" / "diagrams"
 ENV_PATH = REPO_ROOT / ".env"
 
 if ENV_PATH.exists():
@@ -54,6 +55,10 @@ def find_executable(cmd: str) -> Optional[str]:
     prog_files_x86 = os.environ.get("ProgramFiles(x86)", "")
 
     candidates = [
+        Path(prog_files) / "draw.io" / f"{cmd}.exe",
+        Path(local_app) / "Programs" / "draw.io" / f"{cmd}.exe",
+        Path(prog_files) / "draw.io" / "draw.io.exe",
+        Path(local_app) / "Programs" / "draw.io" / "draw.io.exe",
         Path(local_app) / "Pandoc" / f"{cmd}.exe",
         Path(prog_files) / "Pandoc" / f"{cmd}.exe",
         Path(prog_files_x86) / "Pandoc" / f"{cmd}.exe",

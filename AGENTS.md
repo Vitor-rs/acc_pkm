@@ -238,6 +238,32 @@ Sempre que o usuário for estruturar uma revisão de literatura ou triar evidên
    ```
    - Extrai artigos de um dossiê do Lake e gera tabela de triagem e formulário padronizado em Markdown e CSV em `resources/protocols/`.
 
+---
 
+## 11. Comandos de Diagramação Visual com Diagrams.net / Draw.io (`/drawio` e `/diagram`)
 
+Sempre que o usuário solicitar criação, edição ou exportação de diagramas visuais (PRISMA, frameworks conceituais, modelos teóricos, arquiteturas):
 
+1. **Diagnóstico do Ambiente (`/drawio status`):**
+   ```bash
+   uv run python scripts/acc.py diagram status
+   ```
+
+2. **Exportação Vetorial com XML Embutido (`/drawio export`):**
+   ```bash
+   uv run python scripts/acc.py diagram export <arquivo.drawio> -f svg|pdf|png [--scale 2.0]
+   ```
+   - Gera `.drawio.svg` ou `.drawio.pdf` com a flag `-e` ativada, sendo 100% editável e diretamente incluível em manuscritos LaTeX (`\includegraphics`) ou Markdown.
+
+3. **Edição In-Editor e Links Web Zero-Install (`/drawio url`):**
+   ```bash
+   uv run python scripts/acc.py diagram url <arquivo.drawio> [--open]
+   ```
+   - Gera URL oficial `https://app.diagrams.net/#create=...` via algoritmo RFC 1951 `zlib.deflateRaw` + base64 e abre via atalho seguro `.url`.
+   - Edição local no VS Code via extensão instalada `hediet.vscode-drawio`.
+
+4. **Instanciação de Templates Acadêmicos:**
+   - Templates disponíveis em `resources/templates/drawio/` (`prisma_2020.drawio`, `conceptual_framework.drawio`).
+   ```bash
+   uv run python scripts/acc.py diagram template prisma_2020 -o resources/diagrams/meu_prisma.drawio
+   ```

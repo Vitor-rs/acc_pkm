@@ -1,0 +1,57 @@
+<mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" background="none">
+  <root>
+    <mxCell id="0"/>
+    <mxCell id="1" parent="0"/>
+    <mxCell id="fase_ident" value="IDENTIFICAÇÃO" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;fillColor=#f8fafc;strokeColor=#cbd5e1;fontColor=#0f172a;" vertex="1" parent="1">
+      <mxGeometry x="40" y="40" width="300" height="230" as="geometry"/>
+    </mxCell>
+    <mxCell id="box_db" value="Registros identificados em bases de dados científicas&#xa;(arXiv, OpenAlex, S2, CrossRef, Consensus)&#xa;[n = ___]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0f2fe;strokeColor=#0284c7;fontColor=#0369a1;fontStyle=0;spacing=6;" vertex="1" parent="fase_ident">
+      <mxGeometry y="30" width="300" height="80" as="geometry"/>
+    </mxCell>
+    <mxCell id="box_rem_dup" value="Registros duplicados removidos&#xa;antes da triagem&#xa;[n = ___]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#dc2626;fontColor=#991b1b;spacing=6;" vertex="1" parent="fase_ident">
+      <mxGeometry y="110" width="300" height="60" as="geometry"/>
+    </mxCell>
+    <mxCell id="box_total_screen" value="Registros mantidos para triagem de título/resumo&#xa;[n = ___]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0fdf4;strokeColor=#16a34a;fontColor=#166534;fontStyle=1;spacing=6;" vertex="1" parent="fase_ident">
+      <mxGeometry y="170" width="300" height="60" as="geometry"/>
+    </mxCell>
+    <mxCell id="fase_triagem" value="TRIAGEM &amp; ELEGIBILIDADE" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;fillColor=#f8fafc;strokeColor=#cbd5e1;fontColor=#0f172a;" vertex="1" parent="1">
+      <mxGeometry x="40" y="310" width="300" height="240" as="geometry"/>
+    </mxCell>
+    <mxCell id="box_screened" value="Artigos triados (título e resumo)&#xa;[n = ___]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0f2fe;strokeColor=#0284c7;fontColor=#0369a1;spacing=6;" vertex="1" parent="fase_triagem">
+      <mxGeometry y="30" width="300" height="60" as="geometry"/>
+    </mxCell>
+    <mxCell id="box_retrieved" value="Relatórios buscados para recuperação de texto integral&#xa;[n = ___]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0f2fe;strokeColor=#0284c7;fontColor=#0369a1;spacing=6;" vertex="1" parent="fase_triagem">
+      <mxGeometry y="90" width="300" height="60" as="geometry"/>
+    </mxCell>
+    <mxCell id="box_assessed" value="Artigos de texto completo avaliados para elegibilidade&#xa;[n = ___]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0f2fe;strokeColor=#0284c7;fontColor=#0369a1;spacing=6;" vertex="1" parent="fase_triagem">
+      <mxGeometry y="150" width="300" height="90" as="geometry"/>
+    </mxCell>
+    <mxCell id="box_excl_title" value="Artigos excluídos na triagem de título/resumo&#xa;[n = ___]&#xa;• Fora do escopo temático [n = _]&#xa;• População não aderente [n = _]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef2f2;strokeColor=#ef4444;fontColor=#991b1b;align=left;spacing=8;" vertex="1" parent="1">
+      <mxGeometry x="400" y="340" width="280" height="80" as="geometry"/>
+    </mxCell>
+    <mxCell id="box_excl_full" value="Artigos de texto completo excluídos&#xa;com justificativas explícitas:&#xa;• Metodologia incompatível [n = _]&#xa;• Falta de dados empíricos [n = _]&#xa;• Não aderente ao protocolo PICO [n = _]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef2f2;strokeColor=#ef4444;fontColor=#991b1b;align=left;spacing=8;" vertex="1" parent="1">
+      <mxGeometry x="400" y="460" width="280" height="90" as="geometry"/>
+    </mxCell>
+    <mxCell id="fase_inclusao" value="INCLUSÃO &amp; SÍNTESE" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;fillColor=#f0fdf4;strokeColor=#86efac;fontColor=#166534;" vertex="1" parent="1">
+      <mxGeometry x="40" y="590" width="300" height="130" as="geometry"/>
+    </mxCell>
+    <mxCell id="box_included" value="Estudos incluídos na síntese qualitativa/narrativa&#xa;[n = ___]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#22c55e;fontColor=#14532d;fontStyle=1;spacing=6;" vertex="1" parent="fase_inclusao">
+      <mxGeometry y="30" width="300" height="50" as="geometry"/>
+    </mxCell>
+    <mxCell id="box_quant" value="Estudos incluídos na síntese quantitativa / metanálise&#xa;[n = ___]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbf7d0;strokeColor=#16a34a;fontColor=#14532d;fontStyle=1;spacing=6;" vertex="1" parent="fase_inclusao">
+      <mxGeometry y="80" width="300" height="50" as="geometry"/>
+    </mxCell>
+    <mxCell id="edge1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#0284c7;strokeWidth=2;" edge="1" parent="1" source="box_total_screen" target="box_screened">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="edge2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#ef4444;dashed=1;strokeWidth=1.5;" edge="1" parent="1" source="box_screened" target="box_excl_title">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="edge3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#ef4444;dashed=1;strokeWidth=1.5;" edge="1" parent="1" source="box_assessed" target="box_excl_full">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="edge4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#16a34a;strokeWidth=2;" edge="1" parent="1" source="box_assessed" target="box_included">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+  </root>
+</mxGraphModel>

@@ -13,7 +13,9 @@ Repositório de Gestão de Conhecimento Pessoal (Personal Knowledge Management -
 - `.agents/skills/latex/SKILL.md`: Definição da skill e comandos `/latex` e `/overleaf`.
 - `.agents/skills/consensus/SKILL.md`: Definição da skill e comando `/consensus`.
 - `.agents/skills/fleet/SKILL.md`: Definição da skill e comando `/fleet` (Mini-Frota Acadêmica Concorrente).
+- `.agents/skills/drawio/SKILL.md`: Definição da skill e comandos `/drawio` e `/diagram` (Diagrams.net, MCP @drawio/mcp, exportação vetorial e templates).
 
+- `/drawio [status|export|url|template|search]`: Automação Diagrams.net (exporta SVG/PDF com XML embutido, abre no VS Code ou web).
 - `/convert <input> [-o output.docx] [--csl abnt|apa|ieee]`: Converte documentos acadêmicos via Pandoc com resolução CSL e BibTeX.
 - `/protocol "<titulo>" [--framework pico|spider]`: Gera protocolo de revisão sistemática formal aderente ao PRISMA-P e SALSA.
 - `/matrix "<dossie_fleet.md>"`: Gera matriz tabular de triagem e extração de dados (Markdown e CSV).

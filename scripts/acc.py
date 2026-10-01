@@ -202,6 +202,33 @@ def cmd_doctor():
         "Chave CONSENSUS_API_KEY ativa" if consensus_key else ("OAuth configurado em ~/.mcp-auth" if has_oauth else "Executar: uv run python scripts/consensus.py auth")
     )
 
+    # 6. Diagramação Visual Científica (Diagrams.net / Draw.io)
+    try:
+        from drawio_manager import check_drawio_environment
+        drawio_env = check_drawio_environment()
+        has_drawio_cli = bool(drawio_env.get("cli_path"))
+        drawio_ver = drawio_env.get("cli_version") or "Ativo"
+        has_drawio_ext = bool(drawio_env.get("vscode_extension"))
+        has_drawio_mcp = bool(drawio_env.get("mcp_registered"))
+
+        table.add_row(
+            "Draw.io Desktop CLI",
+            f"[green]✔ OK ({drawio_ver})[/green]" if has_drawio_cli else "[yellow]⚠ Ausente[/yellow]",
+            f"Exportador SVG/PDF com XML embutido ({drawio_env['cli_path']})" if has_drawio_cli else "Instalar via winget install JGraph.Draw"
+        )
+        table.add_row(
+            "Diagrams.net MCP (@drawio/mcp)",
+            "[green]✔ Configurado[/green]" if has_drawio_mcp else "[yellow]⚠ Requer Config[/yellow]",
+            "Servidor MCP ativo em ~/.gemini/config/mcp_config.json" if has_drawio_mcp else "Adicionar @drawio/mcp ao mcp_config.json"
+        )
+        table.add_row(
+            "VS Code Draw.io Integration",
+            "[green]✔ Instalada[/green]" if has_drawio_ext else "[yellow]⚠ Não Detectada[/yellow]",
+            "Extensão hediet.vscode-drawio para edição in-editor" if has_drawio_ext else "Instalar: code --install-extension hediet.vscode-drawio"
+        )
+    except Exception as e:
+        table.add_row("Diagrams.net / Draw.io", "[yellow]⚠ Verificação Falhou[/yellow]", str(e))
+
     console.print(table)
 
 
@@ -535,6 +562,12 @@ def cmd_matrix(args: list[str]):
     subprocess.run([sys.executable, str(script_path), "matrix"] + args)
 
 
+def cmd_drawio(args: list[str]):
+    """Encaminha comandos de diagramas visuais para o Draw.io Manager."""
+    script_path = ROOT_DIR / "scripts" / "drawio_manager.py"
+    subprocess.run([sys.executable, str(script_path)] + args)
+
+
 def main():
     if len(sys.argv) < 2:
         console.print(Panel.fit(
@@ -546,6 +579,7 @@ def main():
             "  [green]fleet[/green]          - Consulta mini-frota concorrente (arXiv, OpenAlex, S2, CrossRef, etc.)\n"
             "  [green]protocol[/green]       - Cria protocolo formal de revisão sistemática (PRISMA-P / PICO / SPIDER)\n"
             "  [green]matrix[/green]         - Gera matriz de extração e triagem (Markdown & CSV) de buscas do Lake\n"
+            "  [green]diagram[/green]        - Automação Diagrams.net / Draw.io (status, export, url, template, search)\n"
             "  [green]consensus[/green]      - Pesquisa no Consensus.app (medidor de consenso e 200M+ papers)\n"
             "  [green]zotero[/green]         - Sincroniza acervo Zotero com Lake via PyMuPDF4LLM e master.bib\n"
             "  [green]scrape[/green]         - Raspa artigos e páginas web com bypass anti-bot e salva no Lake\n"
@@ -555,7 +589,7 @@ def main():
             "  [green]overleaf[/green]       - Ponte Overleaf: pack, unpack, sync-bib e git-info\n"
             "  [green]bib-audit[/green]      - Valida a consistência do arquivo master.bib\n"
             "  [green]transcript[/green]     - Transcreve vídeos e playlists do YouTube para o Lake\n\n"
-            "Exemplo: [italic]uv run python scripts/acc.py protocol \"RAG em Modelos Multimodais\" --framework pico[/italic]",
+            "Exemplo: [italic]uv run python scripts/acc.py diagram export resources/templates/drawio/prisma_2020.drawio -f svg[/italic]",
             border_style="cyan"
         ))
         return
@@ -574,6 +608,8 @@ def main():
         cmd_protocol(sys.argv[2:])
     elif action in ("matrix", "mat", "triagem"):
         cmd_matrix(sys.argv[2:])
+    elif action in ("diagram", "diag", "drawio", "draw"):
+        cmd_drawio(sys.argv[2:])
     elif action in ("providers", "provider", "provedores"):
         cmd_fleet(["--list-providers"] + sys.argv[2:])
     elif action in ("consensus", "cons", "c"):
