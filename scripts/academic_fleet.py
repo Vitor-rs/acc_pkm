@@ -1,12 +1,4 @@
-# /// script
-# requires-python = ">=3.12"
-# dependencies = [
-#     "httpx>=0.27.0",
-#     "rich>=13.7.0",
-#     "pyyaml>=6.0.1",
-#     "python-dotenv>=1.0.0",
-# ]
-# ///
+
 """
 =============================================================================
 ACADEMIC FLEET ORCHESTRATOR - Academic PKM
@@ -252,13 +244,8 @@ def consolidate_papers(raw_results: Dict[str, List[AcademicPaper]]) -> List[Cons
 def trigger_catalog_reindex():
     """Aciona reindexação autônoma do catálogo Lake."""
     try:
-        import yt_transcribe_and_catalog as ytc
-        items = ytc.scan_lake_items(LAKE_DIR)
-        ytc.generate_catalog_html(items, CATALOG_HTML)
-        CATALOG_JSONL.parent.mkdir(parents=True, exist_ok=True)
-        with open(CATALOG_JSONL, "w", encoding="utf-8") as f:
-            for it in items:
-                f.write(json.dumps(it, ensure_ascii=False) + "\n")
+        from core.catalog_service import reindex_catalog
+        reindex_catalog(LAKE_DIR, CATALOG_HTML, CATALOG_JSONL)
         console.print("[dim green]✔ Catálogo Lake reindexado com sucesso.[/dim green]")
     except Exception as e:
         console.print(f"[yellow]⚠️ Aviso ao reindexar catálogo: {e}[/yellow]")
@@ -266,28 +253,10 @@ def trigger_catalog_reindex():
 
 def sync_to_master_bib(papers: List[ConsolidatedPaper], query: str) -> int:
     """Sincroniza citações únicas com references/master.bib."""
-    if not MASTER_BIB.exists():
-        MASTER_BIB.parent.mkdir(parents=True, exist_ok=True)
-        MASTER_BIB.write_text("% Academic PKM - Master Bibliography Database\n\n", encoding="utf-8")
-
-    content = MASTER_BIB.read_text(encoding="utf-8", errors="ignore")
-    added = 0
-    new_entries = []
-
-    for p in papers:
-        if p.citekey not in content:
-            new_entries.append(p.to_bibtex())
-            added += 1
-
-    if new_entries:
-        with open(MASTER_BIB, "a", encoding="utf-8") as f:
-            f.write(f"\n\n% =========================================================================\n")
-            f.write(f"% Academic Fleet Harvest: {query} ({datetime.datetime.now().strftime('%d/%m/%Y %H:%M')})\n")
-            f.write(f"% =========================================================================\n\n")
-            for b in new_entries:
-                f.write(b + "\n\n")
-
-    return added
+    from core.bibtex_service import add_entries_to_bib
+    header_comment = f"% Academic Fleet Harvest: {query} ({datetime.datetime.now().strftime('%d/%m/%Y %H:%M')})"
+    bib_strings = [p.to_bibtex() for p in papers]
+    return add_entries_to_bib(bib_strings, MASTER_BIB, header_comment=header_comment)
 
 
 def save_fleet_synthesis(

@@ -1,10 +1,4 @@
-# /// script
-# requires-python = ">=3.12"
-# dependencies = [
-#     "rich>=13.7.0",
-#     "python-dotenv>=1.0.0",
-# ]
-# ///
+
 """
 =============================================================================
 PANDOC CONVERTER - Academic PKM

@@ -1,11 +1,4 @@
-# /// script
-# requires-python = ">=3.12"
-# dependencies = [
-#     "pymupdf4llm>=1.28.0",
-#     "pyyaml>=6.0.1",
-#     "rich>=13.7.0",
-# ]
-# ///
+
 """
 =============================================================================
 ZOTERO LAKE SYNCHRONIZER (Academic PKM)
@@ -157,30 +150,17 @@ def append_bibtex_entries(bib_entries: List[str]):
     """Adiciona novas entradas ao master.bib evitando duplicatas de chaves."""
     if not bib_entries:
         return
-
-    MASTER_BIB_FILE.parent.mkdir(parents=True, exist_ok=True)
-    existing_content = ""
-    existing_keys = set()
-    if MASTER_BIB_FILE.exists():
-        existing_content = MASTER_BIB_FILE.read_text(encoding="utf-8", errors="replace")
-        for k in re.findall(r"@\w+\s*\{\s*([^,]+),", existing_content):
-            existing_keys.add(k.strip())
-
-    to_add = []
-    for entry in bib_entries:
-        m = re.search(r"@\w+\s*\{\s*([^,]+),", entry)
-        if m:
-            entry_key = m.group(1).strip()
-            if entry_key not in existing_keys:
-                to_add.append(entry)
-                existing_keys.add(entry_key)
-
-    if to_add:
-        separator = "\n\n" if existing_content and not existing_content.endswith("\n\n") else ""
-        new_block = separator + "\n\n".join(to_add) + "\n"
-        with open(MASTER_BIB_FILE, "a", encoding="utf-8") as f:
-            f.write(new_block)
-        console.print(f"[green]✔ Adicionadas {len(to_add)} novas entradas ao master.bib[/green]")
+    try:
+        from core.bibtex_service import add_entries_to_bib
+        added = add_entries_to_bib(
+            bib_entries,
+            MASTER_BIB_FILE,
+            header_comment="% Synchronized from Zotero Desktop",
+        )
+        if added > 0:
+            console.print(f"[green]✔ Adicionadas {added} novas entradas ao master.bib[/green]")
+    except Exception as e:
+        console.print(f"[yellow]Aviso ao atualizar master.bib:[/yellow] {e}")
 
 
 def sync_zotero_to_lake(force: bool = False, limit: int = 500, collection_key: Optional[str] = None):
@@ -360,10 +340,10 @@ def sync_zotero_to_lake(force: bool = False, limit: int = 500, collection_key: O
     # 7. Atualizar Catálogo Web
     console.print("\n[cyan]🔄 Atualizando Catálogo Web (resources/_lake_catalog.html)...[/cyan]")
     try:
-        from yt_transcribe_and_catalog import scan_lake_items, generate_catalog_html
-        lake_items = scan_lake_items(LAKE_DIR)
+        from core.catalog_service import reindex_catalog
         catalog_path = ROOT_DIR / "resources" / "_lake_catalog.html"
-        generate_catalog_html(lake_items, catalog_path)
+        jsonl_path = CATALOG_DIR / "documents.jsonl"
+        lake_items = reindex_catalog(LAKE_DIR, catalog_path, jsonl_path)
         console.print(f"[green]✔ Catálogo Web atualizado com sucesso ({len(lake_items)} ativos catalogados).[/green]")
     except Exception as e:
         console.print(f"[yellow]Aviso ao atualizar catálogo web:[/yellow] {e}")

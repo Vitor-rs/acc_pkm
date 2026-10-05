@@ -1,9 +1,4 @@
-# /// script
-# requires-python = ">=3.12"
-# dependencies = [
-#     "rich>=13.7.0",
-# ]
-# ///
+
 """
 =============================================================================
 OVERLEAF BRIDGE - Academic PKM Monorepo Integration
@@ -51,7 +46,13 @@ if sys.platform == "win32":
 
 console = Console()
 ROOT_DIR = Path(__file__).resolve().parent.parent
+SCRIPTS_DIR = Path(__file__).resolve().parent
 MASTER_BIB = ROOT_DIR / "references" / "master.bib"
+
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
+
+from core.bibtex_service import parse_bibtex_entries, add_entries_to_bib
 
 # Padrões para descarte no empacotamento
 EXCLUDE_DIRS = {"build", "__pycache__", ".git", ".vscode", ".idea"}
@@ -60,37 +61,6 @@ EXCLUDE_EXTENSIONS = {
     ".fls", ".fdb_latexmk", ".synctex.gz", ".synctex", ".nav", ".snm",
     ".vrb", ".idx", ".ind", ".ilg", ".xdv"
 }
-
-
-def parse_bibtex_entries(content: str) -> dict[str, str]:
-    """Extrai todas as entradas de um arquivo BibTeX usando contagem balanceada de chaves."""
-    entries = {}
-    pos = 0
-    while True:
-        m = re.search(r"(@\w+\s*\{(\s*[^,]+),)", content[pos:])
-        if not m:
-            break
-        start = pos + m.start()
-        key = m.group(2).strip()
-        depth = 0
-        in_entry = False
-        end = -1
-        for i in range(start, len(content)):
-            char = content[i]
-            if char == "{":
-                depth += 1
-                in_entry = True
-            elif char == "}":
-                depth -= 1
-                if in_entry and depth == 0:
-                    end = i + 1
-                    break
-        if end != -1:
-            entries[key] = content[start:end].strip()
-            pos = end
-        else:
-            pos += len(m.group(0))
-    return entries
 
 
 def extract_cited_keys(project_dir: Path) -> set[str]:
@@ -165,10 +135,11 @@ def sync_project_citations(project_dir: Path) -> tuple[int, int, list[str]]:
             missing_keys.append(key)
 
     if added_entries:
-        with open(bib_file, "a", encoding="utf-8") as f:
-            f.write("\n\n% --- Importadas automaticamente do Academic PKM master.bib ---\n")
-            for entry in added_entries:
-                f.write(entry + "\n\n")
+        add_entries_to_bib(
+            added_entries,
+            bib_file,
+            header_comment="% --- Importadas automaticamente do Academic PKM master.bib ---",
+        )
 
     return len(cited_keys), len(added_entries), missing_keys
 
@@ -323,20 +294,18 @@ def unpack_project(zip_path_str: str, project_name: str = "", sync_to_master: bo
 
         if new_entries_found:
             date_str = datetime.now().strftime("%Y-%m-%d %H:%M")
-            with open(MASTER_BIB, "a", encoding="utf-8") as f:
-                f.write(f"\n\n% =========================================================================\n")
-                f.write(f"% [OVERLEAF IMPORT] Adicionadas a partir de projects/{clean_name} em {date_str}\n")
-                f.write(f"% =========================================================================\n")
-                for key, bib_raw in new_entries_found:
-                    f.write(bib_raw + "\n\n")
-
+            added = add_entries_to_bib(
+                [b for _, b in new_entries_found],
+                MASTER_BIB,
+                header_comment=f"% [OVERLEAF IMPORT] Adicionadas a partir de projects/{clean_name} em {date_str}",
+            )
             table = Table(box=box.SIMPLE, show_header=True, header_style="bold green")
             table.add_column("Chave BibTeX", style="bold")
             table.add_column("Status")
             for key, _ in new_entries_found:
                 table.add_row(key, "Incorporada a references/master.bib")
             console.print(table)
-            console.print(f"[bold green]✔ {len(new_entries_found)} novas referências salvas na biblioteca global master.bib![/bold green]")
+            console.print(f"[bold green]✔ {added} novas referências salvas na biblioteca global master.bib![/bold green]")
         else:
             console.print("[dim]✔ Nenhuma referência inédita para adicionar ao master.bib.[/dim]")
 

@@ -1,12 +1,4 @@
-# /// script
-# requires-python = ">=3.12"
-# dependencies = [
-#     "pymupdf>=1.24.0",
-#     "beautifulsoup4>=4.12.0",
-#     "rich>=13.7.0",
-#     "pyyaml>=6.0.1",
-# ]
-# ///
+
 """
 =============================================================================
 DEEP METHODOLOGY MINER & CATALOGER - Academic PKM
@@ -46,6 +38,10 @@ from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.table import Table
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
+SCRIPTS_DIR = REPO_ROOT / "scripts"
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
+
 LAKE_DIR = REPO_ROOT / "resources" / "_lake"
 MASTER_BIB = REPO_ROOT / "references" / "master.bib"
 CATALOG_HTML = REPO_ROOT / "resources" / "_lake_catalog.html"
@@ -678,13 +674,12 @@ def save_mined_book_to_lake(book: MinedBook, lake_dir: Path, master_bib: Path) -
     target_path.write_text("\n".join(lines), encoding="utf-8")
 
     # Anexa ao master.bib se inédito
-    if master_bib.exists() and book.bibtex:
-        content = master_bib.read_text(encoding="utf-8", errors="ignore")
-        citekey = book.bibtex.split("{")[1].split(",")[0].strip()
-        if citekey not in content:
-            with open(master_bib, "a", encoding="utf-8") as f:
-                f.write(f"\n\n% --- Obra Metodológica Seminal ({book.title}) ---\n")
-                f.write(book.bibtex + "\n")
+    if book.bibtex:
+        try:
+            from core.bibtex_service import add_entries_to_bib
+            add_entries_to_bib([book.bibtex], master_bib, header_comment=f"% --- Obra Metodológica Seminal ({book.title}) ---")
+        except Exception:
+            pass
 
     return target_path
 
@@ -777,6 +772,13 @@ def main():
             b.epistemology_summary[:45] + "...",
         )
     console.print(table)
+
+    try:
+        from core.catalog_service import reindex_catalog
+        reindex_catalog(LAKE_DIR, CATALOG_HTML, CATALOG_JSONL)
+        console.print("[dim green]✔ Catálogo Lake reindexado com sucesso.[/dim green]")
+    except Exception as e:
+        console.print(f"[yellow]⚠️ Aviso ao reindexar catálogo: {e}[/yellow]")
 
 
 if __name__ == "__main__":

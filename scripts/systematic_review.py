@@ -1,10 +1,4 @@
-# /// script
-# requires-python = ">=3.12"
-# dependencies = [
-#     "rich>=13.7.0",
-#     "pyyaml>=6.0.1",
-# ]
-# ///
+
 """
 =============================================================================
 SYSTEMATIC REVIEW & EXTRACTION MATRIX ENGINE - Academic PKM

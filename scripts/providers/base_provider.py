@@ -175,17 +175,12 @@ class BaseAcademicProvider(ABC):
         target_path.write_text(md_content, encoding="utf-8")
 
         # Atualizar master.bib se fornecido
-        if master_bib and master_bib.exists():
-            master_content = master_bib.read_text(encoding="utf-8", errors="ignore")
-            new_entries = []
-            for p in papers:
-                if p.citekey not in master_content:
-                    new_entries.append(p.to_bibtex())
-
-            if new_entries:
-                with open(master_bib, "a", encoding="utf-8") as f:
-                    f.write(f"\n\n% --- Adicionado pelo Academic Fleet [{self.name}]: {query} ---\n")
-                    for b in new_entries:
-                        f.write(b + "\n\n")
+        if master_bib:
+            try:
+                from core.bibtex_service import add_entries_to_bib
+                entries = [p.to_bibtex() for p in papers]
+                add_entries_to_bib(entries, source_label=f"Academic Fleet [{self.name}]: {query}", target_bib=master_bib)
+            except Exception as e:
+                print(f"⚠️ Aviso ao atualizar master.bib: {e}")
 
         return target_path

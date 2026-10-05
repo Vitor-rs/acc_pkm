@@ -3506,7 +3506,7 @@
 
       const duration = isYT ? `<span class="card-duration">${item.duracao || '00:00'}</span>` : (isDoc ? `<span class="card-duration">${item.tamanho_mb || ''}</span>` : `<span class="card-duration">${item.palavras ? item.palavras + ' pal.' : ''}</span>`);
 
-      const mediaHtml = isYT && item.thumbnail_url 
+      const mediaHtml = isYT && item.thumbnail_url
         ? `<img src="${item.thumbnail_url}" alt="${item.titulo}" loading="lazy" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'360\' height=\'200\' fill=\'%231e293b\'><rect width=\'100%\' height=\'100%\'/></svg>'">`
         : `<div class="card-media-doc">${isYT ? '🎬' : (isWeb ? '🌐' : '📚')}</div>`;
 
@@ -3581,8 +3581,8 @@
 
     document.getElementById('modalTitle').textContent = item.titulo;
     document.getElementById('modalMeta').innerHTML = `
-      Canal/Autor: <strong>${item.canal}</strong> | 
-      Publicação: <strong>${item.data_publicacao || 'N/D'}</strong> 
+      Canal/Autor: <strong>${item.canal}</strong> |
+      Publicação: <strong>${item.data_publicacao || 'N/D'}</strong>
       ${item.duracao ? ` | Duração: <strong>${item.duracao}</strong>` : ''}
       ${item.palavras ? ` | Palavras: <strong>${item.palavras}</strong>` : ''}
     `;

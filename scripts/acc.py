@@ -1,13 +1,4 @@
-# /// script
-# requires-python = ">=3.12"
-# dependencies = [
-#     "rich>=13.7.0",
-#     "pypdf>=5.0.0",
-#     "pyyaml>=6.0.1",
-#     "bibtexparser>=2.0.1",
-#     "httpx>=0.27.0",
-# ]
-# ///
+
 """
 =============================================================================
 ACC CLI - Academic PKM Monorepo Management Tool
@@ -235,51 +226,14 @@ def cmd_doctor():
 def cmd_catalog():
     """Invoca o motor de catalogação e gera documents.jsonl estruturado."""
     console.print("[cyan]🔄 Sincronizando catálogo e gerando índice estruturado...[/cyan]")
-    # 1. Atualizar catálogo HTML
     try:
-        scripts_dir = ROOT_DIR / "scripts"
-        if str(scripts_dir) not in sys.path:
-            sys.path.insert(0, str(scripts_dir))
-        if str(ROOT_DIR) not in sys.path:
-            sys.path.insert(0, str(ROOT_DIR))
-        import yt_transcribe_and_catalog as ytc
-        items = ytc.scan_lake_items(ROOT_DIR / "resources" / "_lake")
-        ytc.generate_catalog_html(items, ROOT_DIR / "resources" / "_lake_catalog.html")
-        console.print("[green]✔ Catálogo HTML resources/_lake_catalog.html atualizado com sucesso.[/green]")
+        from core.catalog_service import reindex_catalog
+        res = reindex_catalog()
+        console.print(f"[green]✔ Catálogo HTML e índice estruturado atualizados ({res['total_items']} itens).[/green]")
+        console.print(f"  [dim]HTML:[/dim] {res['html_path'].relative_to(ROOT_DIR)}")
+        console.print(f"  [dim]JSONL:[/dim] {res['jsonl_path'].relative_to(ROOT_DIR)}")
     except Exception as e:
-        console.print(f"[red]Erro ao atualizar catálogo HTML:[/red] {e}")
-
-    # 2. Gerar documents.jsonl para controle fino no Git
-    lake_dir = ROOT_DIR / "resources" / "_lake"
-    catalog_dir = ROOT_DIR / "resources" / "_catalog"
-    catalog_dir.mkdir(parents=True, exist_ok=True)
-    jsonl_file = catalog_dir / "documents.jsonl"
-
-    documents = []
-    if lake_dir.exists():
-        for file in sorted(lake_dir.iterdir()):
-            if file.is_file() and not file.name.startswith("."):
-                # Calcular hash SHA-256 rápido
-                h = hashlib.sha256()
-                with open(file, "rb") as f:
-                    while chunk := f.read(65536):
-                        h.update(chunk)
-                
-                doc_record = {
-                    "id": f"sha256:{h.hexdigest()[:16]}",
-                    "filename": file.name,
-                    "media_type": file.suffix.lower().lstrip("."),
-                    "size_bytes": file.stat().st_size,
-                    "sha256": h.hexdigest(),
-                    "updated_at": datetime.fromtimestamp(file.stat().st_mtime).isoformat()
-                }
-                documents.append(doc_record)
-
-    with open(jsonl_file, "w", encoding="utf-8") as f:
-        for doc in documents:
-            f.write(json.dumps(doc, ensure_ascii=False) + "\n")
-
-    console.print(f"[green]✔ Índice estruturado gerado em: {jsonl_file.relative_to(ROOT_DIR)} ({len(documents)} itens)[/green]")
+        console.print(f"[red]Erro ao atualizar catálogo:[/red] {e}")
 
 
 def cmd_new_project(project_name: str, template: str = "sbc"):
@@ -445,29 +399,20 @@ def cmd_overleaf(args: list[str]):
 def cmd_bib_audit():
     """Audita referências nos arquivos BibTeX verificando duplicidades e campos essenciais."""
     console.print("[cyan]🔍 Auditando acervo de referências bibliográficas...[/cyan]")
-    master_bib = ROOT_DIR / "references" / "master.bib"
+    try:
+        from core.bibtex_service import audit_master_bib
+        audit = audit_master_bib()
+        console.print(f"Total de referências encontradas em master.bib: [bold]{audit['total_entries']}[/bold] (Únicas: {audit['unique_keys']})")
 
-    if not master_bib.exists():
-        console.print(f"[red]❌ references/master.bib não encontrado![/red]")
-        return
+        if audit["duplicate_keys"]:
+            console.print(f"[red]⚠️ Chaves duplicadas encontradas:[/red] {', '.join(audit['duplicate_keys'])}")
+        else:
+            console.print("[green]✔ Nenhuma chave duplicada encontrada no master.bib.[/green]")
 
-    content = master_bib.read_text(encoding="utf-8")
-    entries = re.findall(r"@(\w+)\s*\{\s*([^,]+),", content)
-
-    console.print(f"Total de referências encontradas em master.bib: [bold]{len(entries)}[/bold]")
-
-    keys = [e[1].strip() for e in entries]
-    seen = set()
-    duplicates = set()
-    for k in keys:
-        if k in seen:
-            duplicates.add(k)
-        seen.add(k)
-
-    if duplicates:
-        console.print(f"[red]⚠ Chaves duplicadas encontradas:[/red] {', '.join(duplicates)}")
-    else:
-        console.print("[green]✔ Nenhuma chave duplicada encontrada no master.bib.[/green]")
+        if audit["missing_author"]:
+            console.print(f"[yellow]ℹ️ Referências sem campo 'author':[/yellow] {len(audit['missing_author'])}")
+    except Exception as e:
+        console.print(f"[red]Erro ao auditar master.bib:[/red] {e}")
 
 
 def cmd_transcript(args: list[str]):

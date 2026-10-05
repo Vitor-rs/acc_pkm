@@ -74,16 +74,8 @@ def trigger_catalog_reindex():
         scripts_dir = REPO_ROOT / "scripts"
         if str(scripts_dir) not in sys.path:
             sys.path.insert(0, str(scripts_dir))
-        if str(REPO_ROOT) not in sys.path:
-            sys.path.insert(0, str(REPO_ROOT))
-        import yt_transcribe_and_catalog as ytc
-        items = ytc.scan_lake_items(LAKE_DIR)
-        ytc.generate_catalog_html(items, CATALOG_HTML)
-        # Atualiza JSONL
-        CATALOG_JSONL.parent.mkdir(parents=True, exist_ok=True)
-        with open(CATALOG_JSONL, "w", encoding="utf-8") as f:
-            for it in items:
-                f.write(json.dumps(it, ensure_ascii=False) + "\n")
+        from core.catalog_service import reindex_catalog
+        reindex_catalog(LAKE_DIR, CATALOG_HTML, CATALOG_JSONL)
         console.print("[dim green]✔ Catálogo Lake reindexado com sucesso.[/dim green]")
     except Exception as e:
         console.print(f"[yellow]⚠️ Aviso ao reindexar catálogo: {e}[/yellow]")

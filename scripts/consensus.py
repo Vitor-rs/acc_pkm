@@ -1,12 +1,4 @@
-# /// script
-# requires-python = ">=3.12"
-# dependencies = [
-#     "httpx>=0.27.0",
-#     "rich>=13.7.0",
-#     "python-dotenv>=1.0.0",
-#     "pyyaml>=6.0.1",
-# ]
-# ///
+
 """
 =============================================================================
 CONSENSUS RESEARCH CLIENT & HARVESTER - Academic PKM
@@ -217,22 +209,28 @@ def search_consensus(query: str, save_to_lake: bool = False, open_access: bool =
         console.print(f"[bold green]✔ Fichamento gravado no Lake:[/bold green] {lake_file}")
 
         # Mesclar no master.bib
-        if MASTER_BIB.exists() and bib_entries:
-            master_content = MASTER_BIB.read_text(encoding="utf-8", errors="ignore")
-            new_to_add = [b for k, b in bib_entries if k not in master_content]
-            if new_to_add:
-                with open(MASTER_BIB, "a", encoding="utf-8") as f:
-                    f.write(f"\n\n% --- Artigos importados do Consensus: {query} ---\n")
-                    for b in new_to_add:
-                        f.write(b + "\n\n")
-                console.print(f"[green]✔ {len(new_to_add)} referências adicionadas a references/master.bib.[/green]")
+        if bib_entries:
+            try:
+                from core.bibtex_service import add_entries_to_bib
+                added = add_entries_to_bib(
+                    [b for _, b in bib_entries],
+                    MASTER_BIB,
+                    header_comment=f"% Artigos importados do Consensus: {query}",
+                )
+                if added > 0:
+                    console.print(f"[green]✔ {added} novas referências adicionadas a references/master.bib.[/green]")
+            except Exception as e:
+                console.print(f"[yellow]Aviso ao sincronizar BibTeX:[/yellow] {e}")
 
         # Atualizar catálogo web interativo
         try:
-            import yt_transcribe_and_catalog as ytc
-            items = ytc.scan_lake_items(LAKE_DIR)
-            ytc.generate_catalog_html(items, ROOT_DIR / "resources" / "_lake_catalog.html")
-            console.print("[green]✔ Catálogo HTML resources/_lake_catalog.html sincronizado.[/green]")
+            from core.catalog_service import reindex_catalog
+            reindex_catalog(
+                LAKE_DIR,
+                ROOT_DIR / "resources" / "_lake_catalog.html",
+                ROOT_DIR / "resources" / "_catalog" / "documents.jsonl",
+            )
+            console.print("[green]✔ Catálogo HTML e índice documental sincronizados.[/green]")
         except Exception as e:
             console.print(f"[yellow]Aviso ao atualizar catálogo:[/yellow] {e}")
 
